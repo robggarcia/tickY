@@ -1,20 +1,66 @@
+const { create } = require("domain");
 const client = require(".");
 
-const seedDB = async () => {
-  // before we insert a book what do we need to build?
-  // we need a book table
-  await client.query(`
-        DROP TABLE IF EXISTS books;
-  
-        CREATE TABLE books(
-            id SERIAL PRIMARY KEY,
-            title VARCHAR(255) UNIQUE NOT NULL
-        );
-
-        INSERT INTO books (title)
-        VALUES ('Moby Dick');
+const dropTables = async () => {
+  console.log("Dropping All Tables...");
+  // drop all tables, in the correct order
+  try {
+    await client.query(`
+          DROP TABLE IF EXISTS users;
+          DROP TABLE IF EXISTS tickets;
     `);
-  console.log("DB seeded");
+  } catch (error) {
+    console.error("Error while dropping tables");
+    throw error;
+  }
+};
+
+const createTables = async () => {
+  console.log("Creating all tables...");
+  try {
+    await client.query(`
+            CREATE TABLE users(
+                id SERIAL PRIMARY KEY,
+                username VARCHAR(255) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                admin BOOLEAN
+            );
+    
+            CREATE TABLE tickets(
+                id SERIAL PRIMARY KEY,
+                "creatorId" INTEGER REFERENCES users(id),
+                artist VARCHAR(255) NOT NULL,
+                genre VARCHAR(255),
+                location VARCHAR(255) NOT NULL,
+                date DATE NOT NULL, 
+                price DECIMAL(10, 2) NOT NULL,
+                quantity INTEGER NOT NULL,
+                "isSold" Boolean,
+                "artistPic" VARCHAR(255),
+                "tickPic" VARCHAR(255)
+            );       
+    `);
+  } catch (error) {
+    console.error("Error building tables");
+    throw error;
+  }
+};
+
+// create initial ticket data
+
+// create initial user data
+
+const seedDB = async () => {
+  console.log("Seeding Database...");
+  try {
+    await dropTables();
+    await createTables();
+    console.log("DB seeded");
+  } catch (error) {
+    console.error("Error seeding tables");
+    throw error;
+  }
 };
 
 seedDB();

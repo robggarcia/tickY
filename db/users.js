@@ -1,11 +1,11 @@
 const { response } = require("express");
 const client = require(".");
 
-const fetchBooks = async () => {
+const fetchUsers = async () => {
   const response = await client.query(`
-        SELECT * FROM books
+        SELECT * FROM users
     `);
   return response.rows;
 };
 
-module.exports = fetchBooks;
+module.exports = fetchUsers;

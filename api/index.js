@@ -1,11 +1,11 @@
 const express = require("express");
-const bookRouter = require("./books");
+const usersRouter = require("./users");
 const apiRouter = express.Router();
 
 apiRouter.get("/", (req, res) => {
   res.send("api router working");
 });
 
-apiRouter.use("/books", bookRouter);
+apiRouter.use("/users", usersRouter);
 
 module.exports = apiRouter;
