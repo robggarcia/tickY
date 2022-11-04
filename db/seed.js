@@ -6,8 +6,8 @@ const dropTables = async () => {
   // drop all tables, in the correct order
   try {
     await client.query(`
-          DROP TABLE IF EXISTS users;
           DROP TABLE IF EXISTS tickets;
+          DROP TABLE IF EXISTS users;
     `);
   } catch (error) {
     console.error("Error while dropping tables");
@@ -29,17 +29,21 @@ const createTables = async () => {
     
             CREATE TABLE tickets(
                 id SERIAL PRIMARY KEY,
-                "creatorId" INTEGER REFERENCES users(id),
-                artist VARCHAR(255) NOT NULL,
-                genre VARCHAR(255),
-                location VARCHAR(255) NOT NULL,
+                "artistId" INTEGER REFERENCES artists(id),
+                "venueId" INTEGER REFERENCES venues(id),
                 date DATE NOT NULL, 
                 price DECIMAL(10, 2) NOT NULL,
                 quantity INTEGER NOT NULL,
-                "isSold" Boolean,
-                "artistPic" VARCHAR(255),
-                "tickPic" VARCHAR(255)
-            );       
+                seatTear INTEGER NOT NULL
+            );    
+            
+            CREATE TABLE orders(
+              id SERIAL PRIMARY KEY,
+              "userId" INTEGER REFERENCES users(id),
+              "ticketId" INTEGER REFERENCES ticket(id),
+              quantity INTEGER NOT NULL,
+              price DECIMAL(10, 2) NOT NULL
+            )
     `);
   } catch (error) {
     console.error("Error building tables");
