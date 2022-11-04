@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { Pool } = require("pg");
 
 const connectionString =
@@ -13,8 +14,8 @@ const client = new Pool(
             : undefined,
       }
     : {
-        username: process.env.DB_PASSWORD,
-        password: "postgres",
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
         database: "grace-starter",
       }
 );
