@@ -2,6 +2,7 @@ const { create } = require("domain");
 const client = require(".");
 const { createArtists } = require("./artists");
 const { createUser } = require("./users");
+const { createVenue } = require("./venues");
 
 const dropTables = async () => {
   console.log("Dropping All Tables...");
@@ -82,8 +83,78 @@ const createTables = async () => {
   }
 };
 
-// create initial ticket data
+// create initial tickets data
 
+async function createInitialTickets() {
+  console.log("Starting to create tickets...");
+  try {
+    const ticketsToCreate = [
+      {
+        id: 1,
+        artistId: 1,
+        venueId: 1,
+        date: "1-1-2023",
+        quantity: 1,
+        seatTier: "General Admission",
+      },
+      {
+        id: 2,
+        artistId: 2,
+        venueId: 2,
+        date: "1-2-2023",
+        quantity: 13,
+        seatTier: "VIP",
+      },
+      {
+        id: 3,
+        artistId: 3,
+        venueId: 3,
+        date: "1-3-2023",
+        quantity: 4,
+        seatTier: "VIP",
+      },
+    ];
+    console.log("Tickets created:");
+    console.log(ticketsToCreate);
+    console.log("Finished creating tickets!");
+  } catch (error) {
+    console.error("Error creating tickets!");
+  }
+}
+
+// create initial order data
+async function createInitialOrder() {
+  try {
+    console.log("Starting to create orders...");
+
+    const ordersToCreate = [
+      {
+        id: 1,
+        userId: 1,
+        ticketId: 1,
+        isPurchased: true,
+      },
+      {
+        id: 2,
+        userId: 2,
+        ticketId: 2,
+        isPurchased: false,
+      },
+      {
+        id: 3,
+        userId: 3,
+        ticketId: 3,
+        isPurchased: true,
+      },
+    ];
+    console.log("Orders created:");
+    console.log(ordersToCreate);
+    console.log("Finished creating orders");
+  } catch (error) {
+    console.error("Could not build orders");
+    throw error;
+  }
+}
 // create initial user data
 async function createInitialUsers() {
   console.log("Starting to create users...");
@@ -128,6 +199,36 @@ async function createInitialArtists() {
     throw error;
   }
 }
+// create initial venues
+async function createInitialVenues() {
+  console.log("Starting to create venues...");
+  try {
+    const venuesToCreate = [
+      {
+        name: "Knitting Factory",
+        city: "New York",
+        state: "NY",
+        capacity: 999,
+      },
+      {
+        name: "Rickshaw Stop",
+        city: "San Francisco",
+        state: "CA",
+        capacity: 400,
+      },
+      { name: "Lincoln Hall", city: "Chicago", state: "IL", capacity: "507" },
+    ];
+    const venues = await Promise.all(venuesToCreate.map(createVenue));
+
+    console.log("venues created: ", venues);
+
+    console.log("Finished creating venues!");
+  } catch (error) {
+    console.error("Error creating venues");
+    throw error;
+  }
+}
+
 const seedDB = async () => {
   console.log("Seeding Database...");
   try {
@@ -135,6 +236,9 @@ const seedDB = async () => {
     await createTables();
     await createInitialUsers();
     await createInitialArtists();
+    await createInitialVenues();
+    await createInitialTickets();
+    await createInitialOrder();
     console.log("DB seeded");
   } catch (error) {
     console.error("Error seeding tables");
