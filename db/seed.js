@@ -84,6 +84,8 @@ const createTables = async () => {
 
 // create initial user data
 
+// is this working?????
+
 const seedDB = async () => {
   console.log("Seeding Database...");
   try {
