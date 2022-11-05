@@ -34,7 +34,7 @@ const createTables = async () => {
                 username VARCHAR(255) UNIQUE NOT NULL,
                 password VARCHAR(255) NOT NULL,
                 email VARCHAR(255) UNIQUE NOT NULL,
-                admin BOOLEAN
+                admin BOOLEAN DEFAULT false
                 );
                 
                 CREATE TABLE venues (
@@ -170,9 +170,24 @@ async function createInitialUsers() {
   console.log("Starting to create users...");
   try {
     const usersToCreate = [
-      { username: "Rob", password: "password1", email: "emailtest@gmail.com" },
-      { username: "Jon", password: "groupticky2pass", email: "jon@gmail.com" },
-      { username: "Max", password: "password2", email: "max@gmail.com" },
+      {
+        username: "Rob",
+        password: "password1",
+        email: "emailtest@gmail.com",
+        admin: false,
+      },
+      {
+        username: "Jon",
+        password: "groupticky2pass",
+        email: "jon@gmail.com",
+        admin: false,
+      },
+      {
+        username: "Max",
+        password: "password2",
+        email: "max@gmail.com",
+        admin: true,
+      },
     ];
     const users = await Promise.all(usersToCreate.map(createUser));
 
