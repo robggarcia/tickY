@@ -25,6 +25,30 @@ async function createTickets({
   }
 }
 
+async function getAllTickets() {
+  try {
+    const { rows } = await client.query(`
+      SELECT tickets.*, venues.name AS venue, artists.name AS artist
+      FROM tickets
+      JOIN venues ON "venueId"=venues.id
+      JOIN artists ON "artistId"=artists.id;
+    `);
+    return rows;
+  } catch (error) {
+    console.error("Error in getAllTickets");
+    throw error;
+  }
+}
+
+// testing adapter functions
+async function testTickets() {
+  const tickets = await getAllTickets();
+  console.log(tickets);
+}
+
+testTickets();
+
 module.exports = {
   createTickets,
+  getAllTickets,
 };
