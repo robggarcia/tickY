@@ -55,8 +55,14 @@ const createTables = async () => {
                 price DECIMAL(10, 2) NOT NULL,
                 quantity INTEGER NOT NULL,
                 seatTear INTEGER NOT NULL
-            );    
-            
+            );      
+            CREATE TABLE venues(
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL
+                city VARCHAR(255) NOT NULL
+                state VARCHAR(255) NOT NULL
+                capacity INTERGER NOT NULL
+            );
             CREATE TABLE orders(
               id SERIAL PRIMARY KEY,
               "userId" INTEGER REFERENCES users(id),
