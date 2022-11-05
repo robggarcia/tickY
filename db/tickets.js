@@ -82,6 +82,33 @@ async function updateTicket({ id, ...fields }) {
   }
 }
 
+async function deleteTicket(id) {
+  try {
+    await client.query(
+      `
+      DELETE
+      FROM tickets_orders
+      WHERE "ticketId"=$1;
+    `,
+      [id]
+    );
+    const {
+      rows: [ticket],
+    } = await client.query(
+      `
+    DELETE FROM tickets
+    WHERE id=$1
+    RETURNING *;
+  `,
+      [id]
+    );
+    return ticket;
+  } catch (error) {
+    console.error("Error in deleteTicket");
+    throw error;
+  }
+}
+
 // testing adapter functions
 async function testTickets() {
   const tickets = await getAllTickets();
@@ -92,6 +119,9 @@ async function testTickets() {
 
   const editedTicket = await updateTicket({ id: 2, price: 200, quantity: 550 });
   console.log("Updated ticket: ", editedTicket);
+
+  const deletedTicket = await deleteTicket(2);
+  console.log("Deleted ticket: ", deletedTicket);
 }
 
 testTickets();
