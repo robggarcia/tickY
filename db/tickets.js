@@ -40,10 +40,32 @@ async function getAllTickets() {
   }
 }
 
+async function getTicketById(id) {
+  try {
+    const {
+      rows: [ticket],
+    } = await client.query(
+      `
+      SELECT *
+      FROM tickets
+      WHERE id = $1;
+    `,
+      [id]
+    );
+    return ticket;
+  } catch (error) {
+    console.error("Error in getTicketById");
+    throw error;
+  }
+}
+
 // testing adapter functions
 async function testTickets() {
   const tickets = await getAllTickets();
-  console.log(tickets);
+  console.log("all tickets: ", tickets);
+
+  const ticket = await getTicketById(2);
+  console.log("get ticket id=2: ", ticket);
 }
 
 testTickets();
