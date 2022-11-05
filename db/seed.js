@@ -35,9 +35,7 @@ const createTables = async () => {
                 date DATE NOT NULL, 
                 price DECIMAL(10, 2) NOT NULL,
                 quantity INTEGER NOT NULL,
-                "isSold" Boolean,
-                "artistPic" VARCHAR(255),
-                "tickPic" VARCHAR(255)
+                seatTear INTEGER NOT NULL
             );      
             CREATE TABLE venues(
                 id SERIAL PRIMARY KEY,
@@ -45,7 +43,28 @@ const createTables = async () => {
                 city VARCHAR(255) NOT NULL
                 state VARCHAR(255) NOT NULL
                 capacity INTERGER NOT NULL
-            ); 
+            );
+            CREATE TABLE orders(
+              id SERIAL PRIMARY KEY,
+              "userId" INTEGER REFERENCES users(id),
+              "ticketId" INTEGER REFERENCES ticket(id),
+              quantity INTEGER NOT NULL
+            );
+
+            CREATE TABLE artistis(
+              id SERIAL PRIMARY KEY,
+              genre VARCHAR(255),
+              image VARCHAR(255),
+              name VARCHAR(255) NOT NULL,
+              descriptioN VARCHAR(255)
+            );
+
+            CREATE TABLE cart (
+              id SERIAL PRIMARY KEY,
+              "userId" INTEGER REFERENCES users(id),
+              "ticketId" INTEGER REFERENCES tickets(id),
+              quantity INTEGER NOT NULL,
+            );
     `);
   } catch (error) {
     console.error("Error building tables");
