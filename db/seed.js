@@ -1,6 +1,8 @@
 const { create } = require("domain");
 const client = require(".");
 const { createArtists } = require("./artists");
+const { createTickets } = require("./tickets");
+const { createTicketOrders } = require("./tickets_orders");
 const { createUser } = require("./users");
 const { createVenue } = require("./venues");
 
@@ -57,7 +59,7 @@ const createTables = async () => {
                 date DATE NOT NULL, 
                 price DECIMAL(10, 2) NOT NULL,
                 quantity INTEGER NOT NULL,
-                seatTear INTEGER NOT NULL
+                "seatTier" BOOLEAN DEFAULT false
             );      
     
             CREATE TABLE orders(
@@ -86,72 +88,79 @@ const createTables = async () => {
 // create initial tickets data
 
 async function createInitialTickets() {
-  console.log("Starting to create tickets...");
   try {
     const ticketsToCreate = [
       {
         id: 1,
         artistId: 1,
         venueId: 1,
-        date: "1-1-2023",
-        quantity: 1,
-        seatTier: "General Admission",
+        date: "2023-01-23",
+        quantity: 504,
+        seatTier: false,
+        price: 15.0,
       },
       {
         id: 2,
         artistId: 2,
         venueId: 2,
-        date: "1-2-2023",
-        quantity: 13,
-        seatTier: "VIP",
+        date: "2024-02-01",
+        quantity: 242,
+        price: 200.01,
       },
       {
         id: 3,
         artistId: 3,
         venueId: 3,
-        date: "1-3-2023",
-        quantity: 4,
-        seatTier: "VIP",
+        date: "2022-12-24",
+        quantity: 600,
+        seatTier: true,
+        price: 224.22,
       },
     ];
-    console.log("Tickets created:");
-    console.log(ticketsToCreate);
+
+    const tickets = await Promise.all(ticketsToCreate.map(createTickets));
+
+    console.log("tickets Created:");
+    console.log(tickets);
     console.log("Finished creating tickets!");
   } catch (error) {
     console.error("Error creating tickets!");
+    throw error;
   }
 }
 
 // create initial order data
-async function createInitialOrder() {
+async function createInitialTicketOrder() {
   try {
     console.log("Starting to create orders...");
 
-    const ordersToCreate = [
+    const ticketOrdersToCreate = [
       {
-        id: 1,
-        userId: 1,
         ticketId: 1,
-        isPurchased: true,
+        orderId: 1,
+        quantity: 11,
       },
       {
-        id: 2,
-        userId: 2,
         ticketId: 2,
-        isPurchased: false,
+        orderId: 2,
+        quantity: 13,
       },
       {
-        id: 3,
-        userId: 3,
         ticketId: 3,
-        isPurchased: true,
+        orderId: 3,
+        quantity: 21,
       },
     ];
-    console.log("Orders created:");
-    console.log(ordersToCreate);
-    console.log("Finished creating orders");
+
+    const ticketOrders = await Promise.all(
+      ticketOrdersToCreate.map(createTicketOrders)
+    );
+
+    console.log("Ticket Orders created:");
+    console.log(ticketOrders);
+    console.log("Finished creating Ticket orders");
   } catch (error) {
-    console.error("Could not build orders");
+    console.error("Could not build Ticket orders");
     throw error;
   }
 }
@@ -238,7 +247,7 @@ const seedDB = async () => {
     await createInitialArtists();
     await createInitialVenues();
     await createInitialTickets();
-    await createInitialOrder();
+    await createInitialTicketOrder();
     console.log("DB seeded");
   } catch (error) {
     console.error("Error seeding tables");
