@@ -191,6 +191,8 @@ const seedDB = async () => {
     await dropTables();
     await createTables();
     await createInitialVenues();
+    await createInitialTickets();
+    await createInitialOrder();
     console.log("DB seeded");
   } catch (error) {
     console.error("Error seeding tables");
