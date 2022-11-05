@@ -56,7 +56,7 @@ const createTables = async () => {
                 quantity INTEGER NOT NULL,
                 seatTear INTEGER NOT NULL
             );      
-  
+    
             CREATE TABLE orders(
               id SERIAL PRIMARY KEY,
               "userId" INTEGER REFERENCES users(id),
