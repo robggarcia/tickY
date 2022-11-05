@@ -1,5 +1,7 @@
 const { create } = require("domain");
 const client = require(".");
+const { createArtists } = require("./artists");
+const { createUser } = require("./users");
 
 const dropTables = async () => {
   console.log("Dropping All Tables...");
@@ -83,12 +85,56 @@ const createTables = async () => {
 // create initial ticket data
 
 // create initial user data
+async function createInitialUsers() {
+  console.log("Starting to create users...");
+  try {
+    const usersToCreate = [
+      { username: "Rob", password: "password1", email: "emailtest@gmail.com" },
+      { username: "Jon", password: "groupticky2pass", email: "jon@gmail.com" },
+      { username: "Max", password: "password2", email: "max@gmail.com" },
+    ];
+    const users = await Promise.all(usersToCreate.map(createUser));
 
+    console.log("Users created:");
+    console.log(users);
+    console.log("Finished creating users!");
+  } catch (error) {
+    console.error("Error creating users!");
+    throw error;
+  }
+}
+
+async function createInitialArtists() {
+  console.log("Starting to create users...");
+  try {
+    const artistsToCreate = [
+      {
+        name: "Drake",
+        genre: "rap",
+        description: "big time rapper from canada",
+        image:
+          " https://i.pinimg.com/736x/52/ac/99/52ac99c15349b5d678001f83e4ac283e--laughing-so-hard-cant-stop-laughing.jpg",
+      },
+      { name: "Mozart", genre: "classical" },
+      { name: "Justin bieber" },
+    ];
+    const artists = await Promise.all(artistsToCreate.map(createArtists));
+
+    console.log("Artists created:");
+    console.log(artists);
+    console.log("Finished creating artists!");
+  } catch (error) {
+    console.error("Error creating artists!");
+    throw error;
+  }
+}
 const seedDB = async () => {
   console.log("Seeding Database...");
   try {
     await dropTables();
     await createTables();
+    await createInitialUsers();
+    await createInitialArtists();
     console.log("DB seeded");
   } catch (error) {
     console.error("Error seeding tables");

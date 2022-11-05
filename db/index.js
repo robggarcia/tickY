@@ -8,7 +8,7 @@ const client = new Pool(
         ssl: { rejectUnauthorized: false },
       }
     : {
-        username: process.env.DB_USERNAME,
+        user: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         database: "grace-starter",
       }

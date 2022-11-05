@@ -8,4 +8,25 @@ const fetchUsers = async () => {
   return response.rows;
 };
 
-module.exports = fetchUsers;
+async function createUser({ username, password, email }) {
+  try {
+    const result = await client.query(
+      `
+    INSERT INTO users (username, password, email) 
+    VALUES($1, $2, $3)
+    ON CONFLICT (username) DO NOTHING 
+    RETURNING id, username, email;
+    `,
+      [username, password, email]
+    );
+    // console.log(result.rows[0]);
+    return result.rows[0];
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = {
+  createUser,
+  fetchUsers,
+};
