@@ -59,6 +59,29 @@ async function getTicketById(id) {
   }
 }
 
+async function updateTicket({ id, ...fields }) {
+  try {
+    const setString = Object.keys(fields)
+      .map((key, idx) => `"${key}"=$${idx + 2}`)
+      .join(", ");
+    const {
+      rows: [ticket],
+    } = await client.query(
+      `
+          UPDATE tickets
+          SET ${setString}
+          WHERE id=$1
+          RETURNING *;
+      `,
+      [id, ...Object.values(fields)]
+    );
+    return ticket;
+  } catch (error) {
+    console.log("Error in editTicketById");
+    throw error;
+  }
+}
+
 // testing adapter functions
 async function testTickets() {
   const tickets = await getAllTickets();
@@ -66,6 +89,9 @@ async function testTickets() {
 
   const ticket = await getTicketById(2);
   console.log("get ticket id=2: ", ticket);
+
+  const editedTicket = await updateTicket({ id: 2, price: 200, quantity: 550 });
+  console.log("Updated ticket: ", editedTicket);
 }
 
 testTickets();
@@ -73,4 +99,5 @@ testTickets();
 module.exports = {
   createTickets,
   getAllTickets,
+  getTicketById,
 };
