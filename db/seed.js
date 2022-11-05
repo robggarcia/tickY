@@ -1,5 +1,6 @@
 const { create } = require("domain");
 const client = require(".");
+const { createVenue } = require("./venues");
 
 const dropTables = async () => {
   console.log("Dropping All Tables...");
@@ -80,17 +81,46 @@ const createTables = async () => {
   }
 };
 
-// create initial ticket data
+// create initial tickets data
 
 // create initial user data
 
-// is this working?????
+// create initial venues
+async function createInitialVenues() {
+  console.log("Starting to create venues...");
+  try {
+    const venuesToCreate = [
+      {
+        name: "Knitting Factory",
+        city: "New York",
+        state: "NY",
+        capacity: 999,
+      },
+      {
+        name: "Rickshaw Stop",
+        city: "San Francisco",
+        state: "CA",
+        capacity: 400,
+      },
+      { name: "Lincoln Hall", city: "Chicago", state: "IL", capacity: "507" },
+    ];
+    const venues = await Promise.all(venuesToCreate.map(createVenue));
+
+    console.log("venues created: ", venues);
+
+    console.log("Finished creating venues!");
+  } catch (error) {
+    console.error("Error creating venues");
+    throw error;
+  }
+}
 
 const seedDB = async () => {
   console.log("Seeding Database...");
   try {
     await dropTables();
     await createTables();
+    await createInitialVenues();
     console.log("DB seeded");
   } catch (error) {
     console.error("Error seeding tables");
