@@ -31,19 +31,25 @@ async function getArtists() {
   }
 }
 
-async function getArtistTickets(artistId) {
+async function updateArtist({ id, ...fields }) {
   try {
-    const { rows: tickets } = await client.query(
+    const setString = Object.keys(fields)
+      .map((key, idx) => `"${key}"=$${idx + 2}`)
+      .join(", ");
+    const {
+      rows: [ticket],
+    } = await client.query(
       `
-      SELECT *
-      FROM tickets
-      WHERE "artistId" = $1;
-    `,
-      [artistId]
+          UPDATE artists
+          SET ${setString}
+          WHERE id=$1
+          RETURNING *;
+      `,
+      [id, ...Object.values(fields)]
     );
-    return tickets;
+    return ticket;
   } catch (error) {
-    console.error("Error in getArtistTickets");
+    console.log("Error in updateArtist");
     throw error;
   }
 }
@@ -52,10 +58,18 @@ async function getArtistTickets(artistId) {
 async function testArtists() {
   const artists = await getArtists();
   console.log("all artists: ", artists);
+
+  const editedArtist = await updateArtist({
+    id: 2,
+    genre: "contemperary",
+    description: "a dead white dude",
+  });
+  console.log("updated artist: ", editedArtist);
 }
 
 testArtists();
 
 module.exports = {
   createArtists,
+  updateArtist,
 };

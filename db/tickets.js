@@ -77,7 +77,7 @@ async function updateTicket({ id, ...fields }) {
     );
     return ticket;
   } catch (error) {
-    console.log("Error in editTicketById");
+    console.log("Error in updateTicket");
     throw error;
   }
 }
