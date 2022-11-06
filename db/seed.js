@@ -89,7 +89,6 @@ async function createInitialTickets() {
   try {
     const ticketsToCreate = [
       {
-        id: 1,
         artistId: 1,
         venueId: 1,
         date: "2023-01-23",
@@ -98,7 +97,6 @@ async function createInitialTickets() {
         price: 15.0,
       },
       {
-        id: 2,
         artistId: 2,
         venueId: 2,
         date: "2024-02-01",
@@ -107,7 +105,14 @@ async function createInitialTickets() {
         price: 200.01,
       },
       {
-        id: 3,
+        artistId: 2,
+        venueId: 3,
+        date: "2024-02-14",
+        quantity: 0,
+        seatTier: false,
+        price: 220,
+      },
+      {
         artistId: 3,
         venueId: 3,
         date: "2022-12-24",

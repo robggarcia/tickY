@@ -109,25 +109,58 @@ async function deleteTicket(id) {
   }
 }
 
-// testing adapter functions
-async function testTickets() {
-  const tickets = await getAllTickets();
-  console.log("all tickets: ", tickets);
-
-  const ticket = await getTicketById(2);
-  console.log("get ticket id=2: ", ticket);
-
-  const editedTicket = await updateTicket({ id: 2, price: 200, quantity: 550 });
-  console.log("Updated ticket: ", editedTicket);
-
-  const deletedTicket = await deleteTicket(2);
-  console.log("Deleted ticket: ", deletedTicket);
+async function getAllUnsoldTickets() {
+  try {
+    const tickets = await getAllTickets();
+    const unsoldTickets = tickets.filter((ticket) => ticket.quantity > 0);
+    return unsoldTickets;
+  } catch (error) {
+    console.error("Error in getAllUnsoldTickets");
+    throw error;
+  }
 }
 
-// testTickets();
+async function getTicketsByArtist(artistId) {
+  try {
+    const unsoldTickets = await getAllUnsoldTickets();
+    console.log("ARTIST ID", artistId);
+    const ticketsByArtist = unsoldTickets.filter((ticket) => {
+      if (ticket.artistId === artistId) return true;
+      return false;
+    });
+
+    return ticketsByArtist;
+  } catch (error) {
+    console.error("Error in getArtistTickets");
+    throw error;
+  }
+}
+
+// testing adapter functions
+async function testTickets() {
+  // const tickets = await getAllTickets();
+  // console.log("all tickets: ", tickets);
+
+  // const ticket = await getTicketById(2);
+  // console.log("get ticket id=2: ", ticket);
+
+  // const editedTicket = await updateTicket({ id: 2, price: 200, quantity: 550 });
+  // console.log("Updated ticket: ", editedTicket);
+
+  // const deletedTicket = await deleteTicket(2);
+  // console.log("Deleted ticket: ", deletedTicket);
+
+  const artistTicket = await getTicketsByArtist(2);
+  console.log("Ticket by Artist id = 2: ", artistTicket);
+}
+
+testTickets();
 
 module.exports = {
   createTickets,
   getAllTickets,
   getTicketById,
+  updateTicket,
+  deleteTicket,
+  getTicketsByArtist,
 };

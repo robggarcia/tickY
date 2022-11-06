@@ -31,6 +31,23 @@ async function getArtists() {
   }
 }
 
+async function getArtistTickets(artistId) {
+  try {
+    const { rows: tickets } = await client.query(
+      `
+      SELECT *
+      FROM tickets
+      WHERE "artistId" = $1;
+    `,
+      [artistId]
+    );
+    return tickets;
+  } catch (error) {
+    console.error("Error in getArtistTickets");
+    throw error;
+  }
+}
+
 // testing adapter functions
 async function testArtists() {
   const artists = await getArtists();
