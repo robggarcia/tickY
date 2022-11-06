@@ -1,5 +1,6 @@
 const { response } = require("express");
 const client = require(".");
+const { getTicketsByArtist } = require("./tickets");
 
 async function createArtists({ name, genre, image, description }) {
   try {
@@ -54,6 +55,49 @@ async function updateArtist({ id, ...fields }) {
   }
 }
 
+async function deleteArtist(artistId) {
+  try {
+    const ticketsForArtist = await getTicketsByArtist(artistId);
+    console.log("ticketsForArtist", ticketsForArtist);
+    for (let ticket of ticketsForArtist) {
+      console.log("TRYING TO DELETE TICKET ID: ", ticket.id);
+      await client.query(
+        `
+        DELETE
+        FROM tickets_orders
+        WHERE "ticketId"=$1;
+      `,
+        [ticket.id]
+      );
+    }
+
+    console.log("DELETING FROM TICKETS artistId: ", artistId);
+    await client.query(
+      `
+      DELETE
+      FROM tickets
+      WHERE "artistId"=$1;
+    `,
+      [artistId]
+    );
+
+    const {
+      rows: [artist],
+    } = await client.query(
+      `
+    DELETE FROM artists
+    WHERE id=$1
+    RETURNING *;
+  `,
+      [artistId]
+    );
+    return artist;
+  } catch (error) {
+    console.error("Error in deleteArtist");
+    throw error;
+  }
+}
+
 // testing adapter functions
 async function testArtists() {
   const artists = await getArtists();
@@ -65,6 +109,9 @@ async function testArtists() {
     description: "a dead white dude",
   });
   console.log("updated artist: ", editedArtist);
+
+  const deletedArtist = await deleteArtist(2);
+  console.log("deleted artist id 2: ", deletedArtist);
 }
 
 testArtists();
@@ -72,4 +119,5 @@ testArtists();
 module.exports = {
   createArtists,
   updateArtist,
+  deleteArtist,
 };

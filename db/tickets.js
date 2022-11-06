@@ -122,8 +122,8 @@ async function getAllUnsoldTickets() {
 
 async function getTicketsByArtist(artistId) {
   try {
-    const unsoldTickets = await getAllUnsoldTickets();
-    const ticketsByArtist = unsoldTickets.filter((ticket) => {
+    const allTickets = await getAllTickets();
+    const ticketsByArtist = allTickets.filter((ticket) => {
       if (ticket.artistId === artistId) return true;
       return false;
     });
@@ -137,8 +137,8 @@ async function getTicketsByArtist(artistId) {
 
 async function getTicketsByVenue(venueId) {
   try {
-    const unsoldTickets = await getAllUnsoldTickets();
-    const ticketsByVenue = unsoldTickets.filter((ticket) => {
+    const allTickets = await getAllTickets();
+    const ticketsByVenue = allTickets.filter((ticket) => {
       if (ticket.venueId === venueId) return true;
       return false;
     });
@@ -171,7 +171,7 @@ async function testTickets() {
   console.log("Ticket by Venue id = 1: ", venueTicket);
 }
 
-testTickets();
+// testTickets();
 
 module.exports = {
   createTickets,
