@@ -123,7 +123,6 @@ async function getAllUnsoldTickets() {
 async function getTicketsByArtist(artistId) {
   try {
     const unsoldTickets = await getAllUnsoldTickets();
-    console.log("ARTIST ID", artistId);
     const ticketsByArtist = unsoldTickets.filter((ticket) => {
       if (ticket.artistId === artistId) return true;
       return false;
@@ -132,6 +131,21 @@ async function getTicketsByArtist(artistId) {
     return ticketsByArtist;
   } catch (error) {
     console.error("Error in getArtistTickets");
+    throw error;
+  }
+}
+
+async function getTicketsByVenue(venueId) {
+  try {
+    const unsoldTickets = await getAllUnsoldTickets();
+    const ticketsByVenue = unsoldTickets.filter((ticket) => {
+      if (ticket.venueId === venueId) return true;
+      return false;
+    });
+
+    return ticketsByVenue;
+  } catch (error) {
+    console.error("Error in getVenueTickets");
     throw error;
   }
 }
@@ -152,6 +166,9 @@ async function testTickets() {
 
   const artistTicket = await getTicketsByArtist(2);
   console.log("Ticket by Artist id = 2: ", artistTicket);
+
+  const venueTicket = await getTicketsByVenue(1);
+  console.log("Ticket by Venue id = 1: ", venueTicket);
 }
 
 testTickets();
@@ -163,4 +180,5 @@ module.exports = {
   updateTicket,
   deleteTicket,
   getTicketsByArtist,
+  getTicketsByVenue,
 };
