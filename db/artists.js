@@ -114,7 +114,7 @@ async function testArtists() {
   console.log("deleted artist id 2: ", deletedArtist);
 }
 
-testArtists();
+// testArtists();
 
 module.exports = {
   createArtists,

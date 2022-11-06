@@ -176,6 +176,7 @@ async function testTickets() {
 module.exports = {
   createTickets,
   getAllTickets,
+  getAllUnsoldTickets,
   getTicketById,
   updateTicket,
   deleteTicket,

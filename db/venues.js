@@ -19,4 +19,25 @@ async function createVenue({ name, city, state, capacity }) {
   }
 }
 
-module.exports = { createVenue };
+async function getVenues() {
+  try {
+    const { rows: venues } = await client.query(`
+        SELECT * 
+        FROM venues;
+      `);
+    return venues;
+  } catch (error) {
+    console.error("Error in getVenues");
+    throw error;
+  }
+}
+
+// testing adapter functions
+async function testVenues() {
+  const venues = await getVenues();
+  console.log("all venues: ", venues);
+}
+
+testVenues();
+
+module.exports = { createVenue, getVenues };
