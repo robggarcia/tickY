@@ -47,10 +47,10 @@ const createTables = async () => {
 
             CREATE TABLE artists(
               id SERIAL PRIMARY KEY,
-              genre VARCHAR(255),
-              image VARCHAR(255),
+              genre VARCHAR(255) NOT NULL,
+              image VARCHAR(255) NOT NULL,
               name VARCHAR(255) NOT NULL,
-              description VARCHAR(255)
+              description VARCHAR(255) NOT NULL
             );
 
             CREATE TABLE tickets(
@@ -212,10 +212,24 @@ async function createInitialArtists() {
         genre: "rap",
         description: "big time rapper from canada",
         image:
-          " https://i.pinimg.com/736x/52/ac/99/52ac99c15349b5d678001f83e4ac283e--laughing-so-hard-cant-stop-laughing.jpg",
+          "https://media.gq.com/photos/57d9b957436f78925d2b25a7/16:9/w_2560%2Cc_limit/GettyImages-603117346.jpg",
       },
-      { name: "Mozart", genre: "classical" },
-      { name: "Justin bieber" },
+      {
+        name: "Mozart",
+        genre: "classical",
+        image:
+          "https://cdn.getyourguide.com/img/tour/56cc30298b69d.jpeg/145.jpg",
+        description:
+          "Despite his short life, his rapid pace of composition resulted in more than 800 works of virtually every genre of his time.",
+      },
+      {
+        name: "Justin bieber",
+        genre: "pop",
+        image:
+          "https://cache.umusic.com/_sites/_halo/justinbieber/images/v3/jb-tour-header-mobile.jpg",
+        description:
+          "Canadian singer and teen idol whose fresh-faced good looks and appealing pop songs sparked a global craze beginning in 2009.",
+      },
     ];
     const artists = await Promise.all(artistsToCreate.map(createArtists));
 

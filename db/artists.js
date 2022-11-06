@@ -18,6 +18,27 @@ async function createArtists({ name, genre, image, description }) {
   }
 }
 
+async function getArtists() {
+  try {
+    const { rows: artists } = await client.query(`
+      SELECT * 
+      FROM artists;
+    `);
+    return artists;
+  } catch (error) {
+    console.error("Error in getArtists");
+    throw error;
+  }
+}
+
+// testing adapter functions
+async function testArtists() {
+  const artists = await getArtists();
+  console.log("all artists: ", artists);
+}
+
+testArtists();
+
 module.exports = {
   createArtists,
 };
