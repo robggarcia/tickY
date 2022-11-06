@@ -12,12 +12,12 @@ const dropTables = async () => {
   // drop all tables, in the correct order
   try {
     await client.query(`
-    DROP TABLE IF EXISTS tickets_orders;
-    DROP TABLE IF EXISTS orders;
-          DROP TABLE IF EXISTS tickets;
-          DROP TABLE IF EXISTS users;
-          DROP TABLE IF EXISTS artists;
-          DROP TABLE IF EXISTS venues;
+        DROP TABLE IF EXISTS tickets_orders;
+        DROP TABLE IF EXISTS orders;
+        DROP TABLE IF EXISTS tickets;
+        DROP TABLE IF EXISTS users;
+        DROP TABLE IF EXISTS artists;
+        DROP TABLE IF EXISTS venues;
     `);
   } catch (error) {
     console.error("Error while dropping tables");
@@ -30,54 +30,51 @@ const createTables = async () => {
   try {
     await client.query(`
             CREATE TABLE users(
-                id SERIAL PRIMARY KEY,
-                username VARCHAR(255) UNIQUE NOT NULL,
-                password VARCHAR(255) NOT NULL,
-                email VARCHAR(255) UNIQUE NOT NULL,
-                admin BOOLEAN DEFAULT false
-                );
+              id SERIAL PRIMARY KEY,
+              username VARCHAR(255) UNIQUE NOT NULL,
+              password VARCHAR(255) NOT NULL,
+              email VARCHAR(255) UNIQUE NOT NULL,
+              admin BOOLEAN DEFAULT false
+            );
                 
-                CREATE TABLE venues (
-                  id SERIAL PRIMARY KEY,
-                  name VARCHAR(255) UNIQUE NOT NULL,
-                  city VARCHAR(255) NOT NULL,
-                  state VARCHAR(255) NOT NULL,
-                  capacity INTEGER NOT NULL
-                );
+            CREATE TABLE venues (
+              id SERIAL PRIMARY KEY,
+              name VARCHAR(255) UNIQUE NOT NULL,
+              city VARCHAR(255) NOT NULL,
+              state VARCHAR(255) NOT NULL,
+              capacity INTEGER NOT NULL
+            );
 
-                CREATE TABLE artists(
-                  id SERIAL PRIMARY KEY,
-                  genre VARCHAR(255),
-                  image VARCHAR(255),
-                  name VARCHAR(255) NOT NULL,
-                  description VARCHAR(255)
-                );
+            CREATE TABLE artists(
+              id SERIAL PRIMARY KEY,
+              genre VARCHAR(255),
+              image VARCHAR(255),
+              name VARCHAR(255) NOT NULL,
+              description VARCHAR(255)
+            );
 
-                CREATE TABLE tickets(
-                id SERIAL PRIMARY KEY,
-                "artistId" INTEGER REFERENCES artists(id),
-                "venueId" INTEGER REFERENCES venues(id),
-                date DATE NOT NULL, 
-                price DECIMAL(10, 2) NOT NULL,
-                quantity INTEGER NOT NULL,
-                "seatTier" BOOLEAN DEFAULT false
+            CREATE TABLE tickets(
+              id SERIAL PRIMARY KEY,
+              "artistId" INTEGER REFERENCES artists(id),
+              "venueId" INTEGER REFERENCES venues(id),
+              date DATE NOT NULL, 
+              price DECIMAL(10, 2) NOT NULL,
+              quantity INTEGER NOT NULL,
+              "seatTier" BOOLEAN DEFAULT false
             );      
     
             CREATE TABLE orders(
               id SERIAL PRIMARY KEY,
               "userId" INTEGER REFERENCES users(id),
               purchased BOOLEAN DEFAULT false
-              );
+            );
               
-              
-              CREATE TABLE tickets_orders (
-                id SERIAL PRIMARY KEY,
-                "orderId" INTEGER REFERENCES orders(id),
-                "ticketId" INTEGER REFERENCES tickets(id),
-                quantity INTEGER NOT NULL
-                );
-                
-           
+            CREATE TABLE tickets_orders (
+              id SERIAL PRIMARY KEY,
+              "orderId" INTEGER REFERENCES orders(id),
+              "ticketId" INTEGER REFERENCES tickets(id),
+              quantity INTEGER NOT NULL
+            ); 
     `);
   } catch (error) {
     console.error("Error building tables");
@@ -88,6 +85,7 @@ const createTables = async () => {
 // create initial tickets data
 
 async function createInitialTickets() {
+  console.log("Creating initial tickets...");
   try {
     const ticketsToCreate = [
       {
@@ -143,8 +141,13 @@ async function createInitialTicketOrder() {
       },
       {
         ticketId: 2,
-        orderId: 2,
+        orderId: 1,
         quantity: 13,
+      },
+      {
+        ticketId: 2,
+        orderId: 2,
+        quantity: 4,
       },
       {
         ticketId: 3,
@@ -201,7 +204,7 @@ async function createInitialUsers() {
 }
 
 async function createInitialArtists() {
-  console.log("Starting to create users...");
+  console.log("Starting to create artists...");
   try {
     const artistsToCreate = [
       {

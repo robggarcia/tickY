@@ -28,7 +28,7 @@ async function createTickets({
 async function getAllTickets() {
   try {
     const { rows } = await client.query(`
-      SELECT tickets.*, venues.name AS venue, artists.name AS artist
+      SELECT tickets.*, venues.name AS venue, artists.name AS artist, artists.image AS image
       FROM tickets
       JOIN venues ON "venueId"=venues.id
       JOIN artists ON "artistId"=artists.id;
@@ -124,7 +124,7 @@ async function testTickets() {
   console.log("Deleted ticket: ", deletedTicket);
 }
 
-testTickets();
+// testTickets();
 
 module.exports = {
   createTickets,
