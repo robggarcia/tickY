@@ -1,7 +1,27 @@
 const faker = require("faker");
 const { createArtist } = require("../db/artists");
 const { createTickets } = require("../db/tickets");
+const { createUser } = require("../db/users");
 const { createVenue } = require("../db/venues");
+
+const createFakeUser = async (
+  username = faker.internet.userName(),
+  password = faker.internet.password(),
+  email = faker.internet.email(),
+  admin = faker.datatype.boolean()
+) => {
+  const fakeUserData = {
+    username,
+    password,
+    email,
+    admin,
+  };
+  const user = await createUser(fakeUserData);
+  if (!user) {
+    throw new Error("createUser didn't return a user");
+  }
+  return user;
+};
 
 const createFakeArtist = async (
   name = faker.name.findName(),
@@ -48,4 +68,9 @@ const createFakeTicket = async () => {
   return ticket;
 };
 
-module.exports = { createFakeArtist, createFakeTicket, createFakeVenue };
+module.exports = {
+  createFakeUser,
+  createFakeArtist,
+  createFakeTicket,
+  createFakeVenue,
+};
