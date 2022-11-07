@@ -2,7 +2,12 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const faker = require("faker");
 const client = require("../../db");
-const { createUser, getUserById, getUser } = require("../../db/users");
+const {
+  createUser,
+  getUserById,
+  getUser,
+  getAllUsers,
+} = require("../../db/users");
 const { createFakeUser } = require("../helpers");
 
 describe("DB Users", () => {
@@ -126,6 +131,19 @@ describe("DB Users", () => {
       const fakeUser = await createFakeUser("Jonathan");
       const user = await getUserById(fakeUser.id);
       expect(user.password).toBeFalsy();
+    });
+  });
+
+  describe("getAllUsers", () => {
+    it("selects and returns an array of all users", async () => {
+      const fakeUser1 = await createFakeUser();
+      const fakeUser2 = await createFakeUser();
+      const fakeUser3 = await createFakeUser();
+      const users = await getAllUsers();
+      const { rows: usersFromDatabase } = await client.query(`
+        SELECT * FROM users;
+    `);
+      expect(users).toEqual(usersFromDatabase);
     });
   });
 });
