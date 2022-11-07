@@ -1,8 +1,8 @@
 const { create } = require("domain");
 const client = require(".");
-const { createArtists } = require("./artists");
+const { createArtist } = require("./artists");
 const { createOrder } = require("./order");
-const { createTickets } = require("./tickets");
+const { createTicket } = require("./tickets");
 const { createTicketOrders } = require("./tickets_orders");
 const { createUser } = require("./users");
 const { createVenue } = require("./venues");
@@ -122,7 +122,7 @@ async function createInitialTickets() {
       },
     ];
 
-    const tickets = await Promise.all(ticketsToCreate.map(createTickets));
+    const tickets = await Promise.all(ticketsToCreate.map(createTicket));
 
     console.log("tickets Created:");
     console.log(tickets);
@@ -236,7 +236,7 @@ async function createInitialArtists() {
           "Canadian singer and teen idol whose fresh-faced good looks and appealing pop songs sparked a global craze beginning in 2009.",
       },
     ];
-    const artists = await Promise.all(artistsToCreate.map(createArtists));
+    const artists = await Promise.all(artistsToCreate.map(createArtist));
 
     console.log("Artists created:");
     console.log(artists);

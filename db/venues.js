@@ -38,6 +38,6 @@ async function testVenues() {
   console.log("all venues: ", venues);
 }
 
-// testVenues();
+testVenues();
 
 module.exports = { createVenue, getVenues };

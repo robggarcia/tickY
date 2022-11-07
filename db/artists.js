@@ -2,7 +2,7 @@ const { response } = require("express");
 const client = require(".");
 const { getTicketsByArtist } = require("./tickets");
 
-async function createArtists({ name, genre, image, description }) {
+async function createArtist({ name, genre, image, description }) {
   try {
     const result = await client.query(
       `
@@ -19,7 +19,7 @@ async function createArtists({ name, genre, image, description }) {
   }
 }
 
-async function getArtists() {
+async function getArtist() {
   try {
     const { rows: artists } = await client.query(`
       SELECT * 
@@ -27,7 +27,7 @@ async function getArtists() {
     `);
     return artists;
   } catch (error) {
-    console.error("Error in getArtists");
+    console.error("Error in getArtist");
     throw error;
   }
 }
@@ -100,7 +100,7 @@ async function deleteArtist(artistId) {
 
 // testing adapter functions
 async function testArtists() {
-  const artists = await getArtists();
+  const artists = await getArtist();
   console.log("all artists: ", artists);
 
   const editedArtist = await updateArtist({
@@ -117,8 +117,8 @@ async function testArtists() {
 // testArtists();
 
 module.exports = {
-  getArtists,
-  createArtists,
+  getArtist,
+  createArtist,
   updateArtist,
   deleteArtist,
 };

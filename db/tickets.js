@@ -1,7 +1,7 @@
 const { response } = require("express");
 const client = require(".");
 
-async function createTickets({
+async function createTicket({
   artistId,
   venueId,
   date,
@@ -174,7 +174,7 @@ async function testTickets() {
 // testTickets();
 
 module.exports = {
-  createTickets,
+  createTicket,
   getAllTickets,
   getAllUnsoldTickets,
   getTicketById,

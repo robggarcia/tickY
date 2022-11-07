@@ -1,5 +1,5 @@
 const faker = require("faker");
-const { createArtists } = require("../db/artists");
+const { createArtist } = require("../db/artists");
 const { createTickets } = require("../db/tickets");
 
 const createFakeArtist = async (
@@ -8,7 +8,7 @@ const createFakeArtist = async (
   image = faker.image.imageUrl(),
   description = faker.lorem.sentence()
 ) => {
-  const artist = await createArtists({ name, genre, image, description });
+  const artist = await createArtist({ name, genre, image, description });
   console.log("FAKE ARTIST CREATED: ", artist);
   if (!artist) {
     throw new Error("createArtists didn't return a artist");

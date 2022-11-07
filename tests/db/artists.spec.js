@@ -1,14 +1,14 @@
 require("dotenv").config();
 const faker = require("faker");
 const client = require("../../db");
-const { getArtists, updateArtist } = require("../../db/artists");
+const { getArtist, updateArtist } = require("../../db/artists");
 const { createFakeArtist } = require("../helpers");
 
 describe("DB Artists", () => {
   describe("getArtists", () => {
     it("selects and returns an array of all artists", async () => {
       await createFakeArtist();
-      const artists = await getArtists();
+      const artists = await getArtist();
       const { rows: artistsFromDatabase } = await client.query(`
             SELECT * FROM artists;`);
       expect(artists).toEqual(artistsFromDatabase);
