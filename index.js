@@ -1,5 +1,3 @@
-// GET /api/books
-
 const express = require("express");
 const apiRouter = require("./api");
 
