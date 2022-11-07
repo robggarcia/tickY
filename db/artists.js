@@ -117,6 +117,7 @@ async function testArtists() {
 // testArtists();
 
 module.exports = {
+  getArtists,
   createArtists,
   updateArtist,
   deleteArtist,
