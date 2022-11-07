@@ -40,7 +40,7 @@ describe("DB Venues", () => {
         state: faker.address.state(),
         capacity: faker.datatype.number(1000),
       };
-      const venue = await getArtistByName(fakeVenue.name);
+      const venue = await getVenueByName(fakeVenue.name);
       expect(venue.id).toEqual(fakeVenue.id);
     });
   });
