@@ -51,14 +51,15 @@ const createFakeVenue = async (
   return venue;
 };
 
-const createFakeTicket = async () => {
+const createFakeTicket = async ({ artistId, venueId }) => {
   const fakeTicketData = {
-    venueId: faker.datatype.number(100),
     date: "2024-09-13",
     quantity: faker.datatype.number(100),
     seatTier: faker.datatype.boolean(),
     price: faker.datatype.number(100),
   };
+  fakeTicketData.artistId = artistId;
+  fakeTicketData.venueId = venueId;
   console.log("fakeTicketData", fakeTicketData);
   const ticket = await createTickets(fakeTicketData);
   console.log("NEW TICKET", ticket);
@@ -66,6 +67,21 @@ const createFakeTicket = async () => {
     throw new Error("createTickets didn't return a ticket");
   }
   return ticket;
+};
+
+const createFakeTicketWithArtistAndVenue = async () => {
+  const fakeArtist = await createFakeArtist();
+  const fakeVenue = await createFakeVenue();
+  const fakeTicket = await createFakeTicket({
+    artistId: fakeArtist.id,
+    venueId: fakeVenue.id,
+  });
+
+  return {
+    fakeArtist,
+    fakeVenue,
+    fakeTicket,
+  };
 };
 
 module.exports = {
