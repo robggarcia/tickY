@@ -20,12 +20,22 @@ describe("DB Tickets_Orders", () => {
     fakeUser = await createFakeUser();
     fakeTicket = await createFakeTicket();
     fakeOrder = await createFakeOrder(fakeUser.id);
-
     ticketOrderData = {
       ticketId: fakeTicket.id,
       orderId: fakeOrder.id,
       quantity: faker.random.number(10),
     };
+  });
+
+  afterAll(async () => {
+    client.query(`
+        DELETE FROM tickets_orders;
+        DELETE FROM orders;
+        DELETE FROM tickets;
+        DELETE FROM users;
+        DELETE FROM artists;
+        DELETE FROM venues;   
+    `);
   });
 
   describe("getTicketOrderById", () => {

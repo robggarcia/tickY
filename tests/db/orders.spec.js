@@ -1,64 +1,69 @@
 // Expect Helper Functions
+require("dotenv").config();
+const faker = require("faker");
+const client = require("../../db");
+const { createFakeOrder } = require("../helpers");
+const { getAllOrders, getOrderById, updateOrder } = require("../../db/order");
 
-const { createFakeUser } = require("../helpers");
-
-function expectOrdersToContainOrder(order, fakeOrder) {
-  expect(order).toEqual(expect.any(Array));
-  const order = order.find((order) => order.id === fakeOrder.id);
-  expect(order.id).toEqual(fakeOrder.id);
-  expect(order.name).toEqual(fakeOrder.name);
-  expect(order.isPublic).toEqual(fakeOrder.isPublic);
-  expect(order.creatorId).toEqual(fakeOrder.creatorId);
-  expect(order.goal).toEqual(fakeOrder.goal);
-}
-
-function expectOrdersNotToContainDuplicates(orders, fakeOrder) {
-  // Use filter to find out how many orders with the id
-  // of our initial fake order are in the results.
-  const matchingOrders = orders.filter((order) => order.id === fakeOrder.id);
-  // There should only be one.
-  expect(matchingOrders.length).toEqual(1);
-}
-
-// Tests start here
 describe("DB Orders", () => {
-  let fakeTicket,
-    fakeTicket2,
-    fakeSoldOutTicket,
-    fakeArtist,
-    fakeArtist2,
-    fakeSoldOutArtist,
-    fakeVenue,
-    fakeVenue2,
-    fakeSoldOutVenue,
-    fakeTicketOrder,
-    fakeTicketOrder2;
+  let fakeUser;
 
-  beforeEach(async () => {
-    const fakeData = await createFakeTicketWithArtistAndVenue();
-    fakeTicket = fakeData.fakeTickets[0];
-    fakeTicket2 = fakeData.fakeTickets[1];
-    fakeSoldOutTicket = fakeData.fakeTickets[2];
-    fakeArtist = fakeData.fakeArtists[0];
-    fakeArtist2 = fakeData.fakeArtists[1];
-    fakeSoldOutArtist = fakeData.fakeArtists[2];
-    fakeVenue = fakeData.fakeVenues[0];
-    fakeVenue2 = fakeData.fakeVenues[1];
-    fakeSoldOutVenue = fakeData.fakeVenues[2];
-    fakeTicketOrder = fakeData.fakeTicketOrders[0];
-    fakeTicketOrder2 = fakeData.fakeTicketOrders[1];
+  beforeAll(async () => {
+    fakeUser = await createFakeUser();
   });
 
   afterAll(async () => {
     client.query(`
-      DELETE FROM artists;
-      DELETE FROM venues;
-      DELETE FROM tickets;
+      DELETE FROM orders;
+      DELETE FROM users;
     `);
   });
 
-  describe("getAllOrders", () => {});
-  describe("getOrderById", () => {});
-  describe("createOrder", () => {});
-  describe("updateOrder", () => {});
+  describe("getAllOrders", () => {
+    it("selects and returns an array of all activities", async () => {
+      await createFakeOrder(fakeUser.id);
+      const orders = await getAllOrders();
+      const { rows: ordersFromDatabase } = await client.query(`
+        SELECT * FROM orders;
+      `);
+      expect(orders).toEqual(ordersFromDatabase);
+    });
+  });
+
+  describe("getOrderById(id)", () => {
+    it("gets orders by their id", async () => {
+      const fakeOrder = await createFakeOrder(fakeUser.id);
+      const order = await getOrderById(fakeOrder.id);
+
+      expect(order.id).toEqual(fakeOrder.id);
+      expect(order.userId).toEqual(fakeOrder.userId);
+      expect(order.purchased).toEqual(fakeOrder.purchased);
+    });
+  });
+
+  describe("createOrder({ userId, purchased })", () => {
+    it("Creates and returns the new order", async () => {
+      const orderToCreate = {
+        userId: fakeOrder.id,
+        purchased: faker.datatype.boolean(),
+      };
+      const createdOrder = await createActivity(orderToCreate);
+      expect(createdOrder.userId).toBe(orderToCreate.userId);
+      expect(createdOrder.purchased).toBe(orderToCreate.purchased);
+    });
+  });
+
+  describe("updateOrder({id, purchased})", () => {
+    it("Updates purchased without affecting the ID. Returns the updated Order.", async () => {
+      const fakeOrder = await createFakeOrder(fakeUser.id, false);
+      const purchased = true;
+      const updatedOrder = await updateOrder({
+        id: fakeOrder.id,
+        purchased,
+      });
+      expect(updatedOrder.id).toEqual(fakeOrder.id);
+      expect(updatedOrder.purchased).toEqual(purchased);
+      expect(updatedOrder.userId).toEqual(fakeOrder.userId);
+    });
+  });
 });
