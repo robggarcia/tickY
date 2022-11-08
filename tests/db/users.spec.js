@@ -119,6 +119,7 @@ describe("DB Users", () => {
       expect(user.password).toBeFalsy();
     });
   });
+
   describe("getUserById", () => {
     it("Gets a user based on the user Id", async () => {
       const fakeUser = await createFakeUser("Jacob");
@@ -144,6 +145,29 @@ describe("DB Users", () => {
         SELECT * FROM users;
     `);
       expect(users).toEqual(usersFromDatabase);
+    });
+  });
+
+  describe("updateUser", () => {
+    it("Updates name without affecting the ID. Returns the updated User.", async () => {
+      const fakeUser = await createFakeUser();
+      const name = "Mary Poppins";
+      const updatedUser = await updateUser({ id: fakeUser.id, name });
+      expect(updatedUser.id).toEqual(fakeUser.id);
+      expect(updatedUser.name).toEqual(name);
+      expect(updatedUser.email).toEqual(fakeUser.email);
+    });
+
+    it("Updates description without affecting the ID. Returns the updated User.", async () => {
+      const fakeUser = await createFakeUser();
+      const email = "kingcity@gmail.com";
+      const updatedUser = await updateUser({
+        id: fakeUser.id,
+        email,
+      });
+      expect(updatedUser.id).toEqual(fakeUser.id);
+      expect(updatedUser.name).toEqual(fakeUser.name);
+      expect(updatedUser.email).toEqual(email);
     });
   });
 });
