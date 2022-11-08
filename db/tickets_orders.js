@@ -31,4 +31,5 @@ module.exports = {
   getTicketOrderById,
   addTicketToOrder,
   editTicketOrder,
+  deleteTicketOrder,
 };
