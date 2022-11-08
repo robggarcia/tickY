@@ -32,7 +32,7 @@ describe("DB Artists", () => {
     });
   });
 
-  describe("getArtistByName", () => {
+  xdescribe("getArtistByName", () => {
     it("gets an artist by their name", async () => {
       const fakeArtist = {
         name: "Wu Tang",
