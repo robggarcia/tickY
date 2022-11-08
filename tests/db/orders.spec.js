@@ -1,7 +1,7 @@
 require("dotenv").config();
 const faker = require("faker");
 const client = require("../../db");
-const { createFakeOrder } = require("../helpers");
+const { createFakeOrder, createFakeUser } = require("../helpers");
 const { getAllOrders, getOrderById, updateOrder } = require("../../db/order");
 
 describe("DB Orders", () => {
