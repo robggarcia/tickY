@@ -1,6 +1,8 @@
 const faker = require("faker");
 const { createArtist } = require("../db/artists");
+const { createOrder } = require("../db/order");
 const { createTicket } = require("../db/tickets");
+const { createTicketOrder } = require("../db/tickets_orders");
 const { createUser } = require("../db/users");
 const { createVenue } = require("../db/venues");
 
@@ -30,7 +32,6 @@ const createFakeArtist = async (
   description = faker.lorem.sentence()
 ) => {
   const artist = await createArtist({ name, genre, image, description });
-  console.log("FAKE ARTIST CREATED: ", artist);
   if (!artist) {
     throw new Error("createArtists didn't return a artist");
   }
@@ -44,7 +45,6 @@ const createFakeVenue = async (
   capacity = faker.datatype.number(1000)
 ) => {
   const venue = await createVenue({ name, city, state, capacity });
-  console.log("FAKE VENUE CREATED: ", venue);
   if (!venue) {
     throw new Error("createVenue didn't return a venue");
   }
@@ -60,9 +60,7 @@ const createFakeTicket = async ({ artistId, venueId }) => {
   };
   fakeTicketData.artistId = artistId;
   fakeTicketData.venueId = venueId;
-  console.log("fakeTicketData", fakeTicketData);
   const ticket = await createTicket(fakeTicketData);
-  console.log("NEW TICKET", ticket);
   if (!ticket) {
     throw new Error("createTicket didn't return a ticket");
   }
@@ -74,24 +72,22 @@ const createFakeOrder = async (
   purchased = faker.datatype.boolean()
 ) => {
   const order = await createOrder({ userId, purchased });
-  console.log("FAKE Order CREATED: ", order);
   if (!order) {
     throw new Error("createOrder didn't return a order");
   }
-  return venue;
+  return order;
 };
 
-const createFakeTicketOrder = async (
+const createFakeTicketOrder = async ({
   orderId,
   ticketId,
-  quantity = faker.datatype.number(10)
-) => {
-  const order = await createTicketOrders({ orderId, ticketId, quantity });
-  console.log("FAKE Ticket_Order CREATED: ", order);
+  quantity = faker.datatype.number(10),
+}) => {
+  const order = await createTicketOrder({ orderId, ticketId, quantity });
   if (!order) {
     throw new Error("createTicketOrders didn't return a ticket_order");
   }
-  return venue;
+  return order;
 };
 
 const createFakeTicketWithArtistAndVenue = async (numTickets = 2) => {
@@ -115,7 +111,7 @@ const createFakeTicketWithArtistAndVenue = async (numTickets = 2) => {
     fakeTicket.artist = fakeArtist;
     fakeTicket.venue = fakeVenue;
     fakeTickets.push(fakeTicket);
-    const fakeOrder = await createFakeOrder();
+    const fakeOrder = await createFakeOrder(fakeUser.id);
     const fakeTicketOrder = await createFakeTicketOrder({
       orderId: fakeOrder.id,
       ticketId: fakeTicket.id,
@@ -124,7 +120,7 @@ const createFakeTicketWithArtistAndVenue = async (numTickets = 2) => {
   }
 
   const fakeSoldOutArtist = await createFakeArtist();
-  fakeArtists.push(fakeArfakeSoldOutArtisttist);
+  fakeArtists.push(fakeSoldOutArtist);
   const fakeSoldOutVenue = await createFakeVenue();
   fakeVenues.push(fakeSoldOutVenue);
   const fakeSoldOutTicket = await createFakeTicket({
@@ -141,6 +137,7 @@ const createFakeTicketWithArtistAndVenue = async (numTickets = 2) => {
     fakeVenues,
     fakeTickets,
     fakeSoldOutTicket,
+    fakeTicketOrders,
   };
 };
 

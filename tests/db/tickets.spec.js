@@ -1,6 +1,14 @@
 require("dotenv").config();
+const faker = require("faker");
 const client = require("../../db");
-const { getAllTickets, getAllUnsoldTickets } = require("../../db/tickets");
+const {
+  getAllTickets,
+  getAllUnsoldTickets,
+  getTicketsByArtist,
+  getTicketsByVenue,
+  deleteTicket,
+  updateTicket,
+} = require("../../db/tickets");
 const {
   createFakeTicket,
   createFakeTicketWithArtistAndVenue,
@@ -111,11 +119,14 @@ describe("DB Tickets", () => {
 
   describe("getAllTickets", () => {
     it("selects and returns an array of all tickets", async () => {
-      await createFakeTicket();
       const tickets = await getAllTickets();
       console.log("GET ALL TICKETS: ", tickets);
       const { rows: ticketsFromDatabase } = await client.query(`
-            SELECT * FROM tickets;`);
+          SELECT tickets.*, venues.name AS venue, artists.name AS artist, artists.image AS image
+          FROM tickets
+          JOIN venues ON "venueId"=venues.id
+          JOIN artists ON "artistId"=artists.id;
+        `);
       expect(tickets).toEqual(ticketsFromDatabase);
     });
 
@@ -268,7 +279,6 @@ describe("DB Tickets", () => {
 
   describe("updateTicket", () => {
     it("Returns the updated ticket", async () => {
-      const fakeTicket = await createFakeTicket();
       const updatedTicket = await updateTicket({
         id: fakeTicket.id,
         date: "2024-01-01",
@@ -280,9 +290,8 @@ describe("DB Tickets", () => {
     });
 
     it("Updates the ticket date, quantity, seatTier, or price as necessary", async () => {
-      const fakeTicket = await createFakeTicket();
       const quantity = faker.datatype.number(100);
-      const price = faker.datatype.number(100);
+      const price = faker.commerce.price();
       const updatedTicket = await updateTicket({
         id: fakeTicket.id,
         seatTier: false,
@@ -295,21 +304,19 @@ describe("DB Tickets", () => {
     });
 
     it("Does not update fields that are not passed in", async () => {
-      const fakeTicket = await createFakeTicket();
-      const price = faker.datatype.number(100);
+      const price = faker.commerce.price();
       const updatedTicket = await updateTicket({
         id: fakeTicket.id,
         price,
       });
       expect(updatedTicket.seatTier).toBe(fakeTicket.seatTier);
-      expect(updatedTicket.quantity).toBe(fakeTicket);
+      expect(updatedTicket.quantity).toBe(fakeTicket.quantity);
       expect(updatedTicket.price).toBe(price);
     });
   });
 
   describe("deleteTicket", () => {
     it("removes ticket from database", async () => {
-      const fakeTicket = await createFakeTicket();
       await deleteTicket(fakeTicket.id);
       const {
         rows: [ticket],
@@ -325,12 +332,7 @@ describe("DB Tickets", () => {
     });
 
     it("Deletes all the tickets_orders whose ticket is the one being deleted.", async () => {
-      const { fakeTickets, fakeTicketOrders } =
-        await createFakeTicketWithArtistAndVenue();
-      const fakeTicket = fakeTickets[0];
-      const fakeTicketActivity = fakeTicketActivities[0];
       await deleteTicket(fakeTicket.id);
-
       const {
         rows: [queriedTicketOrders],
       } = await client.query(
@@ -339,7 +341,7 @@ describe("DB Tickets", () => {
           from tickets_orders
           WHERE id = $1;
         `,
-        [fakeTicketActivity.id]
+        [fakeTicketOrder.id]
       );
 
       expect(queriedTicketOrders).toBeFalsy();

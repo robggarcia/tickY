@@ -1,7 +1,7 @@
 const { response } = require("express");
 const client = require(".");
 
-async function createTicketOrders({ orderId, ticketId, quantity }) {
+async function createTicketOrder({ orderId, ticketId, quantity }) {
   try {
     const result = await client.query(
       `
@@ -19,5 +19,5 @@ async function createTicketOrders({ orderId, ticketId, quantity }) {
 }
 
 module.exports = {
-  createTicketOrders,
+  createTicketOrder,
 };
