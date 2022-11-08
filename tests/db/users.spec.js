@@ -170,4 +170,6 @@ describe("DB Users", () => {
       expect(updatedUser.email).toEqual(email);
     });
   });
+
+  describe("getOrdersByUserId", () => {});
 });

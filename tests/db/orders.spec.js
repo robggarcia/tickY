@@ -22,15 +22,43 @@ function expectOrdersNotToContainDuplicates(orders, fakeOrder) {
 
 // Tests start here
 describe("DB Orders", () => {
-  let fakeuser,
-    fakeOrder,
-    fakeVenue,
-    fakeTicket,
-    fakeArtist1,
+  let fakeTicket,
+    fakeTicket2,
+    fakeSoldOutTicket,
+    fakeArtist,
     fakeArtist2,
-    fakeTicketOrder;
+    fakeSoldOutArtist,
+    fakeVenue,
+    fakeVenue2,
+    fakeSoldOutVenue,
+    fakeTicketOrder,
+    fakeTicketOrder2;
 
   beforeEach(async () => {
-    fakeUser = await createFakeUser();
+    const fakeData = await createFakeTicketWithArtistAndVenue();
+    fakeTicket = fakeData.fakeTickets[0];
+    fakeTicket2 = fakeData.fakeTickets[1];
+    fakeSoldOutTicket = fakeData.fakeTickets[2];
+    fakeArtist = fakeData.fakeArtists[0];
+    fakeArtist2 = fakeData.fakeArtists[1];
+    fakeSoldOutArtist = fakeData.fakeArtists[2];
+    fakeVenue = fakeData.fakeVenues[0];
+    fakeVenue2 = fakeData.fakeVenues[1];
+    fakeSoldOutVenue = fakeData.fakeVenues[2];
+    fakeTicketOrder = fakeData.fakeTicketOrders[0];
+    fakeTicketOrder2 = fakeData.fakeTicketOrders[1];
   });
+
+  afterAll(async () => {
+    client.query(`
+      DELETE FROM artists;
+      DELETE FROM venues;
+      DELETE FROM tickets;
+    `);
+  });
+
+  describe("getAllOrders", () => {});
+  describe("getOrderById", () => {});
+  describe("createOrder", () => {});
+  describe("updateOrder", () => {});
 });

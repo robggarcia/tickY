@@ -18,6 +18,17 @@ async function createTicketOrder({ orderId, ticketId, quantity }) {
   }
 }
 
+async function getTicketOrderById(id) {}
+
+async function addTicketToOrder({ orderId, ticketId, quantity }) {}
+
+async function editTicketOrder({ id, quantity }) {}
+
+async function deleteTicketOrder(id) {}
+
 module.exports = {
   createTicketOrder,
+  getTicketOrderById,
+  addTicketToOrder,
+  editTicketOrder,
 };

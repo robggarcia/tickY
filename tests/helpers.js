@@ -146,5 +146,6 @@ module.exports = {
   createFakeArtist,
   createFakeTicket,
   createFakeVenue,
+  createFakeOrder,
   createFakeTicketWithArtistAndVenue,
 };
