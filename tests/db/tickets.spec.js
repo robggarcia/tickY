@@ -141,6 +141,12 @@ describe("DB Tickets", () => {
       expectTicketToContainArtist(ticket, fakeArtist);
     });
 
+    it("includes the venue", async () => {
+      const tickets = await getAllTickets();
+      const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
+      expectTicketToContainVenue(ticket, fakeVenue);
+    });
+
     it("should not include a ticket more than once", async () => {
       const tickets = await getAllTickets();
       expectTicketsNotToContainDuplicates(tickets, fakeTicket);
@@ -174,6 +180,12 @@ describe("DB Tickets", () => {
       const tickets = await getAllUnsoldTickets();
       const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
       expectTicketToContainArtist(ticket, fakeArtist);
+    });
+
+    it("includes the venue", async () => {
+      const tickets = await getAllTickets();
+      const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
+      expectTicketToContainVenue(ticket, fakeVenue);
     });
 
     it("should not include a ticket more than once", async () => {
@@ -217,6 +229,12 @@ describe("DB Tickets", () => {
       expectTicketToContainArtist(ticket, fakeArtist);
     });
 
+    it("includes the venue", async () => {
+      const tickets = await getAllTickets();
+      const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
+      expectTicketToContainVenue(ticket, fakeVenue);
+    });
+
     it("should not include a ticket more than once", async () => {
       const tickets = await getTicketsByArtist(fakeArtist.id);
       expectTicketsNotToContainDuplicates(tickets, fakeTicket);
@@ -256,6 +274,12 @@ describe("DB Tickets", () => {
       const tickets = await getTicketsByVenue(fakeVenue.id);
       const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
       expectTicketToContainArtist(ticket, fakeArtist);
+    });
+
+    it("includes the venue", async () => {
+      const tickets = await getAllTickets();
+      const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
+      expectTicketToContainVenue(ticket, fakeVenue);
     });
 
     it("should not include a ticket more than once", async () => {
