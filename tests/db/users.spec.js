@@ -2,12 +2,14 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const faker = require("faker");
 const client = require("../../db");
+
 const {
   createUser,
   getUserById,
   getUser,
   getAllUsers,
 } = require("../../db/users");
+
 const { createFakeUser } = require("../helpers");
 
 describe("DB Users", () => {

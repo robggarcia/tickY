@@ -111,9 +111,9 @@ describe("DB Tickets", () => {
 
   afterAll(async () => {
     client.query(`
+      DELETE FROM tickets;
       DELETE FROM artists;
       DELETE FROM venues;
-      DELETE FROM tickets;
     `);
   });
 

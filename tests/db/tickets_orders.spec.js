@@ -1,12 +1,14 @@
 require("dotenv").config();
 const faker = require("faker");
 const client = require("../../db");
+
 const {
   getTicketOrderById,
   addTicketToOrder,
   editTicketOrder,
   deleteTicketOrder,
 } = require("../../db/tickets_orders");
+
 const {
   createFakeTicket,
   createFakeOrder,

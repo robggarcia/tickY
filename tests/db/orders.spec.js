@@ -1,4 +1,3 @@
-// Expect Helper Functions
 require("dotenv").config();
 const faker = require("faker");
 const client = require("../../db");
