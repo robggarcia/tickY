@@ -8,6 +8,7 @@ const {
   getUserById,
   getUser,
   getAllUsers,
+  updateUser,
 } = require("../../db/users");
 
 const { createFakeUser } = require("../helpers");
@@ -153,10 +154,10 @@ describe("DB Users", () => {
   describe("updateUser", () => {
     it("Updates name without affecting the ID. Returns the updated User.", async () => {
       const fakeUser = await createFakeUser();
-      const name = "Mary Poppins";
-      const updatedUser = await updateUser({ id: fakeUser.id, name });
+      const username = "Mary Poppins";
+      const updatedUser = await updateUser({ id: fakeUser.id, username });
       expect(updatedUser.id).toEqual(fakeUser.id);
-      expect(updatedUser.name).toEqual(name);
+      expect(updatedUser.username).toEqual(username);
       expect(updatedUser.email).toEqual(fakeUser.email);
     });
 
@@ -168,10 +169,8 @@ describe("DB Users", () => {
         email,
       });
       expect(updatedUser.id).toEqual(fakeUser.id);
-      expect(updatedUser.name).toEqual(fakeUser.name);
+      expect(updatedUser.username).toEqual(fakeUser.username);
       expect(updatedUser.email).toEqual(email);
     });
   });
-
-  describe("getOrdersByUserId", () => {});
 });

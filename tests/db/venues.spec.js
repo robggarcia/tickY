@@ -1,7 +1,7 @@
 require("dotenv").config();
 const faker = require("faker");
 const client = require("../../db");
-const { getVenues, createVenue } = require("../../db/venues");
+const { getVenues, createVenue, updateVenue } = require("../../db/venues");
 const { createFakeVenue } = require("../helpers");
 
 describe("DB Venues", () => {

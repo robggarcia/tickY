@@ -32,6 +32,8 @@ async function getVenues() {
   }
 }
 
+async function updateVenue(id) {}
+
 // testing adapter functions
 async function testVenues() {
   const venues = await getVenues();
@@ -40,4 +42,4 @@ async function testVenues() {
 
 // testVenues();
 
-module.exports = { createVenue, getVenues };
+module.exports = { createVenue, getVenues, updateVenue };

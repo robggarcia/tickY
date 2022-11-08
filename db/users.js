@@ -95,10 +95,34 @@ async function getUserByUsername(userName) {
   }
 }
 
+async function updateUser({ id, ...fields }) {
+  try {
+    const setString = Object.keys(fields)
+      .map((key, idx) => `"${key}"=$${idx + 2}`)
+      .join(", ");
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+          UPDATE users
+          SET ${setString}
+          WHERE id=$1
+          RETURNING *;
+      `,
+      [id, ...Object.values(fields)]
+    );
+    return user;
+  } catch (error) {
+    console.log("Error in updateArtist");
+    throw error;
+  }
+}
+
 module.exports = {
   getAllUsers,
   createUser,
   getUser,
   getUserById,
   getUserByUsername,
+  updateUser,
 };
