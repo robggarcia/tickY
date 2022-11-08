@@ -5,6 +5,7 @@ const { createTicket } = require("../db/tickets");
 const { createTicketOrder } = require("../db/tickets_orders");
 const { createUser } = require("../db/users");
 const { createVenue } = require("../db/venues");
+const jwt = require("jsonwebtoken");
 
 const createFakeUser = async (
   username = faker.internet.userName(),
@@ -23,6 +24,21 @@ const createFakeUser = async (
     throw new Error("createUser didn't return a user");
   }
   return user;
+};
+
+const createFakeUserWithToken = async (username) => {
+  const fakeUser = await createFakeUser(username);
+
+  const token = jwt.sign(
+    { id: fakeUser.id, username: fakeUser.username },
+    JWT_SECRET,
+    { expiresIn: "1w" }
+  );
+
+  return {
+    fakeUser,
+    token,
+  };
 };
 
 const createFakeArtist = async (
@@ -143,6 +159,7 @@ const createFakeTicketWithArtistAndVenue = async (numTickets = 2) => {
 
 module.exports = {
   createFakeUser,
+  createFakeUserWithToken,
   createFakeArtist,
   createFakeTicket,
   createFakeVenue,
