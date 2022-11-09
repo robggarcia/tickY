@@ -25,14 +25,48 @@ async function createTicket({
   }
 }
 
+async function attachArtistAndVenueToTicket(ticket) {
+  const {
+    rows: [artist],
+  } = await client.query(
+    `
+    SELECT *
+    FROM artists
+    WHERE id=$1;
+  `,
+    [ticket.artistId]
+  );
+  const {
+    rows: [venue],
+  } = await client.query(
+    `
+    SELECT *
+    FROM venues
+    WHERE id=$1;
+  `,
+    [ticket.venueId]
+  );
+
+  ticket.artist = artist;
+  ticket.venue = venue;
+  return ticket;
+}
+
 async function getAllTickets() {
   try {
-    const { rows: tickets } = await client.query(`
+    /* const { rows: tickets } = await client.query(`
       SELECT tickets.*, venues.name AS venue, artists.name AS artist, artists.image AS image
       FROM tickets
       JOIN venues ON "venueId"=venues.id
       JOIN artists ON "artistId"=artists.id;
+    `); */
+    const { rows: tickets } = await client.query(`
+      SELECT *
+      FROM tickets;
     `);
+    for (let ticket of tickets) {
+      ticket = await attachArtistAndVenueToTicket(ticket);
+    }
     return tickets;
   } catch (error) {
     console.error("Error in getAllTickets");
