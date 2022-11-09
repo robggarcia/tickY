@@ -34,7 +34,25 @@ async function getTicketOrderById(id) {
 
 async function addTicketToOrder({ orderId, ticketId, quantity }) {}
 
-async function editTicketOrder({ id, quantity }) {}
+async function editTicketOrder({ id, quantity }) {
+  try {
+    const {
+      rows: [ticket],
+    } = await client.query(
+      `
+          UPDATE tickets
+          SET quantity=$2
+          WHERE id=$1
+          RETURNING *;
+      `,
+      [id, quantity]
+    );
+    return ticket;
+  } catch (error) {
+    console.log("Error in editTicketOrder");
+    throw error;
+  }
+}
 
 async function deleteTicketOrder(id) {
   try {

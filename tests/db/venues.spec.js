@@ -66,12 +66,12 @@ describe("DB Venues", () => {
 
   describe("updateVenue", () => {
     it("Updates name without affecting the ID. Returns the updated Venue.", async () => {
-      const fakeVenue = await createfakeVenue({
-        name: faker.address.streetName(),
-        city: faker.address.city(),
-        state: faker.address.state(),
-        capacity: faker.datatype.number(1000),
-      });
+      const fakeVenue = await createFakeVenue(
+        faker.address.streetName(),
+        faker.address.city(),
+        faker.address.state(),
+        faker.datatype.number(1000)
+      );
       const name = "Silly Bumpkins";
       const updatedVenue = await updateVenue({ id: fakeVenue.id, name });
       expect(updatedVenue.id).toEqual(fakeVenue.id);
@@ -80,12 +80,12 @@ describe("DB Venues", () => {
     });
 
     it("Updates description without affecting the ID. Returns the updated Venue.", async () => {
-      const fakeVenue = await createfakeVenue({
-        name: faker.address.streetName(),
-        city: faker.address.city(),
-        state: faker.address.state(),
-        capacity: faker.datatype.number(1000),
-      });
+      const fakeVenue = await createFakeVenue(
+        faker.address.streetName(),
+        faker.address.city(),
+        faker.address.state(),
+        faker.datatype.number(1000)
+      );
       const description = "Kings of Grunge!";
       const updatedVenue = await updateVenue({
         id: fakeVenue.id,
