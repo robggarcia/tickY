@@ -1,28 +1,26 @@
-import { useEffect, useState } from "react";
-import { Link, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Users from "./components/Users";
+import {
+  Artists,
+  Browse,
+  Cart,
+  Home,
+  Login,
+  Register,
+  Venues,
+} from "./components";
 
 function App() {
-  const [users, setUsers] = useState([]);
-
-  // i want to fetch the actual books and save them in state
-  const fetchUsers = async () => {
-    const response = await fetch("/api/users");
-    const data = await response.json();
-    console.log(data);
-    setUsers(data.users);
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
   return (
     <div className="App">
-      <Link to="/users">Users</Link>
       <Routes>
-        <Route path="/users" element={<Users users={users} />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/browse" element={<Browse />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/venues" element={<Venues />} />
+        <Route path="/artists" element={<Artists />} />
       </Routes>
     </div>
   );
