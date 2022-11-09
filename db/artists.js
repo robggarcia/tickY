@@ -99,13 +99,27 @@ async function deleteArtist(artistId) {
 }
 
 async function getArtistById(id) {
-  const result = await client.query(
+  const {
+    rows: [artist],
+  } = await client.query(
     `
   SELECT * FROM artists 
-  WHERE id =$1;`,
+  WHERE id=$1;`,
     [id]
   );
-  return result.rows;
+  return artist;
+}
+
+async function getArtistByName(artistName) {
+  const {
+    rows: [artist],
+  } = await client.query(
+    `
+  SELECT * FROM artists 
+  WHERE name=$1;`,
+    [artistName]
+  );
+  return artist;
 }
 
 // testing adapter functions
@@ -132,4 +146,5 @@ module.exports = {
   updateArtist,
   deleteArtist,
   getArtistById,
+  getArtistByName,
 };

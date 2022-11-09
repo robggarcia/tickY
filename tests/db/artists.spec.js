@@ -6,6 +6,7 @@ const {
   updateArtist,
   createArtist,
   getArtistById,
+  getArtistByName,
 } = require("../../db/artists");
 const { createFakeArtist } = require("../helpers");
 
@@ -22,12 +23,7 @@ describe("DB Artists", () => {
 
   describe("getArtistById", () => {
     it("gets artists by their id", async () => {
-      const fakeArtist = {
-        name: "Beyonce",
-        genre: faker.music.genre(),
-        image: faker.image.imageUrl(),
-        description: faker.lorem.sentence(),
-      };
+      const fakeArtist = await createFakeArtist();
 
       const artist = await getArtistById(fakeArtist.id);
 
@@ -37,14 +33,9 @@ describe("DB Artists", () => {
     });
   });
 
-  xdescribe("getArtistByName", () => {
+  describe("getArtistByName", () => {
     it("gets an artist by their name", async () => {
-      const fakeArtist = {
-        name: "Wu Tang",
-        genre: faker.music.genre(),
-        image: faker.image.imageUrl(),
-        description: faker.lorem.sentence(),
-      };
+      const fakeArtist = await createFakeArtist();
       const artist = await getArtistByName(fakeArtist.name);
       expect(artist.id).toEqual(fakeArtist.id);
     });
@@ -66,12 +57,8 @@ describe("DB Artists", () => {
 
   describe("updateArtist", () => {
     it("Updates name without affecting the ID. Returns the updated Artist.", async () => {
-      const fakeArtist = await createFakeArtist({
-        name: "Smashing Pumpkins",
-        genre: faker.music.genre(),
-        image: faker.image.imageUrl(),
-        description: faker.lorem.sentence(),
-      });
+      const fakeArtist = await createFakeArtist();
+      console.log("UPDATE ARTIST FAKE ARTIST: ", fakeArtist);
       const name = "Silly Bumpkins";
       const updatedArtist = await updateArtist({ id: fakeArtist.id, name });
       expect(updatedArtist.id).toEqual(fakeArtist.id);
