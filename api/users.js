@@ -20,16 +20,13 @@ usersRouter.post("/login", async (req, res, next) => {
     err.status = 400;
     next(err);
   }
-
   try {
     const user = await getUser({ username, password });
-
     if (!user) {
       const err = new Error("Bad Credentials.");
       err.status = 400;
       next(err);
     }
-
     const token = jwt.sign(
       {
         id: user.id,
@@ -40,7 +37,6 @@ usersRouter.post("/login", async (req, res, next) => {
         expiresIn: "1w",
       }
     );
-
     res.send({ success: true, message: "you're logged in!", token, user });
   } catch ({ name, message }) {
     next({ name, message });
@@ -69,7 +65,6 @@ usersRouter.post("/register", async (req, res, next) => {
       err.name = "UserExistsError";
       next(err);
     }
-
     // create a new user
     const user = await createUser({ username, password, email });
     const token = jwt.sign(

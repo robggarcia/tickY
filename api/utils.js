@@ -8,7 +8,8 @@ const requireUser = (req, res, next) => {
 };
 
 const requireAdmin = (req, res, next) => {
-  if (!req.user.admin) {
+  const user = req.user;
+  if (!user.admin) {
     const err = new Error("Admin must be logged in to perform this action");
     err.status = 401;
     next(err);

@@ -31,8 +31,8 @@ function expectTicketsToContainTicket(tickets, fakeTicket) {
   expect(ticket.seatTier).toEqual(fakeTicket.seatTier);
 }
 
-function expectTicketsNotToContainTicket(tickets, fakeSoldOutTicket) {
-  const ticket = tickets.find((ticket) => ticket.id === fakeSoldOutTicket.id);
+function expectTicketsNotToBeSoldOut(tickets) {
+  const ticket = tickets.find((ticket) => ticket.quantity < 1);
   expect(ticket).toBeFalsy();
 }
 
@@ -54,15 +54,13 @@ function expectTicketsNotToContainArtist(tickets, fakeArtist) {
 
 function expectTicketToContainVenue(ticket, fakeVenue) {
   const venue = ticket.venue;
-  expect(venue).toEqual(
-    objectContaining({
-      id: fakeVenue.id,
-      name: fakeVenue.name,
-      city: fakeVenue.city,
-      state: fakeVenue.state,
-      capacity: fakeActivity.capacity,
-    })
-  );
+  expect(venue).toMatchObject({
+    id: fakeVenue.id,
+    name: fakeVenue.name,
+    city: fakeVenue.city,
+    state: fakeVenue.state,
+    capacity: fakeVenue.capacity,
+  });
 }
 
 function expectTicketsNotToContainVenue(tickets, fakeVenue) {
@@ -167,8 +165,7 @@ describe("DB Tickets", () => {
 
     it("should not contain the sold out ticket", async () => {
       const tickets = await getAllUnsoldTickets();
-      console.log("fakeSoldOutTicket", fakeSoldOutTicket);
-      expectTicketsNotToContainTicket(tickets, fakeSoldOutTicket);
+      expectTicketsNotToBeSoldOut(tickets);
     });
 
     it("includes the artist", async () => {
@@ -198,7 +195,9 @@ describe("DB Tickets", () => {
   describe("getTicketsByArtist", () => {
     it("should include the not sold out ticket containing a specific artistId", async () => {
       const tickets = await getTicketsByArtist(fakeArtist.id);
-      expectTicketToContainArtist(tickets, fakeArtist);
+      expectTicketsNotToBeSoldOut(tickets);
+      const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
+      expectTicketToContainArtist(ticket, fakeArtist);
     });
 
     it("should not include a non sold out ticket containing another artist", async () => {
@@ -239,7 +238,9 @@ describe("DB Tickets", () => {
   describe("getTicketsByVenue", () => {
     it("should include the not sold out ticket containing a specific venueId", async () => {
       const tickets = await getTicketsByVenue(fakeVenue.id);
-      expectTicketToContainVenue(tickets, fakeVenue);
+      expectTicketsNotToBeSoldOut(tickets);
+      const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
+      expectTicketToContainVenue(ticket, fakeVenue);
     });
 
     it("should not include a non sold out ticket containing another artist", async () => {
