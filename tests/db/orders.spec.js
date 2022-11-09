@@ -19,7 +19,7 @@ describe("DB Orders", () => {
   });
 
   describe("getAllOrders", () => {
-    it("selects and returns an array of all activities", async () => {
+    it("selects and returns an array of all orders", async () => {
       await createFakeOrder(fakeUser.id);
       const orders = await getAllOrders();
       const { rows: ordersFromDatabase } = await client.query(`

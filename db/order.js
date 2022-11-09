@@ -20,11 +20,60 @@ async function createOrder({ userId, purchased }) {
   }
 }
 
-async function getAllOrders() {}
+async function getAllOrders() {
+  try {
+    const { rows: orders } = await client.query(`
+      SELECT * 
+      FROM orders;
+    `);
+    return orders;
+  } catch (error) {
+    console.error("Error in getAllOrders");
+    throw error;
+  }
+}
 
-async function getOrderById(id) {}
+async function getOrderById(id) {
+  try {
+    const {
+      rows: [order],
+    } = await client.query(
+      `
+      SELECT *
+      FROM orders
+      WHERE id = $1;
+    `,
+      [id]
+    );
+    return order;
+  } catch (error) {
+    console.error("Error in getOrderById");
+    throw error;
+  }
+}
 
-async function updateOrder({ id, purchased }) {}
+async function updateOrder({ id, ...fields }) {
+  try {
+    const setString = Object.keys(fields)
+      .map((key, idx) => `"${key}"=$${idx + 2}`)
+      .join(", ");
+    const {
+      rows: [order],
+    } = await client.query(
+      `
+          UPDATE orders
+          SET ${setString}
+          WHERE id=$1
+          RETURNING *;
+      `,
+      [id, ...Object.values(fields)]
+    );
+    return order;
+  } catch (error) {
+    console.log("Error in updateOrder");
+    throw error;
+  }
+}
 
 module.exports = {
   createOrder,
