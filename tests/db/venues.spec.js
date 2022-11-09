@@ -15,7 +15,7 @@ describe("DB Venues", () => {
     });
   });
 
-  describe("getVenuesById", () => {
+  describe("getVenueById", () => {
     it("gets venues by their id", async () => {
       const fakeVenue = {
         name: faker.address.streetName(),
