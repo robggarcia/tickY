@@ -14,6 +14,7 @@ const {
   createFakeTicketWithArtistAndVenue,
   createFakeArtist,
   createFakeVenue,
+  attachFakeArtistAndFakeVenueToFakeTicket,
 } = require("../helpers");
 
 // Expect Helper Functions
@@ -37,15 +38,13 @@ function expectTicketsNotToContainTicket(tickets, fakeSoldOutTicket) {
 
 function expectTicketToContainArtist(ticket, fakeArtist) {
   const artist = ticket.artist;
-  expect(artist).toEqual(
-    objectContaining({
-      id: fakeArtist.id,
-      name: fakeArtist.name,
-      genre: fakeArtist.genre,
-      image: fakeArtist.image,
-      description: fakeActivity.description,
-    })
-  );
+  expect(artist).toMatchObject({
+    id: fakeArtist.id,
+    name: fakeArtist.name,
+    genre: fakeArtist.genre,
+    image: fakeArtist.image,
+    description: fakeArtist.description,
+  });
 }
 
 function expectTicketsNotToContainArtist(tickets, fakeArtist) {
@@ -98,7 +97,7 @@ describe("DB Tickets", () => {
     const fakeData = await createFakeTicketWithArtistAndVenue();
     fakeTicket = fakeData.fakeTickets[0];
     fakeTicket2 = fakeData.fakeTickets[1];
-    fakeSoldOutTicket = fakeData.fakeTickets[2];
+    fakeSoldOutTicket = fakeData.fakeSoldOutTickets[0];
     fakeArtist = fakeData.fakeArtists[0];
     fakeArtist2 = fakeData.fakeArtists[1];
     fakeSoldOutArtist = fakeData.fakeArtists[2];
@@ -122,11 +121,12 @@ describe("DB Tickets", () => {
       const tickets = await getAllTickets();
       console.log("GET ALL TICKETS: ", tickets);
       const { rows: ticketsFromDatabase } = await client.query(`
-          SELECT tickets.*, venues.name AS venue, artists.name AS artist, artists.image AS image
-          FROM tickets
-          JOIN venues ON "venueId"=venues.id
-          JOIN artists ON "artistId"=artists.id;
+          SELECT *
+          FROM tickets;
         `);
+      for (let ticket of ticketsFromDatabase) {
+        ticket = await attachFakeArtistAndFakeVenueToFakeTicket(ticket);
+      }
       expect(tickets).toEqual(ticketsFromDatabase);
     });
 
@@ -146,16 +146,16 @@ describe("DB Tickets", () => {
       expectTicketsNotToContainDuplicates(tickets, fakeTicket);
     });
 
-    it("includes artist's name, from artists join, aliased as artist", async () => {
+    it("includes artist's name, from artists join", async () => {
       const tickets = await getAllTickets();
       const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
-      expect(ticket.artist).toEqual(fakeArtist.name);
+      expect(ticket.artist.name).toEqual(fakeArtist.name);
     });
 
-    it("includes venue's name, from venues join, aliased as venue", async () => {
+    it("includes venue's name, from venues join", async () => {
       const tickets = await getAllTickets();
       const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
-      expect(ticket.venue).toEqual(fakeVenue.name);
+      expect(ticket.venue.name).toEqual(fakeVenue.name);
     });
   });
 
@@ -167,6 +167,7 @@ describe("DB Tickets", () => {
 
     it("should not contain the sold out ticket", async () => {
       const tickets = await getAllUnsoldTickets();
+      console.log("fakeSoldOutTicket", fakeSoldOutTicket);
       expectTicketsNotToContainTicket(tickets, fakeSoldOutTicket);
     });
 
@@ -181,16 +182,16 @@ describe("DB Tickets", () => {
       expectTicketsNotToContainDuplicates(tickets, fakeTicket);
     });
 
-    it("includes artist's name, from artists join, aliased as artist", async () => {
-      const tickets = await getAllUnsoldTickets();
+    it("includes artist's name, from artists join", async () => {
+      const tickets = await getAllTickets();
       const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
-      expect(ticket.artist).toEqual(fakeArtist.name);
+      expect(ticket.artist.name).toEqual(fakeArtist.name);
     });
 
-    it("includes venue's name, from venues join, aliased as venue", async () => {
-      const tickets = await getAllUnsoldTickets();
+    it("includes venue's name, from venues join", async () => {
+      const tickets = await getAllTickets();
       const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
-      expect(ticket.venue).toEqual(fakeVenue.name);
+      expect(ticket.venue.name).toEqual(fakeVenue.name);
     });
   });
 
@@ -222,16 +223,16 @@ describe("DB Tickets", () => {
       expectTicketsNotToContainDuplicates(tickets, fakeTicket);
     });
 
-    it("includes artist's name, from artists join, aliased as artist", async () => {
-      const tickets = await getTicketsByArtist(fakeArtist.id);
+    it("includes artist's name, from artists join", async () => {
+      const tickets = await getAllTickets();
       const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
-      expect(ticket.artist).toEqual(fakeArtist.name);
+      expect(ticket.artist.name).toEqual(fakeArtist.name);
     });
 
-    it("includes venue's name, from venues join, aliased as venue", async () => {
-      const tickets = await getTicketsByArtist(fakeArtist.id);
+    it("includes venue's name, from venues join", async () => {
+      const tickets = await getAllTickets();
       const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
-      expect(ticket.venue).toEqual(fakeVenue.name);
+      expect(ticket.venue.name).toEqual(fakeVenue.name);
     });
   });
 
@@ -263,17 +264,16 @@ describe("DB Tickets", () => {
       expectTicketsNotToContainDuplicates(tickets, fakeTicket);
     });
 
-    it("includes artist's name, from artists join, aliased as artist", async () => {
-      const tickets = await getTicketsByVenue(fakeVenue.id);
-
+    it("includes artist's name, from artists join", async () => {
+      const tickets = await getAllTickets();
       const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
-      expect(ticket.artist).toEqual(fakeArtist.name);
+      expect(ticket.artist.name).toEqual(fakeArtist.name);
     });
 
-    it("includes venue's name, from venues join, aliased as venue", async () => {
-      const tickets = await getTicketsByVenue(fakeVenue.id);
+    it("includes venue's name, from venues join", async () => {
+      const tickets = await getAllTickets();
       const ticket = tickets.find((ticket) => ticket.id === fakeTicket.id);
-      expect(ticket.venue).toEqual(fakeVenue.name);
+      expect(ticket.venue.name).toEqual(fakeVenue.name);
     });
   });
 

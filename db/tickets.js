@@ -25,15 +25,49 @@ async function createTicket({
   }
 }
 
+async function attachArtistAndVenueToTicket(ticket) {
+  const {
+    rows: [artist],
+  } = await client.query(
+    `
+    SELECT *
+    FROM artists
+    WHERE id=$1;
+  `,
+    [ticket.artistId]
+  );
+  const {
+    rows: [venue],
+  } = await client.query(
+    `
+    SELECT *
+    FROM venues
+    WHERE id=$1;
+  `,
+    [ticket.venueId]
+  );
+
+  ticket.artist = artist;
+  ticket.venue = venue;
+  return ticket;
+}
+
 async function getAllTickets() {
   try {
-    const { rows } = await client.query(`
+    /* const { rows: tickets } = await client.query(`
       SELECT tickets.*, venues.name AS venue, artists.name AS artist, artists.image AS image
       FROM tickets
       JOIN venues ON "venueId"=venues.id
       JOIN artists ON "artistId"=artists.id;
+    `); */
+    const { rows: tickets } = await client.query(`
+      SELECT *
+      FROM tickets;
     `);
-    return rows;
+    for (let ticket of tickets) {
+      ticket = await attachArtistAndVenueToTicket(ticket);
+    }
+    return tickets;
   } catch (error) {
     console.error("Error in getAllTickets");
     throw error;
@@ -149,29 +183,6 @@ async function getTicketsByVenue(venueId) {
     throw error;
   }
 }
-
-// testing adapter functions
-async function testTickets() {
-  // const tickets = await getAllTickets();
-  // console.log("all tickets: ", tickets);
-
-  // const ticket = await getTicketById(2);
-  // console.log("get ticket id=2: ", ticket);
-
-  // const editedTicket = await updateTicket({ id: 2, price: 200, quantity: 550 });
-  // console.log("Updated ticket: ", editedTicket);
-
-  // const deletedTicket = await deleteTicket(2);
-  // console.log("Deleted ticket: ", deletedTicket);
-
-  const artistTicket = await getTicketsByArtist(2);
-  console.log("Ticket by Artist id = 2: ", artistTicket);
-
-  const venueTicket = await getTicketsByVenue(1);
-  console.log("Ticket by Venue id = 1: ", venueTicket);
-}
-
-// testTickets();
 
 module.exports = {
   createTicket,

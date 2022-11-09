@@ -1,11 +1,12 @@
 const faker = require("faker");
 const { createArtist } = require("../db/artists");
 const { createOrder } = require("../db/order");
-const { createTicket } = require("../db/tickets");
+const { createTicket, updateTicket } = require("../db/tickets");
 const { createTicketOrder } = require("../db/tickets_orders");
 const { createUser } = require("../db/users");
 const { createVenue } = require("../db/venues");
 const jwt = require("jsonwebtoken");
+const client = require("../db");
 
 const createFakeUser = async (
   username = faker.internet.userName(),
@@ -83,6 +84,33 @@ const createFakeTicket = async ({ artistId, venueId }) => {
   return ticket;
 };
 
+async function attachFakeArtistAndFakeVenueToFakeTicket(ticket) {
+  const {
+    rows: [artist],
+  } = await client.query(
+    `
+    SELECT *
+    FROM artists
+    WHERE id=$1;
+  `,
+    [ticket.artistId]
+  );
+  const {
+    rows: [venue],
+  } = await client.query(
+    `
+    SELECT *
+    FROM venues
+    WHERE id=$1;
+  `,
+    [ticket.venueId]
+  );
+
+  ticket.artist = artist;
+  ticket.venue = venue;
+  return ticket;
+}
+
 const createFakeOrder = async (
   userId = fakeUser.id,
   purchased = faker.datatype.boolean()
@@ -143,6 +171,7 @@ const createFakeTicketWithArtistAndVenue = async (numTickets = 2) => {
     artistId: fakeSoldOutArtist.id,
     venueId: fakeSoldOutVenue.id,
   });
+  await updateTicket({ id: fakeSoldOutTicket.id, quantity: 0 });
   fakeSoldOutTicket.artist = fakeSoldOutArtist;
   fakeSoldOutTicket.venue = fakeSoldOutVenue;
   fakeSoldOutTicket.quantity = 0;
@@ -152,7 +181,7 @@ const createFakeTicketWithArtistAndVenue = async (numTickets = 2) => {
     fakeArtists,
     fakeVenues,
     fakeTickets,
-    fakeSoldOutTicket,
+    fakeSoldOutTickets,
     fakeTicketOrders,
   };
 };
@@ -165,4 +194,5 @@ module.exports = {
   createFakeVenue,
   createFakeOrder,
   createFakeTicketWithArtistAndVenue,
+  attachFakeArtistAndFakeVenueToFakeTicket,
 };
