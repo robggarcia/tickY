@@ -2,7 +2,12 @@ require("dotenv").config();
 const faker = require("faker");
 const client = require("../../db");
 const { createFakeOrder, createFakeUser } = require("../helpers");
-const { getAllOrders, getOrderById, updateOrder } = require("../../db/order");
+const {
+  getAllOrders,
+  getOrderById,
+  updateOrder,
+  createOrder,
+} = require("../../db/order");
 
 describe("DB Orders", () => {
   let fakeUser;
@@ -19,7 +24,7 @@ describe("DB Orders", () => {
   });
 
   describe("getAllOrders", () => {
-    it("selects and returns an array of all activities", async () => {
+    it("selects and returns an array of all orders", async () => {
       await createFakeOrder(fakeUser.id);
       const orders = await getAllOrders();
       const { rows: ordersFromDatabase } = await client.query(`
@@ -43,10 +48,10 @@ describe("DB Orders", () => {
   describe("createOrder({ userId, purchased })", () => {
     it("Creates and returns the new order", async () => {
       const orderToCreate = {
-        userId: fakeOrder.id,
+        userId: fakeUser.id,
         purchased: faker.datatype.boolean(),
       };
-      const createdOrder = await createActivity(orderToCreate);
+      const createdOrder = await createOrder(orderToCreate);
       expect(createdOrder.userId).toBe(orderToCreate.userId);
       expect(createdOrder.purchased).toBe(orderToCreate.purchased);
     });
