@@ -1,7 +1,12 @@
 require("dotenv").config();
 const faker = require("faker");
 const client = require("../../db");
-const { getVenues, createVenue, updateVenue } = require("../../db/venues");
+const {
+  getVenues,
+  createVenue,
+  updateVenue,
+  getVenueById,
+} = require("../../db/venues");
 const { createFakeVenue } = require("../helpers");
 
 describe("DB Venues", () => {
@@ -15,7 +20,7 @@ describe("DB Venues", () => {
     });
   });
 
-  describe("getVenuesById", () => {
+  describe("getVenueById", () => {
     it("gets venues by their id", async () => {
       const fakeVenue = {
         name: faker.address.streetName(),

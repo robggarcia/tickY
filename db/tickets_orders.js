@@ -18,13 +18,37 @@ async function createTicketOrder({ orderId, ticketId, quantity }) {
   }
 }
 
-async function getTicketOrderById(id) {}
+async function getTicketOrderById(id) {
+  try {
+    const result = await client.query(
+      `
+    SELECT * FROM tickets_orders
+    WHERE id =$1;`,
+      [id]
+    );
+    return result.rows;
+  } catch (error) {
+    throw error;
+  }
+}
 
 async function addTicketToOrder({ orderId, ticketId, quantity }) {}
 
 async function editTicketOrder({ id, quantity }) {}
 
-async function deleteTicketOrder(id) {}
+async function deleteTicketOrder(id) {
+  try {
+    const result = await client.query(
+      `
+    DELETE FROM tickets_orders 
+    WHERE id=$1;`,
+      [id]
+    );
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
 
 module.exports = {
   createTicketOrder,
