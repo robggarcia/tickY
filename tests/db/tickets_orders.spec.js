@@ -19,8 +19,9 @@ describe("DB Tickets_Orders", () => {
   let fakeUser, fakeTicket, fakeOrder, ticketOrderData;
 
   beforeAll(async () => {
+    const fakeData = await createFakeTicketWithArtistAndVenue();
+    fakeTicket = fakeData.fakeTickets[0];
     fakeUser = await createFakeUser();
-    fakeTicket = await createFakeTicket();
     fakeOrder = await createFakeOrder(fakeUser.id);
     ticketOrderData = {
       ticketId: fakeTicket.id,

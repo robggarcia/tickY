@@ -1,7 +1,12 @@
 require("dotenv").config();
 const faker = require("faker");
 const client = require("../../db");
-const { getArtist, updateArtist, createArtist } = require("../../db/artists");
+const {
+  getArtist,
+  updateArtist,
+  createArtist,
+  getArtistById,
+} = require("../../db/artists");
 const { createFakeArtist } = require("../helpers");
 
 describe("DB Artists", () => {
