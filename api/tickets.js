@@ -5,6 +5,8 @@ const {
   getAllTickets,
   getAllUnsoldTickets,
   getTicketById,
+  getTicketsByArtist,
+  createTicket,
 } = require("../db/tickets");
 const ticketsRouter = express.Router();
 
@@ -29,6 +31,33 @@ ticketsRouter.get("/:ticketId", async (req, res, next) => {
       err.name = "NonExistingTicketError";
       next(err);
     }
+    res.send(ticket);
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+ticketsRouter.post("/", async (req, res, next) => {
+  const inputFields = req.body;
+  try {
+    // check to see if the ticket already exists (check artist and venue)
+    const existingTickets = await getTicketsByArtist(inputFields.artistId);
+    if (existingTickets) {
+      for (let ticket of existingTickets) {
+        if (ticket.venueId === req.body.venueId) {
+          const err = new Error(
+            `An activity with name ${inputFields.name} already exists`
+          );
+          err.status = 400;
+          err.name = "ExistingActivityError";
+          next(err);
+          return;
+        }
+      }
+    }
+
+    // create the new ticket
+    const ticket = await createTicket(inputFields);
     res.send(ticket);
   } catch ({ name, message }) {
     next({ name, message });
