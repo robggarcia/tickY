@@ -4,15 +4,17 @@ const client = require("../../db");
 
 const {
   getTicketOrderById,
-  addTicketToOrder,
   editTicketOrder,
   deleteTicketOrder,
+  createTicketOrder,
 } = require("../../db/tickets_orders");
 
 const {
   createFakeTicket,
   createFakeOrder,
   createFakeUser,
+  createFakeTicketWithArtistAndVenue,
+  createFakeTicketOrder,
 } = require("../helpers");
 
 describe("DB Tickets_Orders", () => {
@@ -26,7 +28,7 @@ describe("DB Tickets_Orders", () => {
     ticketOrderData = {
       ticketId: fakeTicket.id,
       orderId: fakeOrder.id,
-      quantity: faker.random.number(10),
+      quantity: faker.datatype.number(10),
     };
   });
 
@@ -49,9 +51,10 @@ describe("DB Tickets_Orders", () => {
     });
   });
 
-  describe("addTicketToOrder({orderId, ticketId, quantity})", () => {
-    it("creates a new routine_activity, and return it", async () => {
-      const ticketOrder = await addTicketToOrder(ticketOrderData);
+  describe("createTicketOrder({orderId, ticketId, quantity})", () => {
+    it("creates a new ticket_order, and returns it", async () => {
+      console.log("ticketOrderData", ticketOrderData);
+      const ticketOrder = await createTicketOrder(ticketOrderData);
       expect(ticketOrder.ticketId).toBe(ticketOrderData.ticketId);
       expect(ticketOrder.orderId).toBe(ticketOrderData.orderId);
       expect(ticketOrder.quantity).toBe(ticketOrderData.quantity);
@@ -61,20 +64,17 @@ describe("DB Tickets_Orders", () => {
   describe("editTicketOrder({id, quantity})", () => {
     it("Finds the ticket with id equal to the passed in id. Updates the quantity as necessary.", async () => {
       const fakeTicketOrder = await createFakeTicketOrder(ticketOrderData);
-
       const newTicketOrderData = {
         id: fakeTicketOrder.id,
-        quantity: faker.random.number(),
+        quantity: faker.datatype.number(),
+        ticketId: fakeTicketOrder.ticketId,
       };
       const updatedTicketOrder = await editTicketOrder(newTicketOrderData);
-
       expect(updatedTicketOrder.id).toBe(fakeTicketOrder.id);
       expect(updatedTicketOrder.quantity).toBe(newTicketOrderData.quantity);
-      expect(updatedTicketOrder.orderId).toBe(newTicketOrderData.orderId);
+      expect(updatedTicketOrder.ticketId).toBe(newTicketOrderData.ticketId);
     });
   });
-
-  //   describe("getTicketOrderByTicket", () => {});
 
   describe("deleteTicketOrder(id)", () => {
     it("remove ticket_order from database", async () => {
@@ -83,7 +83,7 @@ describe("DB Tickets_Orders", () => {
       const deletedTicketOrder = await deleteTicketOrder(fakeTicketOrder.id);
       expect(deletedTicketOrder.id).toBe(fakeTicketOrder.id);
       const { rows } = await client.query(`
-            SELECT * FROM routine_activities
+            SELECT * FROM tickets_orders
             WHERE id = ${deletedTicketOrder.id}
           `);
       expect(rows.length).toBe(0);

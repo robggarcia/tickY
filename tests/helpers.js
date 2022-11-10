@@ -193,6 +193,7 @@ module.exports = {
   createFakeTicket,
   createFakeVenue,
   createFakeOrder,
+  createFakeTicketOrder,
   createFakeTicketWithArtistAndVenue,
   attachFakeArtistAndFakeVenueToFakeTicket,
 };

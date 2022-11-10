@@ -3,7 +3,9 @@ const client = require(".");
 
 async function createTicketOrder({ orderId, ticketId, quantity }) {
   try {
-    const result = await client.query(
+    const {
+      rows: [ticketOrder],
+    } = await client.query(
       `
     INSERT INTO tickets_orders ("orderId", "ticketId", quantity) 
     VALUES($1, $2, $3)
@@ -11,8 +13,7 @@ async function createTicketOrder({ orderId, ticketId, quantity }) {
     `,
       [orderId, ticketId, quantity]
     );
-    // console.log(result.rows[0]);
-    return result.rows[0];
+    return ticketOrder;
   } catch (error) {
     throw error;
   }
@@ -20,34 +21,34 @@ async function createTicketOrder({ orderId, ticketId, quantity }) {
 
 async function getTicketOrderById(id) {
   try {
-    const result = await client.query(
+    const {
+      rows: [ticketOrder],
+    } = await client.query(
       `
     SELECT * FROM tickets_orders
     WHERE id =$1;`,
       [id]
     );
-    return result.rows;
+    return ticketOrder;
   } catch (error) {
     throw error;
   }
 }
 
-async function addTicketToOrder({ orderId, ticketId, quantity }) {}
-
 async function editTicketOrder({ id, quantity }) {
   try {
     const {
-      rows: [ticket],
+      rows: [ticketOrder],
     } = await client.query(
       `
-          UPDATE tickets
+          UPDATE tickets_orders
           SET quantity=$2
           WHERE id=$1
           RETURNING *;
       `,
       [id, quantity]
     );
-    return ticket;
+    return ticketOrder;
   } catch (error) {
     console.log("Error in editTicketOrder");
     throw error;
@@ -56,13 +57,17 @@ async function editTicketOrder({ id, quantity }) {
 
 async function deleteTicketOrder(id) {
   try {
-    const result = await client.query(
+    const {
+      rows: [deletedTicketOrder],
+    } = await client.query(
       `
     DELETE FROM tickets_orders 
-    WHERE id=$1;`,
+    WHERE id=$1
+    RETURNING *;
+    `,
       [id]
     );
-    return result;
+    return deletedTicketOrder;
   } catch (error) {
     throw error;
   }
@@ -71,7 +76,6 @@ async function deleteTicketOrder(id) {
 module.exports = {
   createTicketOrder,
   getTicketOrderById,
-  addTicketToOrder,
   editTicketOrder,
   deleteTicketOrder,
 };
