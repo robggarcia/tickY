@@ -37,7 +37,7 @@ usersRouter.post("/login", async (req, res, next) => {
         expiresIn: "1w",
       }
     );
-    res.send({ success: true, message: "you're logged in!", token, user });
+    res.send({ message: "you're logged in!", token, user });
   } catch ({ name, message }) {
     next({ name, message });
   }
@@ -78,7 +78,6 @@ usersRouter.post("/register", async (req, res, next) => {
       }
     );
     res.send({
-      success: true,
       message: "User successfully registered",
       token,
       user,
