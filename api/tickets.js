@@ -8,6 +8,7 @@ const {
   getTicketsByArtist,
   createTicket,
 } = require("../db/tickets");
+const { requireUser, requireAdmin } = require("./utils");
 const ticketsRouter = express.Router();
 
 ticketsRouter.get("/", async (req, res, next) => {
@@ -37,7 +38,7 @@ ticketsRouter.get("/:ticketId", async (req, res, next) => {
   }
 });
 
-ticketsRouter.post("/", async (req, res, next) => {
+ticketsRouter.post("/", requireUser, requireAdmin, async (req, res, next) => {
   const inputFields = req.body;
   try {
     // check to see if the ticket already exists (check artist and venue)
