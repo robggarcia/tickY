@@ -6,6 +6,7 @@ const {
   createVenue,
   updateVenue,
   getVenueById,
+  getVenueByName,
 } = require("../../db/venues");
 const { createFakeVenue } = require("../helpers");
 
@@ -22,15 +23,8 @@ describe("DB Venues", () => {
 
   describe("getVenueById", () => {
     it("gets venues by their id", async () => {
-      const fakeVenue = {
-        name: faker.address.streetName(),
-        city: faker.address.city(),
-        state: faker.address.state(),
-        capacity: faker.datatype.number(1000),
-      };
-
+      const fakeVenue = await createFakeVenue();
       const venue = await getVenueById(fakeVenue.id);
-
       expect(venue.id).toEqual(fakeVenue.id);
       expect(venue.name).toEqual(fakeVenue.name);
       expect(venue.description).toEqual(fakeVenue.description);
@@ -39,12 +33,7 @@ describe("DB Venues", () => {
 
   describe("getVenueByName", () => {
     it("gets an venue by their name", async () => {
-      const fakeVenue = {
-        name: faker.address.streetName(),
-        city: faker.address.city(),
-        state: faker.address.state(),
-        capacity: faker.datatype.number(1000),
-      };
+      const fakeVenue = await createFakeVenue();
       const venue = await getVenueByName(fakeVenue.name);
       expect(venue.id).toEqual(fakeVenue.id);
     });
@@ -76,7 +65,7 @@ describe("DB Venues", () => {
       const updatedVenue = await updateVenue({ id: fakeVenue.id, name });
       expect(updatedVenue.id).toEqual(fakeVenue.id);
       expect(updatedVenue.name).toEqual(name);
-      expect(updatedVenue.description).toEqual(fakeVenue.description);
+      expect(updatedVenue.capacity).toEqual(fakeVenue.capacity);
     });
 
     it("Updates description without affecting the ID. Returns the updated Venue.", async () => {
@@ -86,14 +75,14 @@ describe("DB Venues", () => {
         faker.address.state(),
         faker.datatype.number(1000)
       );
-      const description = "Kings of Grunge!";
+
       const updatedVenue = await updateVenue({
         id: fakeVenue.id,
-        description,
+        capacity: 10,
       });
       expect(updatedVenue.id).toEqual(fakeVenue.id);
       expect(updatedVenue.name).toEqual(fakeVenue.name);
-      expect(updatedVenue.description).toEqual(description);
+      expect(updatedVenue.capacity).toEqual(10);
     });
   });
 });

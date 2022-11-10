@@ -122,24 +122,6 @@ async function getArtistByName(artistName) {
   return artist;
 }
 
-// testing adapter functions
-async function testArtists() {
-  const artists = await getArtist();
-  console.log("all artists: ", artists);
-
-  const editedArtist = await updateArtist({
-    id: 2,
-    genre: "contemperary",
-    description: "a dead white dude",
-  });
-  console.log("updated artist: ", editedArtist);
-
-  const deletedArtist = await deleteArtist(2);
-  console.log("deleted artist id 2: ", deletedArtist);
-}
-
-// testArtists();
-
 module.exports = {
   getArtist,
   createArtist,

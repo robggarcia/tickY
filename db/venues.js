@@ -66,24 +66,33 @@ async function destroyVenue(id) {
 
 async function getVenueById(id) {
   try {
-    const { rows: venues } = await client.query(
+    const {
+      rows: [venue],
+    } = await client.query(
       `
     SELECT * FROM venues 
-    WHERE id=$1;`,
+    WHERE id=$1;
+    `,
       [id]
     );
-    console.log(venues);
-    return venues;
+    return venue;
   } catch (error) {}
 }
 
-// testing adapter functions
-async function testVenues() {
-  const venues = await getVenueById(1);
-  console.log("all venues: ", venues);
+async function getVenueByName(name) {
+  try {
+    const {
+      rows: [venue],
+    } = await client.query(
+      `
+    SELECT * FROM venues 
+    WHERE name=$1;
+    `,
+      [name]
+    );
+    return venue;
+  } catch (error) {}
 }
-
-// testVenues();
 
 module.exports = {
   createVenue,
@@ -91,4 +100,5 @@ module.exports = {
   updateVenue,
   destroyVenue,
   getVenueById,
+  getVenueByName,
 };
