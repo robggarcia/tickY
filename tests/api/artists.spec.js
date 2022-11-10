@@ -17,7 +17,7 @@ describe("api/artists", () => {
     it("Just returns a list of all artists in the database", async () => {
       // Create a fake artist to watch for
       const fakeArtist = await createFakeArtist();
-      const response = await request(app).get("/api/activities");
+      const response = await request(app).get("/api/artists");
       expectNotToBeError(response.body);
       expect(response.body).toEqual(arrayContaining([fakeArtist]));
     });
@@ -79,7 +79,7 @@ describe("api/artists", () => {
       };
 
       const response = await request(app)
-        .patch(`/api/activities/${fakeArtist.id}`)
+        .patch(`/api/artists/${fakeArtist.id}`)
         .set("Authorization", `Bearer ${token}`)
         .send(newArtistData);
 
@@ -100,7 +100,7 @@ describe("api/artists", () => {
       };
 
       const response = await request(app)
-        .patch(`/api/activities/10000`)
+        .patch(`/api/artists/10000`)
         .set("Authorization", `Bearer ${token}`)
         .send(newArtistData);
 
@@ -128,7 +128,7 @@ describe("api/artists", () => {
       };
 
       const response = await request(app)
-        .patch(`/api/activities/${fakeArtist.id}`)
+        .patch(`/api/artists/${fakeArtist.id}`)
         .set("Authorization", `Bearer ${token}`)
         .send(newArtistData);
 
