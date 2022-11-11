@@ -110,7 +110,7 @@ artistsRouter.delete("/:artistId", requireAdmin, async (req, res, next) => {
   const artistId = req.params.artistId;
   try {
     // check to see if artist id exists
-    const artist = await getArtistById(artistId);
+    const artist = await getArtistById(+artistId);
     if (!artist) {
       const err = new Error(`Artist ${artistId} not found`);
       err.status = 400;
