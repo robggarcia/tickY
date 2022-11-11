@@ -1,8 +1,14 @@
 const express = require("express");
 const { JWT_SECRET } = process.env;
 const jwt = require("jsonwebtoken");
-const { getArtistById, getAllArtists } = require("../db/artists");
+const {
+  getArtistById,
+  getAllArtists,
+  getArtistByName,
+  createArtist,
+} = require("../db/artists");
 const { getTicketsByArtist } = require("../db/tickets");
+const { requireAdmin } = require("./utils");
 const artistsRouter = express.Router();
 
 // GET /api/artists
@@ -43,8 +49,32 @@ artistsRouter.get("/:artistId/tickets", async (req, res, next) => {
       err.status = 400;
       err.name = "NotTicketsWithArtistError";
       next(err);
+      return;
     }
     res.send(tickets);
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+// POST api/artists
+artistsRouter.post("/", requireAdmin, async (req, res, next) => {
+  const inputFields = req.body;
+  try {
+    // check to see if the artist already exists (check artist and venue)
+    const existingArtist = await getArtistByName(inputFields.name);
+    if (existingArtist) {
+      const err = new Error(
+        `An artist with name ${inputFields.name} already exists`
+      );
+      err.status = 400;
+      err.name = "ExistingArtistError";
+      next(err);
+      return;
+    }
+    // create the new ticket
+    const artist = await createArtist(inputFields);
+    res.send(artist);
   } catch ({ name, message }) {
     next({ name, message });
   }
