@@ -2,6 +2,7 @@ const express = require("express");
 const { JWT_SECRET } = process.env;
 const jwt = require("jsonwebtoken");
 const apiRouter = express.Router();
+const { getUserById } = require("../db/users");
 
 // GET /api/health
 apiRouter.get("/health", async (req, res) => {

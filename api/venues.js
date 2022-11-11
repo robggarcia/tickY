@@ -8,6 +8,7 @@ const {
   getVenueById,
   updateVenue,
 } = require("../db/venues");
+const { requireAdmin } = require("./utils");
 const venuesRouter = express.Router();
 
 // GET /api/venues

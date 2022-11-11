@@ -18,10 +18,8 @@ artistsRouter.get("/", async (req, res, next) => {
   try {
     const artists = await getAllArtists();
     res.send(artists);
-    return;
   } catch (error) {
     next(error);
-    return;
   }
 });
 
