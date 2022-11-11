@@ -14,8 +14,8 @@ const { JWT_SECRET } = process.env;
 
 // POST /api/users/login
 usersRouter.post("/login", async (req, res, next) => {
-  console.log("REQUEST MADE TO /users/login", req.body);
   const { username, password } = req.body;
+  console.log("REQUEST MADE TO /users/login", req);
   // make sure both username and password are provided
   if (!username || !password) {
     const err = new Error("Please provide username and password.");
