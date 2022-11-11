@@ -1,5 +1,6 @@
 const { response } = require("express");
 const client = require(".");
+const { getTicketById } = require("./tickets");
 
 async function createOrder({ userId, purchased }) {
   try {
@@ -45,6 +46,20 @@ async function getOrderById(id) {
     `,
       [id]
     );
+    // attach ticket to order by first grabbing the ticket_order
+    const {
+      rows: [ticket_order],
+    } = await client.query(
+      `
+      SELECT *
+      FROM tickets_orders
+      WHERE "orderId"=$1,
+    `,
+      order.id
+    );
+    const ticket = await getTicketById(ticket_order.ticketId);
+    order.ticketQuantity = ticket_order.quantity;
+    order.ticket = ticket;
     return order;
   } catch (error) {
     console.error("Error in getOrderById");
