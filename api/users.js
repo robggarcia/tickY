@@ -6,6 +6,7 @@ const {
   createUser,
   updateUser,
   getAllUsers,
+  getUserByEmail,
 } = require("../db/users");
 const { requireUser, requireAdmin } = require("./utils");
 const usersRouter = express.Router();
@@ -58,14 +59,15 @@ usersRouter.post("/register", async (req, res, next) => {
       return;
     }
 
-    // check to see if username exists
-    const _user = await getUserByUsername(username);
+    // check to see if email exists
+    const _user = await getUserByEmail(email);
     if (_user) {
-      const err = new Error(`User ${_user.username} is already taken.`);
+      const err = new Error(`User ${_user.email} is already taken.`);
       err.status = 404;
       err.name = "UserExistsError";
       next(err);
     }
+
     // create a new user
     const user = await createUser({ username, password, email });
     const token = jwt.sign(

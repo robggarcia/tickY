@@ -95,6 +95,28 @@ async function getUserByUsername(userName) {
   }
 }
 
+async function getUserByEmail(email) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+        SELECT *
+        FROM users
+        WHERE email=$1;
+    `,
+      [email]
+    );
+
+    if (!user) return null;
+
+    return user;
+  } catch (error) {
+    console.log("Error in getUserByUsername");
+    throw error;
+  }
+}
+
 async function updateUser({ id, ...fields }) {
   try {
     const setString = Object.keys(fields)
@@ -124,5 +146,6 @@ module.exports = {
   getUser,
   getUserById,
   getUserByUsername,
+  getUserByEmail,
   updateUser,
 };
