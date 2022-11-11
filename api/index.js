@@ -73,7 +73,6 @@ apiRouter.use("/tickets_orders", ticketOrdersRouter);
 
 // ROUTER: /api/orders
 const ordersRouter = require("./orders");
-const { getUserById } = require("../db/users");
 apiRouter.use("/orders", ordersRouter);
 
 apiRouter.get("*", (req, res) => {

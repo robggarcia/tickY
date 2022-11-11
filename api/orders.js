@@ -32,6 +32,7 @@ ordersRouter.get("/:orderId", requireAdmin, async (req, res, next) => {
     next(error);
   }
 });
+
 ordersRouter.patch("/:orderId", requireAdmin, async (req, res, next) => {
   const orderId = req.params.orderId;
   const inputFields = req.body;
@@ -53,4 +54,5 @@ ordersRouter.patch("/:orderId", requireAdmin, async (req, res, next) => {
     next({ name, message });
   }
 });
+
 module.exports = ordersRouter;
