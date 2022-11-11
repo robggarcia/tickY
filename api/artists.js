@@ -7,6 +7,7 @@ const {
   getArtistByName,
   createArtist,
   updateArtist,
+  deleteArtist,
 } = require("../db/artists");
 const { getTicketsByArtist } = require("../db/tickets");
 const { requireAdmin } = require("./utils");
@@ -99,6 +100,26 @@ artistsRouter.patch("/:artistId", requireAdmin, async (req, res, next) => {
     inputFields.id = artistId;
     const updatedArtist = await updateArtist(inputFields);
     res.send(updatedArtist);
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+// DELETE api/artists/:artistId
+artistsRouter.delete("/:artistId", requireAdmin, async (req, res, next) => {
+  const artistId = req.params.artistId;
+  try {
+    // check to see if artist id exists
+    const artist = await getArtistById(artistId);
+    if (!artist) {
+      const err = new Error(`Artist ${artistId} not found`);
+      err.status = 400;
+      err.name = "NonExistingArtistError";
+      next(err);
+    }
+    // delete artist
+    const deletedArtist = await deleteArtist(artistId);
+    res.send(deletedArtist);
   } catch ({ name, message }) {
     next({ name, message });
   }
