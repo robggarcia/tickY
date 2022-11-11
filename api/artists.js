@@ -88,7 +88,7 @@ artistsRouter.patch("/:artistId", requireAdmin, async (req, res, next) => {
   const inputFields = req.body;
   try {
     // check to see if the artist exists and update if it does
-    const checkArtistId = await getArtistById(artistId);
+    const checkArtistId = await getArtistById(+artistId);
     if (!checkArtistId) {
       const err = new Error(`Artist ${artistId} not found`);
       err.status = 400;
