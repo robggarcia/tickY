@@ -1,9 +1,19 @@
 const express = require("express");
 const { JWT_SECRET } = process.env;
 const jwt = require("jsonwebtoken");
-const { getAllOrders, getOrderById } = require("../db/order");
+const { getAllOrders, getOrderById, createOrder } = require("../db/order");
 const { requireUser, requireAdmin } = require("./utils");
 const ordersRouter = express.Router();
+
+ordersRouter.post("/", requireUser, async (req, res, next) => {
+  const inputFields = req.body;
+  try {
+    const order = await createOrder(inputFields);
+    res.send(order);
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
 
 ordersRouter.get("/", requireUser, requireAdmin, async (req, res, next) => {
   try {
