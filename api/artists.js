@@ -29,7 +29,7 @@ artistsRouter.get("/", async (req, res, next) => {
 artistsRouter.get("/:artistId", async (req, res, next) => {
   const artistId = req.params.artistId;
   try {
-    const artist = await getArtistById(artistId);
+    const artist = await getArtistById(+artistId);
     if (!artist) {
       const err = new Error(`Artist id ${artistId} does not exist`);
       err.status = 400;
@@ -45,7 +45,7 @@ artistsRouter.get("/:artistId", async (req, res, next) => {
 artistsRouter.get("/:artistId/tickets", async (req, res, next) => {
   const artistId = req.params.artistId;
   try {
-    const tickets = await getTicketsByArtist(artistId);
+    const tickets = await getTicketsByArtist(+artistId);
     if (!tickets) {
       const err = new Error(`No tickets from artist id ${artistId} exist`);
       err.status = 400;
@@ -118,7 +118,7 @@ artistsRouter.delete("/:artistId", requireAdmin, async (req, res, next) => {
       next(err);
     }
     // delete artist
-    const deletedArtist = await deleteArtist(artistId);
+    const deletedArtist = await deleteArtist(+artistId);
     res.send(deletedArtist);
   } catch ({ name, message }) {
     next({ name, message });
