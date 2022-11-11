@@ -1,10 +1,11 @@
 const express = require("express");
 const { JWT_SECRET } = process.env;
 const jwt = require("jsonwebtoken");
-const { getAllArtists } = require("../db/artists");
-const artistRouter = express.Router();
+const { getArtistById, getAllArtists } = require("../db/artists");
+const artistsRouter = express.Router();
 
-artistRouter.get("/", async (req, res, next) => {
+// GET /api/artists
+artistsRouter.get("/", async (req, res, next) => {
   try {
     const artists = await getAllArtists();
     res.send(artists);
@@ -15,4 +16,20 @@ artistRouter.get("/", async (req, res, next) => {
   }
 });
 
-module.exports = artistRouter;
+// GET /api/artists/:artistId
+artistsRouter.get("/:artistId", async (req, res, next) => {
+  const artistId = req.params.artistId;
+  try {
+    const artist = await getArtistById(artistId);
+    if (!artist) {
+      const err = new Error(`Artist id ${artistId} does not exist`);
+      err.status = 400;
+      err.name = "UnknownArtistError";
+    }
+    res.send(artist);
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+module.exports = artistsRouter;
