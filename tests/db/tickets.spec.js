@@ -200,7 +200,7 @@ describe("DB Tickets", () => {
       expectTicketToContainArtist(ticket, fakeArtist);
     });
 
-    it("should not include a non sold out ticket containing another artist", async () => {
+    it("should not include a ticket containing another artist", async () => {
       const anotherArtist = await createFakeArtist();
       const anotherVenue = await createFakeVenue();
       await createFakeTicket({

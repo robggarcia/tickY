@@ -112,9 +112,11 @@ usersRouter.get("/:userId/orders", requireUser, async (req, res, next) => {
 // PATCH api/users/:userId
 usersRouter.get(":userId", requireUser, async (req, res, next) => {
   const userId = req.params.userId;
+  const inputFields = req.body;
+  inputFields.id = userId;
   try {
-    const orders = await getOrdersByUserId(userId);
-    res.send(orders);
+    const updatedUser = await updateUser(inputFields);
+    res.send(updatedUser);
   } catch ({ name, message }) {
     next({ name, message });
   }

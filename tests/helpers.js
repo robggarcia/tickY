@@ -56,7 +56,7 @@ const createFakeArtist = async (
 };
 
 const createFakeVenue = async (
-  name = faker.address.streetName(),
+  name = faker.name.findName(),
   city = faker.address.city(),
   state = faker.address.state(),
   capacity = faker.datatype.number(1000)
