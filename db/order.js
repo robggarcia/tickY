@@ -47,9 +47,7 @@ async function getOrderById(id) {
       [id]
     );
     // attach ticket to order by first grabbing the ticket_order
-    const {
-      rows: [ticket_order],
-    } = await client.query(
+    const { rows: ticket_orders } = await client.query(
       `
       SELECT *
       FROM tickets_orders
@@ -57,9 +55,13 @@ async function getOrderById(id) {
     `,
       order.id
     );
-    const ticket = await getTicketById(ticket_order.ticketId);
-    order.ticketQuantity = ticket_order.quantity;
-    order.ticket = ticket;
+    const tickets = [];
+    for (let ticket_order of ticket_orders) {
+      const ticket = await getTicketById(ticket_order.ticketId);
+      ticket.quantity = ticket_order.quantity;
+      tickets.push(ticket);
+    }
+    order.tickets = tickets;
     return order;
   } catch (error) {
     console.error("Error in getOrderById");
