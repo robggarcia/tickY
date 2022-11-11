@@ -125,3 +125,5 @@ ticketsRouter.delete("/:ticketId", requireAdmin, async (req, res, next) => {
     next({ name, message });
   }
 });
+
+module.exports = ticketsRouter;

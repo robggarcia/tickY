@@ -50,8 +50,6 @@ apiRouter.get("/", (req, res) => {
   res.send("api router working");
 });
 
-apiRouter.use("/users", usersRouter);
-
 // ROUTER: /api/users
 const usersRouter = require("./users");
 apiRouter.use("/users", usersRouter);
