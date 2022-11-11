@@ -7,6 +7,7 @@ const {
   getTicketById,
   getTicketsByArtist,
   createTicket,
+  updateTicket,
 } = require("../db/tickets");
 const { requireUser, requireAdmin } = require("./utils");
 const ticketsRouter = express.Router();
@@ -38,7 +39,7 @@ ticketsRouter.get("/:ticketId", async (req, res, next) => {
   }
 });
 
-ticketsRouter.post("/", requireUser, requireAdmin, async (req, res, next) => {
+ticketsRouter.post("/", requireAdmin, async (req, res, next) => {
   const inputFields = req.body;
   try {
     // check to see if the ticket already exists (check artist and venue)
@@ -56,11 +57,47 @@ ticketsRouter.post("/", requireUser, requireAdmin, async (req, res, next) => {
         }
       }
     }
-
     // create the new ticket
     const ticket = await createTicket(inputFields);
     res.send(ticket);
   } catch ({ name, message }) {
     next({ name, message });
+  }
+});
+
+ticketsRouter.patch("/:ticketId", requireAdmin, async (req, res, next) => {
+  const ticketId = req.params.ticketId;
+  const inputFields = req.body;
+  try {
+    // check to see if the artist and venue on the ticket already exist
+    const existingTickets = await getTicketsByArtist(inputFields.artistId);
+    if (existingTickets) {
+      for (let ticket of existingTickets) {
+        if (ticket.venueId === req.body.venueId) {
+          const err = new Error(
+            `An activity with name ${inputFields.name} already exists`
+          );
+          err.status = 400;
+          err.name = "ExistingActivityError";
+          next(err);
+          return;
+        }
+      }
+    }
+    // check to see if the ticket exists and update it
+    const checkTicketId = await getTicketById(ticketId);
+    if (!checkTicketId) {
+      const err = new Error(`Activity ${activityId} not found`);
+      err.status = 400;
+      err.name = "NonExistingActivityError";
+      next(err);
+      return;
+    }
+    // update the ticket
+    inputFields.id = ticketId;
+    const updatedTicket = await updateTicket(inputFields);
+    res.send(updatedTicket);
+  } catch ({ name, message }) {
+    next({ error, message });
   }
 });
