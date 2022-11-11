@@ -6,6 +6,7 @@ const {
   getAllArtists,
   getArtistByName,
   createArtist,
+  updateArtist,
 } = require("../db/artists");
 const { getTicketsByArtist } = require("../db/tickets");
 const { requireAdmin } = require("./utils");
@@ -75,6 +76,29 @@ artistsRouter.post("/", requireAdmin, async (req, res, next) => {
     // create the new ticket
     const artist = await createArtist(inputFields);
     res.send(artist);
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+// PATCH api/artists/:artistId
+artistsRouter.patch("/:artistId", requireAdmin, async (req, res, next) => {
+  const artistId = req.params.artistId;
+  const inputFields = req.body;
+  try {
+    // check to see if the artist exists and update if it does
+    const checkArtistId = await getArtistById(artistId);
+    if (!checkArtistId) {
+      const err = new Error(`Artist ${artistId} not found`);
+      err.status = 400;
+      err.name = "NonExistingArtistError";
+      next(err);
+      return;
+    }
+    // update the artist
+    inputFields.id = artistId;
+    const updatedArtist = await updateArtist(inputFields);
+    res.send(updatedArtist);
   } catch ({ name, message }) {
     next({ name, message });
   }
