@@ -37,3 +37,5 @@ ordersRouter.get(
     }
   }
 );
+
+module.exports = ordersRouter;
