@@ -2,6 +2,7 @@ const express = require("express");
 const { JWT_SECRET } = process.env;
 const jwt = require("jsonwebtoken");
 const { getArtistById, getAllArtists } = require("../db/artists");
+const { getTicketsByArtist } = require("../db/tickets");
 const artistsRouter = express.Router();
 
 // GET /api/artists
@@ -27,6 +28,23 @@ artistsRouter.get("/:artistId", async (req, res, next) => {
       err.name = "UnknownArtistError";
     }
     res.send(artist);
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+// GET /api/artists/:artistId/tickets
+artistsRouter.get("/:artistId/tickets", async (req, res, next) => {
+  const artistId = req.params.artistId;
+  try {
+    const tickets = await getTicketsByArtist(artistId);
+    if (!tickets) {
+      const err = new Error(`No tickets from artist id ${artistId} exist`);
+      err.status = 400;
+      err.name = "NotTicketsWithArtistError";
+      next(err);
+    }
+    res.send(tickets);
   } catch ({ name, message }) {
     next({ name, message });
   }
