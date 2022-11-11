@@ -19,7 +19,7 @@ async function createArtist({ name, genre, image, description }) {
   }
 }
 
-async function getArtist() {
+async function getAllArtists() {
   try {
     const { rows: artists } = await client.query(`
       SELECT * 
@@ -123,7 +123,7 @@ async function getArtistByName(artistName) {
 }
 
 module.exports = {
-  getArtist,
+  getAllArtists,
   createArtist,
   updateArtist,
   deleteArtist,
