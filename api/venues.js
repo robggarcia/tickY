@@ -1,17 +1,10 @@
 const express = require("express");
 const { JWT_SECRET } = process.env;
 const jwt = require("jsonwebtoken");
-<<<<<<< HEAD
-const { getAllArtists, getArtistById } = require("../db/artists");
-const { ArtistExistsError } = require("../errors");
+const { getVenues } = require("../db/venues");
 const venuesRouter = express.Router();
 
-module.exports = venuesRouter;
-=======
-const { getVenues } = require("../db/venues");
-const venueRouter = express.Router();
-
-venueRouter.get("/", async (req, res, next) => {
+venuesRouter.get("/", async (req, res, next) => {
   try {
     const venues = await getVenues();
     res.send(venues);
@@ -21,4 +14,5 @@ venueRouter.get("/", async (req, res, next) => {
     return;
   }
 });
->>>>>>> a218a42 (eric)
+
+module.exports = venuesRouter;
