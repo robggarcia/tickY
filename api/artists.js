@@ -1,13 +1,13 @@
 const express = require("express");
 const { JWT_SECRET } = process.env;
 const jwt = require("jsonwebtoken");
-const { getArtist, getArtistById } = require("../db/artists");
+const { getArtistById, getAllArtists } = require("../db/artists");
 const artistsRouter = express.Router();
 
 // GET /api/artists
 artistsRouter.get("/", async (req, res, next) => {
   try {
-    const artists = await getArtist();
+    const artists = await getAllArtists();
     res.send(artists);
     return;
   } catch (error) {
