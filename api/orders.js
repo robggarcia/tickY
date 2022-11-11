@@ -1,10 +1,28 @@
 const express = require("express");
 const { JWT_SECRET } = process.env;
 const jwt = require("jsonwebtoken");
-const { getAllOrders, getOrderById, updateOrder } = require("../db/order");
+const {
+  getAllOrders,
+  getOrderById,
+  updateOrder,
+  createOrder,
+} = require("../db/order");
 const { requireUser, requireAdmin } = require("./utils");
 const ordersRouter = express.Router();
 
+// POST /api/orders
+ordersRouter.post("/", requireUser, async (req, res, next) => {
+  const inputFields = req.body;
+  try {
+    // create the new order
+    const order = await createOrder(inputFields);
+    res.send(order);
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+// GET /api/orders
 ordersRouter.get("/", requireAdmin, async (req, res, next) => {
   try {
     const orders = await getAllOrders();
@@ -16,6 +34,7 @@ ordersRouter.get("/", requireAdmin, async (req, res, next) => {
   }
 });
 
+// GET /api/orders/:orderId
 ordersRouter.get("/:orderId", requireAdmin, async (req, res, next) => {
   const orderId = req.params.orderId;
   try {
@@ -33,6 +52,7 @@ ordersRouter.get("/:orderId", requireAdmin, async (req, res, next) => {
   }
 });
 
+// PATCH /api/orders/:orderId
 ordersRouter.patch("/:orderId", requireAdmin, async (req, res, next) => {
   const orderId = req.params.orderId;
   const inputFields = req.body;
