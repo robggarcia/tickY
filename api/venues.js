@@ -21,6 +21,16 @@ venuesRouter.get("/", async (req, res, next) => {
   }
 });
 
+venuesRouter.get("/:venueId", async (req, res, next) => {
+  try {
+    const venueId = req.params.venueId;
+    const venue = await getVenueById(+venueId);
+    res.send(venue);
+  } catch (error) {
+    next(error);
+  }
+});
+
 venuesRouter.get("/:venueId/tickets", async (req, res, next) => {
   try {
     const venueId = req.params.venueId;
