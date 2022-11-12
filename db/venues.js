@@ -40,7 +40,9 @@ async function updateVenue({ id, ...fields }) {
 
   // console.log(setString);
   if (setString.length > 0) {
-    const update = await client.query(
+    const {
+      rows: [updatedVenue],
+    } = await client.query(
       `
       UPDATE venues
       SET ${setString}
@@ -49,19 +51,21 @@ async function updateVenue({ id, ...fields }) {
     `,
       Object.values(fields)
     );
-    return update.rows[0];
+    return updatedVenue;
   }
 }
 
 async function destroyVenue(id) {
-  const result = await client.query(
+  const {
+    rows: [deletedVenue],
+  } = await client.query(
     `
   DELETE FROM venues
   WHERE id=$1
   RETURNING *;`,
     [id]
   );
-  return result.rows[0];
+  return deletedVenue;
 }
 
 async function getVenueById(id) {
