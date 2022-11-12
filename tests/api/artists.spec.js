@@ -1,7 +1,11 @@
 require("dotenv").config();
 const request = require("supertest");
-const app = require("../../app");
-const { createFakeUserWithToken, createFakeArtist } = require("../helpers");
+const { app, appServer } = require("../..");
+const {
+  createFakeUserWithToken,
+  createFakeArtist,
+  createFakeAdmin,
+} = require("../helpers");
 const {
   expectToBeError,
   expectNotToBeError,
@@ -11,6 +15,11 @@ const {
 const { ArtistExistsError, ArtistNotFoundError } = require("../../errors");
 
 const { arrayContaining } = expect;
+
+afterAll(() => {
+  console.log("tests finished running");
+  appServer.close();
+});
 
 describe("api/artists", () => {
   describe("GET api/artists", () => {
@@ -25,7 +34,7 @@ describe("api/artists", () => {
 
   describe("POST /api/artists (*)", () => {
     it("Creates a new artists", async () => {
-      const { token } = await createFakeUserWithToken("bob");
+      const { token } = await createFakeAdmin();
 
       const artistData = {
         name: "The Beatles",
@@ -45,9 +54,9 @@ describe("api/artists", () => {
     });
 
     it("responds with an error when a artists already exists with the same name", async () => {
-      const { token } = await createFakeUserWithToken("alice");
+      const { token } = await createFakeAdmin();
 
-      await createFakeArtists("Push Ups", "Do 30 reps");
+      await createFakeArtist();
 
       const artistData = {
         name: "The Beatles",
@@ -70,7 +79,8 @@ describe("api/artists", () => {
 
   describe("PATCH /api/artists/:artistId (**)", () => {
     it("Admin can update an artist", async () => {
-      const { token } = await createFakeUserWithToken("Allison");
+      const { token } = await createFakeAdmin();
+
       const fakeArtist = await createFakeArtist();
 
       const newArtistData = {
@@ -83,8 +93,11 @@ describe("api/artists", () => {
         .set("Authorization", `Bearer ${token}`)
         .send(newArtistData);
 
+      console.log("PATCH ARTIST RESPONSE: ", response.body);
       expectNotToBeError(response.body);
 
+      newArtistData.image = fakeArtist.image;
+      newArtistData.genre = fakeArtist.genre;
       expect(response.body).toEqual({
         id: expect.any(Number),
         ...newArtistData,
@@ -92,7 +105,7 @@ describe("api/artists", () => {
     });
 
     it("returns an error when updating an artist that does not exist", async () => {
-      const { token } = await createFakeUserWithToken("Barry");
+      const { token } = await createFakeAdmin();
 
       const newArtistData = {
         name: "Alien Nose Job",
@@ -108,7 +121,7 @@ describe("api/artists", () => {
     });
 
     it("returns an error when changing an artist to have the name of an existing artist", async () => {
-      const { token } = await createFakeUserWithToken("Jane");
+      const { token } = await createFakeAdmin();
       const fakeArtist = await createFakeArtist(
         "The Clean",
         "pop",

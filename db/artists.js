@@ -1,4 +1,3 @@
-const { response } = require("express");
 const client = require(".");
 const { getTicketsByArtist } = require("./tickets");
 
@@ -38,7 +37,7 @@ async function updateArtist({ id, ...fields }) {
       .map((key, idx) => `"${key}"=$${idx + 2}`)
       .join(", ");
     const {
-      rows: [ticket],
+      rows: [updatedTicket],
     } = await client.query(
       `
           UPDATE artists
@@ -48,7 +47,7 @@ async function updateArtist({ id, ...fields }) {
       `,
       [id, ...Object.values(fields)]
     );
-    return ticket;
+    return updatedTicket;
   } catch (error) {
     console.log("Error in updateArtist");
     throw error;

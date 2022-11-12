@@ -6,25 +6,52 @@ const { createTicketOrder } = require("../db/tickets_orders");
 const { createUser } = require("../db/users");
 const { createVenue } = require("../db/venues");
 const jwt = require("jsonwebtoken");
-const client = require("../db");
+const client = require("../db/index");
+const { JWT_SECRET } = process.env;
 
 const createFakeUser = async (
   username = faker.internet.userName(),
   password = faker.internet.password(),
-  email = faker.internet.email(),
-  admin = faker.datatype.boolean()
+  email = faker.internet.email()
 ) => {
   const fakeUserData = {
     username,
     password,
     email,
-    admin,
   };
   const user = await createUser(fakeUserData);
   if (!user) {
     throw new Error("createUser didn't return a user");
   }
   return user;
+};
+
+const createFakeAdmin = async (
+  username = faker.internet.userName(),
+  password = faker.internet.password(),
+  email = faker.internet.email(),
+  admin = true
+) => {
+  const {
+    rows: [newAdmin],
+  } = await client.query(
+    `
+      INSERT INTO users (username, password, email, admin) 
+      VALUES($1, $2, $3, $4)
+      ON CONFLICT (username) DO NOTHING 
+      RETURNING id, username, email, admin;
+  `,
+    [username, password, email, admin]
+  );
+  console.log("ADMIN CREATED: ", admin);
+
+  const token = jwt.sign(
+    { id: newAdmin.id, username: newAdmin.username },
+    JWT_SECRET,
+    { expiresIn: "1w" }
+  );
+
+  return { newAdmin, token };
 };
 
 const createFakeUserWithToken = async (username) => {
@@ -188,6 +215,7 @@ const createFakeTicketWithArtistAndVenue = async (numTickets = 2) => {
 
 module.exports = {
   createFakeUser,
+  createFakeAdmin,
   createFakeUserWithToken,
   createFakeArtist,
   createFakeTicket,
