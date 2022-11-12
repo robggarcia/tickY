@@ -46,14 +46,15 @@ async function getOrderById(id) {
     `,
       [id]
     );
+    console.log("GETORDERBYIT: ", order);
     // attach ticket to order by first grabbing the ticket_order
     const { rows: ticket_orders } = await client.query(
       `
       SELECT *
       FROM tickets_orders
-      WHERE "orderId"=$1,
+      WHERE "orderId"=$1;
     `,
-      order.id
+      [order.id]
     );
     const tickets = [];
     for (let ticket_order of ticket_orders) {
@@ -92,9 +93,34 @@ async function updateOrder({ id, ...fields }) {
   }
 }
 
+async function getOrdersByUserId(userId) {
+  try {
+    const { rows: orders } = await client.query(
+      `
+      SELECT *
+      FROM orders
+      WHERE "userId"=$1;
+    `,
+      [userId]
+    );
+    // attach tickets to each order
+    const fullOrders = [];
+    for (let order of orders) {
+      console.log("FOR EACH ORDER, ", order.id);
+      const fullOrder = await getOrderById(order.id);
+      fullOrders.push(fullOrder);
+    }
+    return fullOrders;
+  } catch (error) {
+    console.log("error in getOrdersByUserId");
+    throw error;
+  }
+}
+
 module.exports = {
   createOrder,
   getAllOrders,
   getOrderById,
   updateOrder,
+  getOrdersByUserId,
 };

@@ -37,7 +37,6 @@ async function getUser({ username, password }) {
   try {
     // retrieve the user from the database from the given username
     const user = await getUserByUsername(username);
-
     // confirm correct password
     const isValid = await bcrypt.compare(password, user.password);
     if (isValid) {

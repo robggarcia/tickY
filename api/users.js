@@ -1,5 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const { getOrdersByUserId } = require("../db/order");
 const {
   getUser,
   getUserByUsername,
@@ -15,7 +16,6 @@ const { JWT_SECRET } = process.env;
 // POST /api/users/login
 usersRouter.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
-  console.log("REQUEST MADE TO /users/login", req);
   // make sure both username and password are provided
   if (!username || !password) {
     const err = new Error("Please provide username and password.");
@@ -102,11 +102,15 @@ usersRouter.get("/me", requireUser, async (req, res, next) => {
 // GET /api/users/:userId/orders
 usersRouter.get("/:userId/orders", requireUser, async (req, res, next) => {
   const userId = req.params.userId;
-  const inputFields = req.body;
   try {
-    inputFields.id = userId;
-    const updatedUser = await updateUser(inputFields);
-    res.send(updatedUser);
+    const orders = await getOrdersByUserId(+userId);
+    if (!orders) {
+      const err = new Error(`User Id ${userId} does not have any orders`);
+      err.status = 400;
+      err.name = "NoOrdersWithUserId";
+      next(err);
+    }
+    res.send(orders);
   } catch ({ name, message }) {
     next({ name, message });
   }
