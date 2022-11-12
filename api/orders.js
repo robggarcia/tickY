@@ -13,6 +13,8 @@ const ordersRouter = express.Router();
 // POST /api/orders
 ordersRouter.post("/", requireUser, async (req, res, next) => {
   const inputFields = req.body;
+  if (!inputFields.purchased) inputFields.purchased = false;
+  if (!inputFields.userId) inputFields.userId = req.user.id;
   try {
     // create the new order
     const order = await createOrder(inputFields);
@@ -35,8 +37,9 @@ ordersRouter.get("/", requireAdmin, async (req, res, next) => {
 });
 
 // GET /api/orders/:orderId
-ordersRouter.get("/:orderId", requireAdmin, async (req, res, next) => {
+ordersRouter.get("/:orderId", requireUser, async (req, res, next) => {
   const orderId = req.params.orderId;
+  const user = req.user;
   try {
     // check to see if order id exists
     const order = await getOrderById(orderId);
@@ -46,7 +49,17 @@ ordersRouter.get("/:orderId", requireAdmin, async (req, res, next) => {
       err.name = "NonExistingOrderError";
       next(err);
     }
-    res.send(order);
+    // user must either be admin or have a matching userId to view this order
+    if (user.admin || user.id === order.userId) {
+      res.send(order);
+    } else {
+      const err = new Error(
+        `User Id ${user.id} does not have access to view this order`
+      );
+      err.status = 400;
+      err.name = "UnauthorizedUserError";
+      next(err);
+    }
   } catch (error) {
     next(error);
   }
@@ -68,8 +81,8 @@ ordersRouter.patch("/:orderId", requireAdmin, async (req, res, next) => {
     }
     // update the Order
     inputFields.id = orderId;
-    const updateOrder = await updateOrder(inputFields);
-    res.send(updateOrder);
+    const updatedOrder = await updateOrder(inputFields);
+    res.send(updatedOrder);
   } catch ({ name, message }) {
     next({ name, message });
   }

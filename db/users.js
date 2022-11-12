@@ -1,4 +1,3 @@
-const { response } = require("express");
 const client = require(".");
 const bcrypt = require("bcrypt");
 
@@ -9,7 +8,7 @@ const getAllUsers = async () => {
   return response.rows;
 };
 
-async function createUser({ username, password, email, admin }) {
+async function createUser({ username, password, email }) {
   // hash password before inserting it into database
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -19,12 +18,12 @@ async function createUser({ username, password, email, admin }) {
       rows: [user],
     } = await client.query(
       `
-    INSERT INTO users (username, password, email, admin) 
-    VALUES($1, $2, $3, $4)
+    INSERT INTO users (username, password, email) 
+    VALUES($1, $2, $3)
     ON CONFLICT (username) DO NOTHING 
-    RETURNING id, username, email, admin;
+    RETURNING id, username, email;
     `,
-      [username, hashedPassword, email, admin]
+      [username, hashedPassword, email]
     );
 
     return user;
@@ -37,7 +36,9 @@ async function getUser({ username, password }) {
   try {
     // retrieve the user from the database from the given username
     const user = await getUserByUsername(username);
+    if (!user) return null;
     // confirm correct password
+    console.log("IS VALID? :", password, user.pass);
     const isValid = await bcrypt.compare(password, user.password);
     if (isValid) {
       delete user.password;
@@ -108,6 +109,7 @@ async function getUserByEmail(email) {
     );
 
     if (!user) return null;
+    delete user.password;
 
     return user;
   } catch (error) {
@@ -132,11 +134,26 @@ async function updateUser({ id, ...fields }) {
       `,
       [id, ...Object.values(fields)]
     );
+    delete user.password;
+
     return user;
   } catch (error) {
     console.log("Error in updateArtist");
     throw error;
   }
+}
+
+async function destroyUser(id) {
+  const {
+    rows: [user],
+  } = await client.query(
+    `
+  DELETE FROM users
+  WHERE id=$1
+  RETURNING *;`,
+    [id]
+  );
+  return user;
 }
 
 module.exports = {
@@ -147,4 +164,5 @@ module.exports = {
   getUserByUsername,
   getUserByEmail,
   updateUser,
+  destroyUser,
 };

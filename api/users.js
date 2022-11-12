@@ -8,6 +8,8 @@ const {
   updateUser,
   getAllUsers,
   getUserByEmail,
+  getUserById,
+  destroyUser,
 } = require("../db/users");
 const { requireUser, requireAdmin } = require("./utils");
 const usersRouter = express.Router();
@@ -117,11 +119,21 @@ usersRouter.get("/:userId/orders", requireUser, async (req, res, next) => {
 });
 
 // PATCH api/users/:userId
-usersRouter.get(":userId", requireUser, async (req, res, next) => {
-  const userId = req.params.userId;
+usersRouter.patch("/:userId", requireUser, async (req, res, next) => {
+  const userId = +req.params.userId;
   const inputFields = req.body;
   inputFields.id = userId;
+  const user = req.user;
   try {
+    // check if userId matches input parameters
+    if (userId !== user.id) {
+      const err = new Error(
+        `User id ${user.id} does not have access to edit this profile`
+      );
+      err.status = 400;
+      err.name = "IncorrectUserIdError";
+      next(err);
+    }
     const updatedUser = await updateUser(inputFields);
     res.send(updatedUser);
   } catch ({ name, message }) {
@@ -134,6 +146,26 @@ usersRouter.get("/", requireAdmin, async (req, res, next) => {
   try {
     const users = await getAllUsers();
     res.send(users);
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+// DELETE api/users/:userId
+usersRouter.delete("/:userId", requireAdmin, async (req, res, next) => {
+  const userId = req.params.userId;
+  try {
+    // check that user exists
+    const _user = await getUserById(+userId);
+    if (!_user) {
+      const err = new Error(`User Id ${userId} does not exist`);
+      err.status = 400;
+      err.name = "UserDoesNotExistError";
+      next(err);
+      return;
+    }
+    const deletedUser = await destroyUser(userId);
+    res.send(deletedUser);
   } catch ({ name, message }) {
     next({ name, message });
   }
