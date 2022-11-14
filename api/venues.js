@@ -75,10 +75,21 @@ venuesRouter.patch("/:venueId", requireAdmin, async (req, res, next) => {
   const venueId = req.params.venueId;
   const inputFields = req.body;
   try {
+    // check to see if a venue with the same name already exists
+    const _checkVenueName = await getVenueByName(inputFields.name);
+    if (_checkVenueName) {
+      const err = new Error(
+        `A venue with name ${_checkVenueName.name} already exists`
+      );
+      err.status = 400;
+      err.name = "DuplicateVenueError";
+      next(err);
+      return;
+    }
     // check to see if the venue exists and update if it does
     const checkVenueId = await getVenueById(venueId);
     if (!checkVenueId) {
-      const err = new Error(`venue ${venueId} not found`);
+      const err = new Error(`Venue ${venueId} not found`);
       err.status = 400;
       err.name = "NonExistingVenueError";
       next(err);

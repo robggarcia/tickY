@@ -1,7 +1,11 @@
 require("dotenv").config();
 const request = require("supertest");
-const app = require("../../app");
-const { createFakeUserWithToken, createFakeVenue } = require("../helpers");
+const { app, appServer } = require("../..");
+const {
+  createFakeUserWithToken,
+  createFakeVenue,
+  createFakeAdmin,
+} = require("../helpers");
 const {
   expectToBeError,
   expectNotToBeError,
@@ -11,6 +15,11 @@ const {
 const { VenueExistsError, VenueNotFoundError } = require("../../errors");
 
 const { arrayContaining } = expect;
+
+afterAll(() => {
+  console.log("tests finished running");
+  appServer.close();
+});
 
 describe("api/venues", () => {
   describe("GET api/venues", () => {
@@ -25,13 +34,13 @@ describe("api/venues", () => {
 
   describe("POST /api/venues (*)", () => {
     it("Creates a new venues", async () => {
-      const { token } = await createFakeUserWithToken("bob");
+      const { token } = await createFakeAdmin();
 
       const venueData = {
-        name: "The Beatles",
-        genre: "pop",
-        image: "pic.com",
-        description: "love, love me do",
+        name: "Jim's Room",
+        city: "Cherry Hill",
+        state: "NJ",
+        capacity: 20,
       };
 
       const response = await request(app)
@@ -45,15 +54,15 @@ describe("api/venues", () => {
     });
 
     it("responds with an error when a venues already exists with the same name", async () => {
-      const { token } = await createFakeUserWithToken("alice");
+      const { token } = await createFakeAdmin();
 
-      await createFakevenues("Push Ups", "Do 30 reps");
+      await createFakeVenue();
 
       const venueData = {
-        name: "The Beatles",
-        genre: "pop",
-        image: "pic.com",
-        description: "love, love me do",
+        name: "Jim's Room",
+        city: "Cherry Hill",
+        state: "NJ",
+        capacity: 20,
       };
 
       const response = await request(app)
@@ -67,12 +76,14 @@ describe("api/venues", () => {
 
   describe("PATCH /api/venues/:venueId (**)", () => {
     it("Admin can update an venue", async () => {
-      const { token } = await createFakeUserWithToken("Allison");
+      const { token } = await createFakeAdmin();
       const fakeVenue = await createFakeVenue();
 
       const newVenueData = {
-        name: "Stone Temple Pilots",
-        description: "Grunge Rock Pioneers",
+        name: "The Casbah",
+        city: "San Diego",
+        state: "CA",
+        capacity: 200,
       };
 
       const response = await request(app)
@@ -89,11 +100,13 @@ describe("api/venues", () => {
     });
 
     it("returns an error when updating an venue that does not exist", async () => {
-      const { token } = await createFakeUserWithToken("Barry");
+      const { token } = await createFakeAdmin();
 
       const newVenueData = {
-        name: "Alien Nose Job",
-        description: "Weirdo Punkers",
+        name: "Johnny Brenda's",
+        city: "Philadelphia",
+        state: "PA",
+        capacity: 150,
       };
 
       const response = await request(app)
@@ -105,23 +118,26 @@ describe("api/venues", () => {
     });
 
     it("returns an error when changing an venue to have the name of an existing venue", async () => {
-      const { token } = await createFakeUserWithToken("Jane");
+      const { token } = await createFakeAdmin();
+
       const fakeVenue = await createFakeVenue(
-        "The Clean",
-        "pop",
-        "pic.com",
-        "New Zealand New Wavers"
+        "Boot and Saddle",
+        "Philadelphia",
+        "PA",
+        "100"
       );
       const secondFakeVenue = await createFakeVenue(
-        "Toy Love",
-        "pop",
-        "pic.com",
-        "New Zealand New Wavers"
+        "Century Bar",
+        "Philadelphia",
+        "PA",
+        "60"
       );
 
       const newVenueData = {
         name: secondFakeVenue.name,
-        description: "Good for the heart",
+        city: "Alexandria",
+        state: "LA",
+        capacity: 230,
       };
 
       const response = await request(app)
@@ -134,6 +150,31 @@ describe("api/venues", () => {
         VenueExistsError(secondFakeVenue.name)
       );
       expectToBeError(response.body);
+    });
+  });
+
+  describe("DELETE /api/venues/:venueId (**)", () => {
+    it("Admin can delete a venue", async () => {
+      const { token } = await createFakeAdmin();
+      const fakeVenue = await createFakeVenue();
+
+      const response = await request(app)
+        .delete(`/api/venues/${fakeVenue.id}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expectNotToBeError(response.body);
+
+      expect(response.body).toEqual(fakeVenue);
+    });
+
+    it("returns an error when deleting a venue that does not exist", async () => {
+      const { token } = await createFakeAdmin();
+
+      const response = await request(app)
+        .delete(`/api/venues/10000`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expectToHaveErrorMessage(response.body, VenueNotFoundError(10000));
     });
   });
 });

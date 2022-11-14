@@ -1,11 +1,7 @@
 require("dotenv").config();
 const request = require("supertest");
 const { app, appServer } = require("../..");
-const {
-  createFakeUserWithToken,
-  createFakeArtist,
-  createFakeAdmin,
-} = require("../helpers");
+const { createFakeArtist, createFakeAdmin } = require("../helpers");
 const {
   expectToBeError,
   expectNotToBeError,
@@ -93,7 +89,6 @@ describe("api/artists", () => {
         .set("Authorization", `Bearer ${token}`)
         .send(newArtistData);
 
-      console.log("PATCH ARTIST RESPONSE: ", response.body);
       expectNotToBeError(response.body);
 
       newArtistData.image = fakeArtist.image;
@@ -150,6 +145,31 @@ describe("api/artists", () => {
         ArtistExistsError(secondFakeArtist.name)
       );
       expectToBeError(response.body);
+    });
+  });
+
+  describe("DELETE /api/artists/:artistId (**)", () => {
+    it("Admin can delete an artist", async () => {
+      const { token } = await createFakeAdmin();
+      const fakeArtist = await createFakeArtist();
+
+      const response = await request(app)
+        .delete(`/api/artists/${fakeArtist.id}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expectNotToBeError(response.body);
+
+      expect(response.body).toEqual(fakeArtist);
+    });
+
+    it("returns an error when deleting an artist that does not exist", async () => {
+      const { token } = await createFakeAdmin();
+
+      const response = await request(app)
+        .delete(`/api/artists/10000`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expectToHaveErrorMessage(response.body, ArtistNotFoundError(10000));
     });
   });
 });
