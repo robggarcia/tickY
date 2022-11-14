@@ -46,6 +46,7 @@ async function getOrderById(id) {
     `,
       [id]
     );
+    if (!order) return null;
     // attach ticket to order by first grabbing the ticket_order
     const { rows: ticket_orders } = await client.query(
       `

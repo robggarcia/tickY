@@ -1,11 +1,7 @@
 require("dotenv").config();
 const request = require("supertest");
 const { app, appServer } = require("../..");
-const {
-  createFakeUserWithToken,
-  createFakeVenue,
-  createFakeAdmin,
-} = require("../helpers");
+const { createFakeVenue, createFakeAdmin } = require("../helpers");
 const {
   expectToBeError,
   expectNotToBeError,
@@ -13,8 +9,6 @@ const {
 } = require("../expectHelpers");
 
 const { VenueExistsError, VenueNotFoundError } = require("../../errors");
-
-const { arrayContaining } = expect;
 
 afterAll(() => {
   console.log("tests finished running");

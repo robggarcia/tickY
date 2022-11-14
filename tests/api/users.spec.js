@@ -9,8 +9,6 @@ const { JWT_SECRET } = process.env;
 
 const {
   createFakeUserWithToken,
-  createFakeUserWithRoutines,
-  createFakeUserWithOrders,
   createFakeOrder,
   createFakeTicket,
   createFakeTicketOrder,
@@ -23,8 +21,6 @@ const {
   expectNotToBeError,
   expectToHaveErrorMessage,
 } = require("../expectHelpers");
-
-const { getPublicRoutinesByUser, getAllRoutinesByUser } = require("../../db");
 
 const {
   UserTakenError,

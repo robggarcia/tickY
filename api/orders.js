@@ -42,7 +42,7 @@ ordersRouter.get("/:orderId", requireUser, async (req, res, next) => {
   const user = req.user;
   try {
     // check to see if order id exists
-    const order = await getOrderById(orderId);
+    const order = await getOrderById(+orderId);
     if (!order) {
       const err = new Error(`Order ${orderId} not found`);
       err.status = 400;
@@ -73,7 +73,7 @@ ordersRouter.patch("/:orderId", requireAdmin, async (req, res, next) => {
     // check to see if the order exists and update if it does
     const checkOrderId = await getOrderById(orderId);
     if (!checkOrderId) {
-      const err = new Error(`order ${orderId} not found`);
+      const err = new Error(`Order ${orderId} not found`);
       err.status = 400;
       err.name = "NotexistingOrderId";
       next(err);
