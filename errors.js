@@ -12,5 +12,7 @@ module.exports = {
     `Ticket ID ${ticketId} already exists in Order ID ${orderId}`,
   UserDoesNotExistError: (name) => `User ${name} does not exist`,
   PasswordTooShortError: () => `Password Too Short!`,
-  UserTakenError: (name) => `User ${name} is already taken.`,
+  UserTakenError: (email) => `User ${email} is already taken.`,
+  UserAccessError: (id) =>
+    `User id ${id} does not have access to edit this profile`,
 };

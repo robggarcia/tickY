@@ -46,7 +46,6 @@ async function getOrderById(id) {
     `,
       [id]
     );
-    console.log("GETORDERBYIT: ", order);
     // attach ticket to order by first grabbing the ticket_order
     const { rows: ticket_orders } = await client.query(
       `
@@ -106,7 +105,6 @@ async function getOrdersByUserId(userId) {
     // attach tickets to each order
     const fullOrders = [];
     for (let order of orders) {
-      console.log("FOR EACH ORDER, ", order.id);
       const fullOrder = await getOrderById(order.id);
       fullOrders.push(fullOrder);
     }

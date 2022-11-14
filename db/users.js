@@ -38,7 +38,6 @@ async function getUser({ username, password }) {
     const user = await getUserByUsername(username);
     if (!user) return null;
     // confirm correct password
-    console.log("IS VALID? :", password, user.pass);
     const isValid = await bcrypt.compare(password, user.password);
     if (isValid) {
       delete user.password;
@@ -138,7 +137,7 @@ async function updateUser({ id, ...fields }) {
 
     return user;
   } catch (error) {
-    console.log("Error in updateArtist");
+    console.log("Error in updateUser");
     throw error;
   }
 }

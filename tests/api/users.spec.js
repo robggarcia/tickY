@@ -1,13 +1,22 @@
 require("dotenv").config();
 const request = require("supertest");
 const faker = require("faker");
+const { app, appServer } = require("../..");
 const client = require("../../db");
-const app = require("../../app");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = process.env;
+
 const {
   createFakeUserWithToken,
   createFakeUserWithRoutines,
+  createFakeUserWithOrders,
+  createFakeOrder,
+  createFakeTicket,
+  createFakeTicketOrder,
+  createFakeTicketWithArtistAndVenue,
+  createFakeAdmin,
+  createFakeUser,
 } = require("../helpers");
 const {
   expectToBeError,
@@ -15,20 +24,22 @@ const {
   expectToHaveErrorMessage,
 } = require("../expectHelpers");
 
-const { JWT_SECRET = "neverTell" } = process.env;
+const { getPublicRoutinesByUser, getAllRoutinesByUser } = require("../../db");
 
-const { objectContaining } = expect;
-
-const {
-  getPublicRoutinesByUser,
-  createUser,
-  getAllRoutinesByUser,
-} = require("../../db");
 const {
   UserTakenError,
   PasswordTooShortError,
   UnauthorizedError,
+  UserDoesNotExistError,
+  UserAccessError,
 } = require("../../errors");
+const { createUser } = require("../../db/users");
+const { getOrdersByUserId } = require("../../db/order");
+
+afterAll(() => {
+  console.log("tests finished running");
+  appServer.close();
+});
 
 describe("/api/users", () => {
   describe("POST /api/users/register", () => {
@@ -37,6 +48,7 @@ describe("/api/users", () => {
       const fakeUserData = {
         username: faker.internet.userName(),
         password: faker.internet.password(),
+        email: faker.internet.email(),
       };
       // Register the user
       const response = await request(app)
@@ -60,6 +72,7 @@ describe("/api/users", () => {
       const fakeUserData = {
         username: faker.internet.userName(),
         password: faker.internet.password(),
+        email: faker.internet.email(),
       };
 
       // Create the user through the API
@@ -97,8 +110,9 @@ describe("/api/users", () => {
       const { fakeUser: firstUser } = await createFakeUserWithToken();
       // Now try to create a user with the same email
       const secondUserData = {
-        username: firstUser.email,
+        username: faker.internet.userName(),
         password: faker.internet.password(),
+        email: firstUser.email,
       };
 
       const response = await request(app)
@@ -107,18 +121,15 @@ describe("/api/users", () => {
 
       expectToBeError(response.body);
 
-      expectToHaveErrorMessage(
-        response.body,
-        UserTakenError(firstUser.username)
-      );
+      expectToHaveErrorMessage(response.body, UserTakenError(firstUser.email));
     });
 
-    // is this a requirement????
     it("returns error if password is less than 8 characters.", async () => {
       // Create some user data with a password with 7 characters
       const newUserShortPassword = {
         username: faker.internet.userName(),
         password: faker.internet.password(7),
+        email: faker.internet.email(),
       };
 
       const response = await request(app)
@@ -130,11 +141,12 @@ describe("/api/users", () => {
   });
 
   describe("POST /api/users/login", () => {
-    it("Logs in the user. Requires username and password, and verifies that hashed login password matches the saved hashed password.", async () => {
+    it("Logs in the user. Requires username, password and email, and verifies that hashed login password matches the saved hashed password.", async () => {
       // Create some fake user data
       const userData = {
         username: faker.internet.userName(),
         password: faker.internet.password(),
+        email: faker.internet.email(),
       };
       // Create the user in the DB
       await createUser(userData);
@@ -145,11 +157,9 @@ describe("/api/users", () => {
 
       expectNotToBeError(response.body);
 
-      expect(response.body).toEqual(
-        objectContaining({
-          message: "you're logged in!",
-        })
-      );
+      expect(response.body).toMatchObject({
+        message: "you're logged in!",
+      });
     });
 
     it("Logs in the user and returns the user back to us", async () => {
@@ -157,6 +167,7 @@ describe("/api/users", () => {
       const userData = {
         username: faker.internet.userName(),
         password: faker.internet.password(),
+        email: faker.internet.email(),
       };
       // Create the user in the DB
       const user = await createUser(userData);
@@ -177,6 +188,7 @@ describe("/api/users", () => {
       const userData = {
         username: faker.internet.userName(),
         password: faker.internet.password(),
+        email: faker.internet.email(),
       };
       // Create the user in the DB
       const user = await createUser(userData);
@@ -192,62 +204,165 @@ describe("/api/users", () => {
       });
       // Verify the JWT token
       const parsedToken = jwt.verify(body.token, JWT_SECRET);
-      // The token should return an object just like the user
-      expect(parsedToken).toMatchObject(user);
+      // The token should return an object that contains userId and username
+      expect(parsedToken.id).toEqual(user.id);
+      expect(parsedToken.username).toEqual(user.username);
     });
   });
 
-  describe("GET /api/users/me", () => {
+  describe("GET /api/users/me (*)", () => {
     it("sends back users data if valid token is supplied in header", async () => {
       const { fakeUser, token } = await createFakeUserWithToken();
-
       const response = await request(app)
         .get("/api/users/me")
         .set("Authorization", `Bearer ${token}`);
-
       expectNotToBeError(response.body);
-
-      expect(response.body).toEqual(objectContaining(fakeUser));
+      expect(response.body).toMatchObject(fakeUser);
     });
 
     it("rejects requests with no valid token", async () => {
       const response = await request(app).get("/api/users/me");
-
       expect(response.status).toBe(401);
-
       expectToHaveErrorMessage(response.body, UnauthorizedError());
     });
   });
 
-  // TO UPDATE FOR TICKETS
-  describe("GET /api/users/:username/routines", () => {
-    it("Gets a list of public routines for a particular user.", async () => {
-      // Create a fake user with a bunch of routines associated
-      const { fakeUser, token } = await createFakeUserWithRoutines("Greg");
+  describe("GET /api/users/:userId/orders (*)", () => {
+    it("Gets a list of orders for a particular user.", async () => {
+      // Create a fake user that has an order
+      const { fakeUser, token } = await createFakeUserWithToken();
+
+      const order = await createFakeOrder(fakeUser.id);
+      const { fakeTickets } = await createFakeTicketWithArtistAndVenue();
+      const fullOrder = createFakeTicketOrder({
+        orderId: order.id,
+        ticketId: fakeTickets[0].id,
+        quantity: 1,
+      });
 
       const response = await request(app)
-        .get(`/api/users/${fakeUser.username}/routines`)
+        .get(`/api/users/${fakeUser.id}/orders`)
         .set("Authorization", `Bearer ${token}`);
 
       expectNotToBeError(response.body);
 
-      // Get the routines from the DB
-      const routinesFromDB = await getPublicRoutinesByUser(fakeUser);
+      // Get the orders from the DB
+      const ordersFromDB = await getOrdersByUserId(fakeUser.id);
 
-      expect(response.body).toEqual([...routinesFromDB]);
+      expect(response.body.id).toEqual(ordersFromDB.id);
     });
 
-    it("gets a list of all routines for the logged in user", async () => {
-      const { fakeUser, token } = await createFakeUserWithRoutines("Angela");
+    it("gets a list of all orders for the logged in user", async () => {
+      // Create a fake user that has an order
+      const { fakeUser, token } = await createFakeUserWithToken();
+
+      const order = await createFakeOrder(fakeUser.id);
+      const { fakeTickets } = await createFakeTicketWithArtistAndVenue();
+      const fullOrder = createFakeTicketOrder({
+        orderId: order.id,
+        ticketId: fakeTickets[0].id,
+        quantity: 1,
+      });
+
       const response = await request(app)
-        .get(`/api/users/${fakeUser.username}/routines`)
+        .get(`/api/users/${fakeUser.id}/orders`)
         .set("Authorization", `Bearer ${token}`);
 
       expectNotToBeError(response.body);
 
-      const routinesFromDB = await getAllRoutinesByUser(fakeUser);
+      const ordersFromDB = await getOrdersByUserId(fakeUser.id);
 
-      expect(response.body).toEqual([...routinesFromDB]);
+      expect(response.body.id).toEqual(ordersFromDB.id);
+    });
+  });
+
+  // PATCH api/users/:userId
+  describe("PATCH /api/users/:userId (*)", () => {
+    it("Logged in user can update themselves", async () => {
+      const { fakeUser, token } = await createFakeUserWithToken();
+
+      const newFakeUserData = {
+        username: "Tim Jim Bobby",
+        email: "tim@jim.com",
+      };
+
+      const response = await request(app)
+        .patch(`/api/users/${fakeUser.id}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send(newFakeUserData);
+
+      expectNotToBeError(response.body);
+
+      expect(response.body).toEqual({
+        id: fakeUser.id,
+        admin: false,
+        email: fakeUser.email,
+        ...newFakeUserData,
+      });
+    });
+
+    it("returns an error when updating a user that does not exist", async () => {
+      const { token } = await createFakeAdmin();
+
+      const newFakeUserData = {
+        username: "Johnny Brenda",
+        email: "phillyboy@jb.com",
+      };
+
+      const response = await request(app)
+        .patch(`/api/users/10000`)
+        .set("Authorization", `Bearer ${token}`)
+        .send(newFakeUserData);
+
+      expectToHaveErrorMessage(response.body, UserDoesNotExistError(10000));
+    });
+
+    it("returns an error when changing a user to have the email of an existing user", async () => {
+      const { token } = await createFakeAdmin();
+
+      const fakeUser = await createFakeUser();
+      const secondFakeUser = await createFakeUser();
+
+      const newUserData = {
+        email: secondFakeUser.email,
+        username: "Alexander",
+      };
+
+      const response = await request(app)
+        .patch(`/api/users/${fakeUser.id}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send(newUserData);
+
+      expectToHaveErrorMessage(
+        response.body,
+        UserTakenError(secondFakeUser.email)
+      );
+      expectToBeError(response.body);
+    });
+  });
+
+  describe("DELETE /api/users/:userId (**)", () => {
+    it("Admin can delete a user", async () => {
+      const { token } = await createFakeAdmin();
+      const fakeUser = await createFakeUser();
+
+      const response = await request(app)
+        .delete(`/api/users/${fakeUser.id}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expectNotToBeError(response.body);
+
+      expect(response.body.email).toEqual(fakeUser.email);
+    });
+
+    it("returns an error when deleting a user that does not exist", async () => {
+      const { token } = await createFakeAdmin();
+
+      const response = await request(app)
+        .delete(`/api/users/10000`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expectToHaveErrorMessage(response.body, UserDoesNotExistError(10000));
     });
   });
 });

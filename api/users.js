@@ -125,14 +125,34 @@ usersRouter.patch("/:userId", requireUser, async (req, res, next) => {
   inputFields.id = userId;
   const user = req.user;
   try {
-    // check if userId matches input parameters
-    if (userId !== user.id) {
-      const err = new Error(
-        `User id ${user.id} does not have access to edit this profile`
-      );
+    // check if userId exists
+    const _user = await getUserById(userId);
+    if (!_user) {
+      const err = new Error(`User ${userId} does not exist`);
       err.status = 400;
-      err.name = "IncorrectUserIdError";
+      err.name = "UserDoesNotExistError";
       next(err);
+    }
+    if (req.user.admin === false) {
+      // check if userId matches input parameters
+      if (userId !== user.id) {
+        const err = new Error(
+          `User id ${user.id} does not have access to edit this profile`
+        );
+        err.status = 400;
+        err.name = "IncorrectUserIdError";
+        next(err);
+      }
+    }
+    // check if email exists
+    if (inputFields.email) {
+      const _checkUserEmail = await getUserByEmail(inputFields.email);
+      if (_checkUserEmail) {
+        const err = new Error(`User ${inputFields.email} is already taken.`);
+        err.status = 400;
+        err.name = "UserTakenError";
+        next(err);
+      }
     }
     const updatedUser = await updateUser(inputFields);
     res.send(updatedUser);
@@ -158,7 +178,7 @@ usersRouter.delete("/:userId", requireAdmin, async (req, res, next) => {
     // check that user exists
     const _user = await getUserById(+userId);
     if (!_user) {
-      const err = new Error(`User Id ${userId} does not exist`);
+      const err = new Error(`User ${userId} does not exist`);
       err.status = 400;
       err.name = "UserDoesNotExistError";
       next(err);
