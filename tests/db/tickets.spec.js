@@ -108,9 +108,10 @@ describe("DB Tickets", () => {
 
   afterAll(async () => {
     client.query(`
+      DELETE FROM tickets_orders;
+      DELETE FROM tickets;
       DELETE FROM artists;
       DELETE FROM venues;
-      DELETE FROM tickets;
     `);
   });
 
@@ -284,22 +285,19 @@ describe("DB Tickets", () => {
         id: fakeTicket.id,
         date: "2024-01-01",
         quantity: faker.datatype.number(100),
-        seatTier: faker.datatype.boolean(),
         price: faker.datatype.number(100),
       });
       expect(updatedTicket.id).toEqual(fakeTicket.id);
     });
 
-    it("Updates the ticket date, quantity, seatTier, or price as necessary", async () => {
+    it("Updates the ticket date, quantity, or price as necessary", async () => {
       const quantity = faker.datatype.number(100);
       const price = faker.commerce.price();
       const updatedTicket = await updateTicket({
         id: fakeTicket.id,
-        seatTier: false,
         quantity,
         price,
       });
-      expect(updatedTicket.seatTier).toBe(false);
       expect(updatedTicket.quantity).toBe(quantity);
       expect(updatedTicket.price).toBe(price);
     });

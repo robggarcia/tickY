@@ -37,7 +37,7 @@ ticketsOrdersRouter.get(
   }
 );
 
-// GET api/tickets_orders/:ticketOrderId
+// POST api/tickets_orders
 ticketsOrdersRouter.post("/", requireUser, async (req, res, next) => {
   const inputFields = req.body;
   try {
