@@ -40,9 +40,7 @@ function App() {
   const getUser = async (token) => {
     // check local storage to see if a token is available
     if (localStorage.getItem("token")) setToken(localStorage.getItem("token"));
-
     if (!token) return;
-
     const info = await fetchUser(token);
     console.log("THE USER INFO: ", info);
     if (info.id) {
@@ -64,7 +62,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route
           path="/concerts"
-          element={<Concerts artists={artists} venues={venues} />}
+          element={
+            <Concerts artists={artists} venues={venues} tickets={tickets} />
+          }
         />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
