@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
+import { fetchArtists, fetchUser, fetchVenues } from "./api";
 import "./App.css";
 import {
   Artists,
@@ -12,10 +14,45 @@ import {
 } from "./components";
 
 function App() {
+  const [artists, setArtists] = useState([]);
+  const [venues, setVenues] = useState([]);
+  const [token, setToken] = useState("");
+  const [user, setUser] = useState({});
+  const [myOrders, setMyOrders] = useState({});
+
+  const getArtists = async () => {
+    const data = await fetchArtists();
+    console.log("getArtists: ", data);
+    setArtists(data);
+  };
+  const getVenues = async () => {
+    const data = await fetchVenues();
+    console.log("getVenues: ", data);
+    setVenues(data);
+  };
+
+  const getUser = async (token) => {
+    // check local storage to see if a token is available
+    if (localStorage.getItem("token")) setToken(localStorage.getItem("token"));
+
+    if (!token) return;
+
+    const info = await fetchUser(token);
+    console.log("THE USER INFO: ", info);
+    if (info.id) {
+      setUser(info);
+    }
+  };
+
+  useEffect(() => {
+    getArtists();
+    getVenues();
+    getUser(token);
+  }, [token]);
+
   return (
     <div className="App">
       <Nav />
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/concerts" element={<Concerts />} />
