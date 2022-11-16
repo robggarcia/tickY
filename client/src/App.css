@@ -11,31 +11,32 @@ body {
   display: grid;
   grid-auto-rows: 8vh 92vh;
   margin: auto;
-  /* min-width: 600px; */
+  min-width: 600px;
 }
 
-.login {
-  position: relative;
+.login, .register {
+  grid-row: 2;
   max-width: 430px;
   width: 100%;
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  margin: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px auto;
 }
 
-.login .forms {
+/* .login .forms {
   display: flex;
   align-items: center;
   height: 440px;
   width: 200%;
   transition: height 0.2s ease;
-}
+} */
 
 
 .login .form {
-  width: 50%;
   padding: 30px;
   background-color: #fff;
   transition: margin-left 0.18s ease;
