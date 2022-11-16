@@ -58,5 +58,14 @@ describe("api/tickets_orders", () => {
   });
 
   // PATCH api/tickets_orders/:ticketOrderId
+  describe("PATCH api/tickets_orders/:ticketOrderId", () => {
+    it("logged in user can update a ticket order", async () => {});
+    it("returns an error when updating a ticket order that does not exist", async () => {});
+  });
+
   // DELETE api/tickets_orders/:ticketOrderId
+  describe("DELETE api/tickets_orders/:ticketOrderId", () => {
+    it("logged in user can delete a ticket order", async () => {});
+    it("returns an error when deleting a ticket order that does not exist", async () => {});
+  });
 });

@@ -32,7 +32,7 @@ ticketsRouter.get("/:ticketId", async (req, res, next) => {
     if (!ticket) {
       const err = new Error(`Ticket ${ticketId} not found`);
       err.status = 400;
-      err.name = "NonExistingTicketError";
+      err.name = "TicketNotFoundError";
       next(err);
     }
     res.send(ticket);
@@ -50,13 +50,15 @@ ticketsRouter.post("/", requireAdmin, async (req, res, next) => {
     if (existingTickets) {
       for (let ticket of existingTickets) {
         if (ticket.venueId === req.body.venueId) {
-          const err = new Error(
-            `An ticket with name ${inputFields.name} already exists`
-          );
-          err.status = 400;
-          err.name = "ExistingTicketError";
-          next(err);
-          return;
+          if (ticket.data === req.body.data) {
+            const err = new Error(
+              `An ticket with name ${inputFields.name} already exists`
+            );
+            err.status = 400;
+            err.name = "ExistingTicketError";
+            next(err);
+            return;
+          }
         }
       }
     }

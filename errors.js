@@ -16,4 +16,7 @@ module.exports = {
   UserAccessError: (id) =>
     `User id ${id} does not have access to edit this profile`,
   NonExistingOrderError: (id) => `Order ${id} not found`,
+  TicketNotFoundError: (id) => `Ticket ${id} not found`,
+  ExistingTicketError: (date) =>
+    `A ticket with artist and venue on date ${date} already exists`,
 };
