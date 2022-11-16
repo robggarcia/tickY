@@ -12,11 +12,11 @@ async function createTicket({
   try {
     const result = await client.query(
       `
-    INSERT INTO tickets ("artistId", "venueId", date, price, quantity, "seatTier") 
-    VALUES($1, $2, $3, $4, $5, $6)
+    INSERT INTO tickets ("artistId", "venueId", date, price, quantity) 
+    VALUES($1, $2, $3, $4, $5)
     RETURNING *;
     `,
-      [artistId, venueId, date, price, quantity, seatTier]
+      [artistId, venueId, date, price, quantity]
     );
     // console.log(result.rows[0]);
     return result.rows[0];

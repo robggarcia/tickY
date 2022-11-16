@@ -94,6 +94,16 @@ artistsRouter.patch("/:artistId", requireAdmin, async (req, res, next) => {
       next(err);
       return;
     }
+    const existingArtistName = await getArtistByName(inputFields.name);
+    if (existingArtistName) {
+      const err = new Error(
+        `An artist with name ${inputFields.name} already exists`
+      );
+      err.status = 400;
+      err.name = "ExistingArtistError";
+      next(err);
+      return;
+    }
     // update the artist
     inputFields.id = artistId;
     const updatedArtist = await updateArtist(inputFields);

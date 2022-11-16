@@ -1,8 +1,8 @@
 module.exports = {
   ArtistExistsError: (name) => `An artist with name ${name} already exists`,
   ArtistNotFoundError: (id) => `Artist ${id} not found`,
-  VenueExistsError: (name) => `An artist with name ${name} already exists`,
-  VenueNotFoundError: (id) => `Artist ${id} not found`,
+  VenueExistsError: (name) => `A venue with name ${name} already exists`,
+  VenueNotFoundError: (id) => `Venue ${id} not found`,
   UnauthorizedError: () => "You must be logged in to perform this action",
   UnauthorizedUpdateError: (username, name) =>
     `User ${username} is not allowed to update ${name}`,
@@ -12,5 +12,8 @@ module.exports = {
     `Ticket ID ${ticketId} already exists in Order ID ${orderId}`,
   UserDoesNotExistError: (name) => `User ${name} does not exist`,
   PasswordTooShortError: () => `Password Too Short!`,
-  UserTakenError: (name) => `User ${name} is already taken.`,
+  UserTakenError: (email) => `User ${email} is already taken.`,
+  UserAccessError: (id) =>
+    `User id ${id} does not have access to edit this profile`,
+  NonExistingOrderError: (id) => `Order ${id} not found`,
 };

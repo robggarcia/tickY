@@ -1,11 +1,15 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const { getOrdersByUserId } = require("../db/order");
 const {
   getUser,
   getUserByUsername,
   createUser,
   updateUser,
   getAllUsers,
+  getUserByEmail,
+  getUserById,
+  destroyUser,
 } = require("../db/users");
 const { requireUser, requireAdmin } = require("./utils");
 const usersRouter = express.Router();
@@ -57,14 +61,15 @@ usersRouter.post("/register", async (req, res, next) => {
       return;
     }
 
-    // check to see if username exists
-    const _user = await getUserByUsername(username);
+    // check to see if email exists
+    const _user = await getUserByEmail(email);
     if (_user) {
-      const err = new Error(`User ${_user.username} is already taken.`);
+      const err = new Error(`User ${_user.email} is already taken.`);
       err.status = 404;
       err.name = "UserExistsError";
       next(err);
     }
+
     // create a new user
     const user = await createUser({ username, password, email });
     const token = jwt.sign(
@@ -99,22 +104,56 @@ usersRouter.get("/me", requireUser, async (req, res, next) => {
 // GET /api/users/:userId/orders
 usersRouter.get("/:userId/orders", requireUser, async (req, res, next) => {
   const userId = req.params.userId;
-  const inputFields = req.body;
   try {
-    inputFields.id = userId;
-    const updatedUser = await updateUser(inputFields);
-    res.send(updatedUser);
+    const orders = await getOrdersByUserId(+userId);
+    if (!orders) {
+      const err = new Error(`User Id ${userId} does not have any orders`);
+      err.status = 400;
+      err.name = "NoOrdersWithUserId";
+      next(err);
+    }
+    res.send(orders);
   } catch ({ name, message }) {
     next({ name, message });
   }
 });
 
 // PATCH api/users/:userId
-usersRouter.get(":userId", requireUser, async (req, res, next) => {
-  const userId = req.params.userId;
+usersRouter.patch("/:userId", requireUser, async (req, res, next) => {
+  const userId = +req.params.userId;
   const inputFields = req.body;
   inputFields.id = userId;
+  const user = req.user;
   try {
+    // check if userId exists
+    const _user = await getUserById(userId);
+    if (!_user) {
+      const err = new Error(`User ${userId} does not exist`);
+      err.status = 400;
+      err.name = "UserDoesNotExistError";
+      next(err);
+    }
+    if (req.user.admin === false) {
+      // check if userId matches input parameters
+      if (userId !== user.id) {
+        const err = new Error(
+          `User id ${user.id} does not have access to edit this profile`
+        );
+        err.status = 400;
+        err.name = "IncorrectUserIdError";
+        next(err);
+      }
+    }
+    // check if email exists
+    if (inputFields.email) {
+      const _checkUserEmail = await getUserByEmail(inputFields.email);
+      if (_checkUserEmail) {
+        const err = new Error(`User ${inputFields.email} is already taken.`);
+        err.status = 400;
+        err.name = "UserTakenError";
+        next(err);
+      }
+    }
     const updatedUser = await updateUser(inputFields);
     res.send(updatedUser);
   } catch ({ name, message }) {
@@ -127,6 +166,26 @@ usersRouter.get("/", requireAdmin, async (req, res, next) => {
   try {
     const users = await getAllUsers();
     res.send(users);
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+// DELETE api/users/:userId
+usersRouter.delete("/:userId", requireAdmin, async (req, res, next) => {
+  const userId = req.params.userId;
+  try {
+    // check that user exists
+    const _user = await getUserById(+userId);
+    if (!_user) {
+      const err = new Error(`User ${userId} does not exist`);
+      err.status = 400;
+      err.name = "UserDoesNotExistError";
+      next(err);
+      return;
+    }
+    const deletedUser = await destroyUser(userId);
+    res.send(deletedUser);
   } catch ({ name, message }) {
     next({ name, message });
   }
