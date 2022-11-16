@@ -45,3 +45,19 @@ export const fetchVenues = async () => {
     console.error(error);
   }
 };
+
+// Tickets
+export const fetchTickets = async () => {
+  try {
+    const response = await fetch(`api/tickets`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};

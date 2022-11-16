@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import { fetchArtists, fetchUser, fetchVenues } from "./api";
+import { fetchArtists, fetchTickets, fetchUser, fetchVenues } from "./api";
 import "./App.css";
 import {
   Artists,
@@ -16,6 +16,7 @@ import {
 function App() {
   const [artists, setArtists] = useState([]);
   const [venues, setVenues] = useState([]);
+  const [tickets, setTickets] = useState([]);
   const [token, setToken] = useState("");
   const [user, setUser] = useState({});
   const [myOrders, setMyOrders] = useState({});
@@ -29,6 +30,11 @@ function App() {
     const data = await fetchVenues();
     console.log("getVenues: ", data);
     setVenues(data);
+  };
+  const getTickets = async () => {
+    const data = await fetchTickets();
+    console.log("getTickets: ", data);
+    setTickets(data);
   };
 
   const getUser = async (token) => {
@@ -47,6 +53,7 @@ function App() {
   useEffect(() => {
     getArtists();
     getVenues();
+    getTickets();
     getUser(token);
   }, [token]);
 
@@ -55,7 +62,10 @@ function App() {
       <Nav />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/concerts" element={<Concerts />} />
+        <Route
+          path="/concerts"
+          element={<Concerts artists={artists} venues={venues} />}
+        />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
