@@ -12,7 +12,7 @@ const Register = () => {
     setError(error);
   };
   return (
-    <div className="register-container">
+    <div className="register">
       <form onSubmit={handleRegister} className="register-form">
         <Link to="/">TickY</Link>
         <p>Create account</p>

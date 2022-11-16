@@ -11,7 +11,7 @@ const Login = () => {
     setError(error);
   };
   return (
-    <div className="container">
+    <div className="login">
       <div className="forms">
         <div className="form login">
           <Link to="/" className="title">

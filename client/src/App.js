@@ -2,10 +2,11 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import {
   Artists,
-  Browse,
   Cart,
+  Concerts,
   Home,
   Login,
+  Nav,
   Register,
   Venues,
 } from "./components";
@@ -13,9 +14,11 @@ import {
 function App() {
   return (
     <div className="App">
+      <Nav />
+
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/browse" element={<Browse />} />
+        <Route path="/concerts" element={<Concerts />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
