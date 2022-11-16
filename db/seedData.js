@@ -59,21 +59,21 @@ const createTables = async () => {
               "venueId" INTEGER REFERENCES venues(id),
               date DATE NOT NULL, 
               price DECIMAL(10, 2) NOT NULL,
-              quantity INTEGER NOT NULL,
-              "seatTier" BOOLEAN DEFAULT false
-            );      
-    
+              quantity INTEGER NOT NULL
+              );      
+              
             CREATE TABLE orders(
               id SERIAL PRIMARY KEY,
               "userId" INTEGER REFERENCES users(id),
               purchased BOOLEAN DEFAULT false
-            );
+              );
               
             CREATE TABLE tickets_orders (
               id SERIAL PRIMARY KEY,
               "orderId" INTEGER REFERENCES orders(id),
               "ticketId" INTEGER REFERENCES tickets(id),
-              quantity INTEGER NOT NULL
+              quantity INTEGER NOT NULL,
+              "seatTier" BOOLEAN DEFAULT false
             ); 
     `);
   } catch (error) {
@@ -196,7 +196,6 @@ async function createInitialTickets() {
         venueId: 1,
         date: "2023-01-23",
         quantity: 504,
-        seatTier: false,
         price: 15.0,
       },
       {
@@ -204,7 +203,6 @@ async function createInitialTickets() {
         venueId: 2,
         date: "2024-02-01",
         quantity: 242,
-        seatTier: false,
         price: 200.01,
       },
       {
@@ -212,7 +210,6 @@ async function createInitialTickets() {
         venueId: 3,
         date: "2024-02-14",
         quantity: 0,
-        seatTier: false,
         price: 220,
       },
       {
@@ -220,7 +217,6 @@ async function createInitialTickets() {
         venueId: 3,
         date: "2022-12-24",
         quantity: 600,
-        seatTier: true,
         price: 224.22,
       },
     ];

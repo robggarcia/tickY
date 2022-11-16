@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -13,8 +14,8 @@ app.use(cors());
 app.use("/api", apiRouter);
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
+const appServer = app.listen(PORT, () => {
   console.log("Server is up on ", PORT);
 });
 
-module.exports = app;
+module.exports = { app, appServer };

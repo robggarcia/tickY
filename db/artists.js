@@ -1,10 +1,11 @@
-const { response } = require("express");
 const client = require(".");
 const { getTicketsByArtist } = require("./tickets");
 
 async function createArtist({ name, genre, image, description }) {
   try {
-    const result = await client.query(
+    const {
+      rows: [artist],
+    } = await client.query(
       `
     INSERT INTO artists (name, genre, image, description) 
     VALUES($1, $2, $3, $4)
@@ -12,8 +13,7 @@ async function createArtist({ name, genre, image, description }) {
     `,
       [name, genre, image, description]
     );
-    // console.log(result.rows[0]);
-    return result.rows[0];
+    return artist;
   } catch (error) {
     throw error;
   }
@@ -38,7 +38,7 @@ async function updateArtist({ id, ...fields }) {
       .map((key, idx) => `"${key}"=$${idx + 2}`)
       .join(", ");
     const {
-      rows: [ticket],
+      rows: [updatedTicket],
     } = await client.query(
       `
           UPDATE artists
@@ -48,7 +48,7 @@ async function updateArtist({ id, ...fields }) {
       `,
       [id, ...Object.values(fields)]
     );
-    return ticket;
+    return updatedTicket;
   } catch (error) {
     console.log("Error in updateArtist");
     throw error;
@@ -58,9 +58,7 @@ async function updateArtist({ id, ...fields }) {
 async function deleteArtist(artistId) {
   try {
     const ticketsForArtist = await getTicketsByArtist(artistId);
-    console.log("ticketsForArtist", ticketsForArtist);
     for (let ticket of ticketsForArtist) {
-      console.log("TRYING TO DELETE TICKET ID: ", ticket.id);
       await client.query(
         `
         DELETE
@@ -71,7 +69,6 @@ async function deleteArtist(artistId) {
       );
     }
 
-    console.log("DELETING FROM TICKETS artistId: ", artistId);
     await client.query(
       `
       DELETE
