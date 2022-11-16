@@ -2,8 +2,7 @@ import Nav from "./Nav";
 
 const Artists = () => {
   return (
-    <div>
-      <Nav />
+    <div classname="artists">
       <p>Artists</p>
     </div>
   );

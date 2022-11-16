@@ -1,13 +1,12 @@
 import React from "react";
 import Nav from "./Nav";
 
-const Browse = () => {
+const Concerts = () => {
   return (
     <div>
-      <Nav />
-      <p>Browse</p>
+      <p>Concerts</p>
     </div>
   );
 };
 
-export default Browse;
+export default Concerts;

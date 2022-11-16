@@ -1,5 +1,5 @@
 export { default as Nav } from "./Nav";
-export { default as Browse } from "./Browse";
+export { default as Concerts } from "./Concerts";
 export { default as Cart } from "./Cart";
 export { default as Login } from "./Login";
 export { default as Register } from "./Register";

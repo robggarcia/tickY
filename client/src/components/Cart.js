@@ -2,8 +2,7 @@ import Nav from "./Nav";
 
 const Cart = () => {
   return (
-    <div>
-      <Nav />
+    <div className="cart">
       <p>Cart</p>
     </div>
   );
