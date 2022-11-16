@@ -68,7 +68,7 @@ function App() {
         />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/venues" element={<Venues />} />
         <Route path="/artists" element={<Artists />} />
       </Routes>
