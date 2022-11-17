@@ -143,6 +143,14 @@ describe("api/tickets_orders", () => {
       expectNotToBeError(response.body);
       expect(response.body).toEqual(arrayContaining([ticketOrderData]));
     });
-    it("returns an error when deleting a ticket order that does not exist", async () => {});
+    it("returns an error when deleting a ticket order that does not exist", async () => {
+      const response = await request(app)
+        .delete(`/api/tickets_orders/1000`)
+        .send(ticketOrderData);
+      expectToHaveErrorMessage(
+        response.body,
+        NonExistingTicketOrderError(1000)
+      );
+    });
   });
 });
