@@ -20,6 +20,7 @@ function App() {
   const [token, setToken] = useState("");
   const [user, setUser] = useState({});
   const [myOrders, setMyOrders] = useState({});
+  const [artistPage, setArtistPage] = useState({});
 
   const getArtists = async () => {
     const data = await fetchArtists();
@@ -63,13 +64,12 @@ function App() {
         <Route
           path="/concerts"
           element={
-            <Concerts artists={artists} venues={venues} tickets={tickets} />
-          }
-        />
-        <Route
-          path="/concerts"
-          element={
-            <Concerts artists={artists} venues={venues} tickets={tickets} />
+            <Concerts
+              artists={artists}
+              venues={venues}
+              tickets={tickets}
+              setArtistPage={setArtistPage}
+            />
           }
         />
         <Route path="/cart" element={<Cart />} />

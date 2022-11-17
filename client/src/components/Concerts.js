@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Concerts = ({ artists, venues, tickets }) => {
+const Concerts = ({ artists, venues, tickets, setArtistPage }) => {
   const [genres, setGenres] = useState([]);
   const [genreOption, setGenreOption] = useState("any");
 
@@ -109,7 +109,10 @@ const Concerts = ({ artists, venues, tickets }) => {
           featured.map((artist, idx) => {
             return (
               <div className="artist" key={idx}>
-                <Link to={`/artists/${artist.id}`}>
+                <Link
+                  to={`/artists/${artist.id}`}
+                  onClick={() => setArtistPage(artist)}
+                >
                   <img src={artist.image} alt={artist.name} />
                   <h4 className="artist-name">{artist.name}</h4>
                 </Link>
