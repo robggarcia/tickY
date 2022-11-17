@@ -8,12 +8,8 @@ const {
   expectToHaveErrorMessage,
 } = require("../expectHelpers");
 const {
-  createFakeUser,
-  createFakeOrder,
-  createFakeUserWithToken,
   createFakeAdmin,
   createFakeTicketWithArtistAndVenue,
-  createFakeTicketOrder,
   createFakeArtist,
   createFakeVenue,
 } = require("../helpers");
@@ -120,12 +116,60 @@ describe("api/tickets", () => {
       expect(response.body.artistId).toEqual(fakeTicketData.artistId);
       expect(response.body.price).toEqual(fakeTicketData.price);
     });
-    it("returns an error when trying to update a ticket id that doest not exist", async () => {});
-    it("returns an error when the updated ticket information already exists", async () => {});
+    it("returns an error when trying to update a ticket id that doest not exist", async () => {
+      const { token } = await createFakeAdmin();
+      const fakeTicketData = {
+        artistId: 1,
+        price: 1.0,
+      };
+      const response = await request(app)
+        .patch(`/api/orders/10000`)
+        .set("Authorization", `Bearer ${token}`)
+        .send(fakeTicketData);
+
+      expectToHaveErrorMessage(response.body, TicketNotFoundError(10000));
+    });
+    it("returns an error when the updated ticket information already exists", async () => {
+      const { token } = await createFakeAdmin();
+      const { fakeTickets } = await createFakeTicketWithArtistAndVenue();
+      const fakeTicket = fakeTickets[0];
+      const secondFakeTicket = fakeTickets[1];
+      const fakeTicketData = {
+        venueId: fakeTicket.venueId,
+        artistId: fakeTicket.artistId,
+        date: fakeTicket.date,
+      };
+      const response = await request(app)
+        .patch(`api/tickets/${secondFakeTicket.id}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send(fakeTicketData);
+      expectToHaveErrorMessage(
+        response.body,
+        ExistingTicketError(fakeTicketData.date)
+      );
+    });
   });
   // DELETE /api/tickets/:ticketId
   describe("DELETE /api/tickets/:ticketId", () => {
-    it("admin can delete a ticket", async () => {});
-    it("returns an error when deleting a ticket that does not exist", async () => {});
+    it("admin can delete a ticket", async () => {
+      const { token } = await createFakeAdmin();
+      const { fakeTickets } = await createFakeTicketWithArtistAndVenue();
+      const fakeTicket = fakeTickets[0];
+      const response = await request(app)
+        .delete(`api/tickets/${fakeTicket.id}`)
+        .set("Authorization", `Bearer ${token}`);
+      expectNotToBeError(response.body);
+      expect(response.body).toEqual(arrayContaining([fakeTicket]));
+    });
+    it("returns an error when deleting a ticket that does not exist", async () => {
+      const { token } = await createFakeAdmin();
+      const { fakeTickets } = await createFakeTicketWithArtistAndVenue();
+      const fakeTicket = fakeTickets[0];
+
+      const response = await request(app)
+        .delete(`api/tickets/1000`)
+        .set("Authorization", `Bearer ${token}`);
+      expectToHaveErrorMessage(response.body, TicketNotFoundError(1000));
+    });
   });
 });
