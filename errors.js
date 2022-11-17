@@ -19,4 +19,7 @@ module.exports = {
   TicketNotFoundError: (id) => `Ticket ${id} not found`,
   ExistingTicketError: (date) =>
     `A ticket with artist and venue on date ${date} already exists`,
+  InsuficientInputError: () =>
+    `More information is needed to process this request`,
+  NonExistingTicketOrderError: (id) => `Ticket order ${id} not found`,
 };
