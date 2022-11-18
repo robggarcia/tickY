@@ -227,7 +227,8 @@ async function createInitialArtists() {
       {
         name: "The Weeknd",
         genre: "r&b",
-        image: "https://api.time.com/wp-content/uploads/2014/11/458102226.jpg",
+        image:
+          "https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2022%2F09%2Fthe-weeknd-vocal-condition-update-following-canceled-la-show-000.jpg?fit=max&cbr=1&q=90&w=750&h=500",
         description:
           "Candian singer, songwriter, and record producer who's know for his song versatility and dark lyricm",
       },

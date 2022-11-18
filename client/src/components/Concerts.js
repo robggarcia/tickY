@@ -28,7 +28,7 @@ const Concerts = ({ artists, venues, tickets, setArtistPage }) => {
     }
     let sortArr = [...artistGenres];
     sortArr.sort();
-    console.log("SORTED GENRES: ", sortArr);
+    // console.log("SORTED GENRES: ", sortArr);
     setGenres(sortArr);
   };
 
@@ -41,7 +41,7 @@ const Concerts = ({ artists, venues, tickets, setArtistPage }) => {
     }
     let sortArr = [...venuesCities];
     sortArr.sort();
-    console.log("SORTED CITIES: ", sortArr);
+    // console.log("SORTED CITIES: ", sortArr);
     setCities(sortArr);
   };
 

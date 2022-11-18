@@ -60,7 +60,9 @@ const Register = (props) => {
   return (
     <div className="register">
       <div className="form">
-        <Link to="/">TickY</Link>
+        <Link to="/" className="title">
+          TickY
+        </Link>
         <p>Create account</p>
         <p>{error}</p>
         <form onSubmit={handleRegister}>

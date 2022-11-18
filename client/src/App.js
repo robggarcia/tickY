@@ -24,17 +24,17 @@ function App() {
 
   const getArtists = async () => {
     const data = await fetchArtists();
-    console.log("getArtists: ", data);
+    // console.log("getArtists: ", data);
     setArtists(data);
   };
   const getVenues = async () => {
     const data = await fetchVenues();
-    console.log("getVenues: ", data);
+    // console.log("getVenues: ", data);
     setVenues(data);
   };
   const getTickets = async () => {
     const data = await fetchTickets();
-    console.log("getTickets: ", data);
+    // console.log("getTickets: ", data);
     setTickets(data);
   };
 
@@ -43,7 +43,7 @@ function App() {
     if (localStorage.getItem("token")) setToken(localStorage.getItem("token"));
     if (!token) return;
     const info = await fetchUser(token);
-    console.log("THE USER INFO: ", info);
+    // console.log("THE USER INFO: ", info);
     if (info.id) {
       setUser(info);
     }
@@ -76,7 +76,10 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/venues" element={<Venues />} />
-        <Route path="/artists" element={<Artists />} />
+        <Route
+          path="/artists/:artistId"
+          element={<Artists artistPage={artistPage} tickets={tickets} />}
+        />
       </Routes>
     </div>
   );
