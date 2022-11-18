@@ -10,6 +10,7 @@ import {
   Login,
   Nav,
   Register,
+  Suggest,
   Venues,
 } from "./components";
 
@@ -21,6 +22,8 @@ function App() {
   const [user, setUser] = useState({});
   const [myOrders, setMyOrders] = useState({});
   const [artistPage, setArtistPage] = useState({});
+  const [keyword, setKeyword] = useState("");
+  const [suggest, setSuggest] = useState([]);
 
   const getArtists = async () => {
     const data = await fetchArtists();
@@ -58,7 +61,13 @@ function App() {
 
   return (
     <div className="App">
-      <Nav />
+      <Nav
+        keyword={keyword}
+        artists={artists}
+        setKeyword={setKeyword}
+        setSuggest={setSuggest}
+        suggest={suggest}
+      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route

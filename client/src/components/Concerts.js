@@ -63,6 +63,21 @@ const Concerts = ({ artists, venues, tickets, setArtistPage }) => {
   };
 
   // need to filter artists based on user filters
+  const filterArtists = () => {
+    if (genreOption === "any") {
+      setFeatured(artists);
+    } else {
+      const filteredArtists = featured.filter(
+        (artist) => artist.genre === genreOption
+      );
+      setFeatured(filteredArtists);
+    }
+    console.log("filteredArtists", featured);
+  };
+
+  useEffect(() => {
+    filterArtists();
+  }, [genreOption]);
 
   return (
     <div className="concerts">
