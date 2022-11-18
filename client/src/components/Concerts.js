@@ -67,7 +67,7 @@ const Concerts = ({ artists, venues, tickets, setArtistPage }) => {
     if (genreOption === "any") {
       setFeatured(artists);
     } else {
-      const filteredArtists = featured.filter(
+      const filteredArtists = artists.filter(
         (artist) => artist.genre === genreOption
       );
       setFeatured(filteredArtists);

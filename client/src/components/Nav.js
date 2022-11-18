@@ -29,12 +29,14 @@ const Nav = ({ keyword, setKeyword, setSuggest, artists, suggest }) => {
     const filteredNames = [];
     if (!keyword) {
       setSuggest(filteredNames);
+      console.log("filteredNames", filteredNames);
+    } else {
+      for (let name of names) {
+        if (name.includes(keyword)) filteredNames.push(name);
+      }
+      console.log("FILTERED NAMES: ", filteredNames);
+      setSuggest(filteredNames);
     }
-    for (let name of names) {
-      if (name.includes(keyword)) filteredNames.push(name);
-    }
-    console.log("FILTERED NAMES: ", filteredNames);
-    setSuggest(filteredNames);
   };
 
   useEffect(() => {
@@ -56,18 +58,20 @@ const Nav = ({ keyword, setKeyword, setSuggest, artists, suggest }) => {
         <Link to="/cart">Cart</Link>
         <Link to="/Login">Login</Link>
       </div>
-      <div className="suggested">
-        <h4>Suggested Artists: </h4>
-        <div>
-          {suggest.map((artist, idx) => {
-            return (
-              <p key={idx}>
-                <Link>{artist}</Link>
-              </p>
-            );
-          })}
+      {suggest.length > 0 && (
+        <div className="suggested">
+          <h4>Suggested Artists: </h4>
+          <div>
+            {suggest.map((artist, idx) => {
+              return (
+                <p key={idx}>
+                  <Link>{artist}</Link>
+                </p>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
