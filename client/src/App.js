@@ -70,6 +70,8 @@ function App() {
         setKeyword={setKeyword}
         setSuggest={setSuggest}
         suggest={suggest}
+        setToken={setToken}
+        setUser={setUser}
       />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -85,8 +87,8 @@ function App() {
           }
         />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login setToken={setToken} />} />
+        <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/venues" element={<Venues />} />
         <Route
           path="/artists/:artistId"

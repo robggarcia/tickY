@@ -1,15 +1,36 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
+const Login = (props) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [username, setUsername] = useState("");
+  const navigate = useNavigate("");
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    setError(error);
+    console.log(username, password);
+    const response = await fetch(`api/users/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
+    if (data.error) {
+      setError(data.message);
+    } else {
+      props.setToken(data.token);
+      localStorage.setItem("token", data.token);
+      navigate("/");
+    }
   };
+
   return (
     <div className="login">
       <div className="form">
@@ -22,9 +43,9 @@ const Login = () => {
           <div className="input-field">
             <input
               type="text"
-              placeholder="Email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              placeholder="Username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
               className="login-input"
             />
           </div>
@@ -38,7 +59,7 @@ const Login = () => {
             />
           </div>
           <div className="input-field button">
-            <input type="button" value="Login In" />
+            <input type="submit" value="Login In" />
           </div>
           <div className="login-signup">
             <Link to="/register">New to TickY? Create Account</Link>

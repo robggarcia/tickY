@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Nav.css";
 
-const Nav = ({ keyword, setKeyword, setSuggest, artists, suggest }) => {
+const Nav = ({
+  keyword,
+  setKeyword,
+  setSuggest,
+  artists,
+  suggest,
+  setToken,
+  setUser,
+}) => {
   const [names, setNames] = useState([]);
 
   const getArtistsNames = () => {
@@ -43,6 +51,16 @@ const Nav = ({ keyword, setKeyword, setSuggest, artists, suggest }) => {
     searchResults();
   }, [keyword]);
 
+  useEffect(() => {
+    setToken("");
+    setUser("");
+  }, []);
+  const handleLogOut = () => {
+    setToken("");
+    setUser("");
+    localStorage.clear();
+  };
+
   return (
     <div className="navbar">
       <Link to="/">TickY</Link>
@@ -57,6 +75,9 @@ const Nav = ({ keyword, setKeyword, setSuggest, artists, suggest }) => {
         <Link to="/concerts">Concerts</Link>
         <Link to="/cart">Cart</Link>
         <Link to="/Login">Login</Link>
+        <Link to="/" onClick={handleLogOut}>
+          Log Out
+        </Link>
       </div>
       {suggest.length > 0 && (
         <div className="suggested">

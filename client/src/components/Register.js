@@ -32,8 +32,6 @@ const Register = (props) => {
     if (resultEmail.message) {
       setError("invalid email format");
       return;
-    } else if (resultEmail.can_connect_smtp) {
-      setError("invalid email");
     } else {
       // add api for register
       const register = await fetch("/api/users/register", {
