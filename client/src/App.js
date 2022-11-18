@@ -76,7 +76,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/venues" element={<Venues />} />
-        <Route path="/artists" element={<Artists />} />
+        <Route path="/artists/" element={<Artists artistPage={artistPage} />} />
       </Routes>
     </div>
   );
