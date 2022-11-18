@@ -59,6 +59,11 @@ function App() {
     getUser(token);
   }, [token]);
 
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken();
+  }, [token]);
   return (
     <div className="App">
       <Nav
