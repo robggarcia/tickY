@@ -1,0 +1,24 @@
+.suggest {
+    background-color: #f7f8f9;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    position: absolute;
+    top: 50px;
+    left: 100px;
+    opacity: 95%;
+}
+
+.suggest li {
+    font-size: 18px;
+    list-style-type: none;
+}
+
+.suggest a {
+    text-decoration: none;
+    color: black;
+}
+
+.suggest a:hover {
+    background-color: rgb(223, 218, 255);
+}

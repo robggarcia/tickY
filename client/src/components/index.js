@@ -7,3 +7,4 @@ export { default as Profile } from "./Profile";
 export { default as Home } from "./Home";
 export { default as Venues } from "./Venues";
 export { default as Artists } from "./Artists";
+export { default as Suggest } from "./Suggest";
