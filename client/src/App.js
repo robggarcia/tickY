@@ -59,8 +59,6 @@ function App() {
     getUser(token);
   }, [token]);
 
-  const [token, setToken] = useState("");
-
   useEffect(() => {
     setToken();
   }, [token]);
