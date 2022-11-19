@@ -1,3 +1,5 @@
+// test git eric
+
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { fetchArtists, fetchTickets, fetchUser, fetchVenues } from "./api";
@@ -103,7 +105,15 @@ function App() {
             />
           }
         />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/venues" element={<Venues />} />
+        <Route path="/artists" element={<Artists />} />
+        <Route
+          path="/profile"
+          element={<Profile user={user} myOrders={myOrders} />}
+        />
       </Routes>
       <Modal displayMessage={displayMessage} success={success} />
     </div>
