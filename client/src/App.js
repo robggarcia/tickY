@@ -16,6 +16,7 @@ import {
   Venues,
   Profile,
 } from "./components";
+import Admin from "./components/Admin";
 
 // rob test for pushing and pulling
 // rob second test
@@ -114,6 +115,17 @@ function App() {
         <Route
           path="/profile"
           element={<Profile user={user} myOrders={myOrders} />}
+        />
+        <Route
+          path="/admin"
+          element={
+            <Admin
+              venues={venues}
+              artists={artists}
+              tickets={tickets}
+              user={user}
+            />
+          }
         />
       </Routes>
       <Modal displayMessage={displayMessage} success={success} />
