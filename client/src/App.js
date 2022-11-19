@@ -8,9 +8,9 @@ import {
   Concerts,
   Home,
   Login,
+  Modal,
   Nav,
   Register,
-  Suggest,
   Venues,
 } from "./components";
 
@@ -24,6 +24,8 @@ function App() {
   const [artistPage, setArtistPage] = useState({});
   const [keyword, setKeyword] = useState("");
   const [suggest, setSuggest] = useState([]);
+  const [displayMessage, setDisplayMessage] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const getArtists = async () => {
     const data = await fetchArtists();
@@ -97,6 +99,7 @@ function App() {
           element={<Artists artistPage={artistPage} tickets={tickets} />}
         />
       </Routes>
+      <Modal displayMessage={displayMessage} success={success} />
     </div>
   );
 }
