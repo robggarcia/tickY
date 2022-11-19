@@ -32,8 +32,6 @@ const Register = (props) => {
     if (resultEmail.message) {
       setError("invalid email format");
       return;
-    } else if (resultEmail.can_connect_smtp) {
-      setError("invalid email");
     } else {
       // add api for register
       const register = await fetch("/api/users/register", {
@@ -60,7 +58,9 @@ const Register = (props) => {
   return (
     <div className="register">
       <div className="form">
-        <Link to="/">TickY</Link>
+        <Link to="/" className="title">
+          TickY
+        </Link>
         <p>Create account</p>
         <p>{error}</p>
         <form onSubmit={handleRegister}>

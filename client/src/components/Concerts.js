@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Concerts = ({ artists, venues, tickets, setArtistPage }) => {
+const Concerts = ({ artists, venues, tickets }) => {
   const [genres, setGenres] = useState([]);
   const [genreOption, setGenreOption] = useState("any");
 
@@ -28,7 +28,7 @@ const Concerts = ({ artists, venues, tickets, setArtistPage }) => {
     }
     let sortArr = [...artistGenres];
     sortArr.sort();
-    console.log("SORTED GENRES: ", sortArr);
+    // console.log("SORTED GENRES: ", sortArr);
     setGenres(sortArr);
   };
 
@@ -41,7 +41,7 @@ const Concerts = ({ artists, venues, tickets, setArtistPage }) => {
     }
     let sortArr = [...venuesCities];
     sortArr.sort();
-    console.log("SORTED CITIES: ", sortArr);
+    // console.log("SORTED CITIES: ", sortArr);
     setCities(sortArr);
   };
 
@@ -63,6 +63,21 @@ const Concerts = ({ artists, venues, tickets, setArtistPage }) => {
   };
 
   // need to filter artists based on user filters
+  const filterArtists = () => {
+    if (genreOption === "any") {
+      setFeatured(artists);
+    } else {
+      const filteredArtists = artists.filter(
+        (artist) => artist.genre === genreOption
+      );
+      setFeatured(filteredArtists);
+    }
+    console.log("filteredArtists", featured);
+  };
+
+  useEffect(() => {
+    filterArtists();
+  }, [genreOption]);
 
   return (
     <div className="concerts">
@@ -109,10 +124,7 @@ const Concerts = ({ artists, venues, tickets, setArtistPage }) => {
           featured.map((artist, idx) => {
             return (
               <div className="artist" key={idx}>
-                <Link
-                  to={`/artists/${artist.id}`}
-                  onClick={() => setArtistPage(artist)}
-                >
+                <Link to={`/artists/${artist.id}`}>
                   <img src={artist.image} alt={artist.name} />
                   <h4 className="artist-name">{artist.name}</h4>
                 </Link>

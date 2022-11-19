@@ -27,15 +27,6 @@ body {
   margin: 50px auto;
 }
 
-/* .login .forms {
-  display: flex;
-  align-items: center;
-  height: 440px;
-  width: 200%;
-  transition: height 0.2s ease;
-} */
-
-
 .login .form {
   padding: 30px;
   background-color: #fff;
@@ -85,20 +76,6 @@ body {
   color: #999;
   font-size: 23px;
   transition: all 0.2s ease;
-}
-
-.input-field input:is(:focus, :valid)~i {
-  color: #4070f4;
-}
-
-
-.form a.text {
-  color: #4070f4;
-  text-decoration: none;
-}
-
-.form a:hover {
-  text-decoration: underline;
 }
 
 .form .button {
@@ -164,4 +141,31 @@ body {
 .concerts a {
   text-decoration: none;
   color: black;
+}
+
+.artist-detail img {
+  height: 200px;
+  width: 300px;
+  object-fit: cover;
+  object-position: 0 0;
+}
+
+.tickets {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ticket-info {
+  justify-content: start;
+}
+
+.suggested {
+  background-color: #f7f8f9;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  position: absolute;
+  top: 50px;
+  left: 100px;
+  opacity: 95%;
 }
