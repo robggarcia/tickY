@@ -1,8 +1,31 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
-const Artists = ({ artistPage, tickets, cart, setCart }) => {
-  const [quantity, setQuantity] = useState(null);
+const Artists = ({ artists, artistPage, tickets, cart, setCart }) => {
+  const { artistId } = useParams();
+  const [artistDetail, setArtistDetail] = useState({});
+  const [artistTickets, setArtistTickets] = useState([]);
+  const [quantity, setQuantity] = useState(1);
+
+  const grabArtistDetails = async () => {
+    for (let artist of artists) {
+      if (artist.id === +artistId) {
+        setArtistDetail(artist);
+        console.log("artist", artist);
+      }
+    }
+    const allArtistsTicket = tickets.filter((ticket) => {
+      if (ticket.artistId === +artistId) {
+        return ticket;
+      }
+    });
+    setArtistTickets(allArtistsTicket);
+  };
+
+  useEffect(() => {
+    grabArtistDetails();
+  }, []);
 
   const handleSelect = (e) => {
     setQuantity(+e.target.value);
@@ -20,27 +43,21 @@ const Artists = ({ artistPage, tickets, cart, setCart }) => {
     setCart([...cart, newCartItem]);
   };
 
-  const allArtistsTicket = tickets.filter((ticket) => {
-    if (ticket.artistId === artistPage.id) {
-      return ticket;
-    }
-  });
-
-  console.log(artistPage);
+  console.log(artistDetail);
   console.log(tickets);
-  console.log(allArtistsTicket);
+  console.log(artistTickets);
   return (
     <div className="artist-detail">
-      <h1>{artistPage.name}</h1>
+      <h1>{artistDetail.name}</h1>
       <img
         className="artistImage"
-        src={artistPage.image}
-        alt={artistPage.name}
+        src={artistDetail.image}
+        alt={artistDetail.name}
       />
-      <p>{artistPage.description}</p>
+      <p>{artistDetail.description}</p>
       <h3>Tickets</h3>
-      {allArtistsTicket.length > 0 &&
-        allArtistsTicket.map((ticket) => {
+      {artistTickets &&
+        artistTickets.map((ticket) => {
           return (
             <form
               className="tickets"
@@ -52,7 +69,7 @@ const Artists = ({ artistPage, tickets, cart, setCart }) => {
                 <p>{ticket.date}</p>
               </div>
               <div className="ticket-info">
-                <p>{artistPage.name}</p>
+                <p>{artistDetail.name}</p>
                 <p>
                   {ticket.venue.name}, {ticket.venue.city}, {ticket.venue.state}
                 </p>

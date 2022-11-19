@@ -21,7 +21,6 @@ function App() {
   const [token, setToken] = useState("");
   const [user, setUser] = useState({});
   const [myOrders, setMyOrders] = useState({});
-  const [artistPage, setArtistPage] = useState({});
   const [keyword, setKeyword] = useState("");
   const [suggest, setSuggest] = useState([]);
   const [displayMessage, setDisplayMessage] = useState("");
@@ -76,22 +75,16 @@ function App() {
         setToken={setToken}
         setUser={setUser}
         token={token}
-        setArtistPage={setArtistPage}
       />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
           path="/concerts"
           element={
-            <Concerts
-              artists={artists}
-              venues={venues}
-              tickets={tickets}
-              setArtistPage={setArtistPage}
-            />
+            <Concerts artists={artists} venues={venues} tickets={tickets} />
           }
         />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/venues" element={<Venues />} />
@@ -99,7 +92,7 @@ function App() {
           path="/artists/:artistId"
           element={
             <Artists
-              artistPage={artistPage}
+              artists={artists}
               tickets={tickets}
               cart={cart}
               setCart={setCart}

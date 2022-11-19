@@ -11,7 +11,6 @@ const Nav = ({
   setToken,
   setUser,
   token,
-  setArtistPage,
 }) => {
   useEffect(() => {
     setToken("");
@@ -87,7 +86,6 @@ const Nav = ({
                   <Link
                     to={`/artists/${artist.id}`}
                     onClick={() => {
-                      setArtistPage(artist);
                       setKeyword("");
                     }}
                   >
