@@ -45,7 +45,7 @@ function App() {
   };
   const getTickets = async () => {
     const data = await fetchTickets();
-    // console.log("getTickets: ", data);
+    console.log("getTickets: ", data);
     setTickets(data);
   };
 
