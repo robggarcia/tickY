@@ -19,7 +19,6 @@ import {
 import Admin from "./components/Admin";
 
 // rob test for pushing and pulling
-// rob second test
 
 //Push/pull Test - Brandon
 function App() {
@@ -47,7 +46,7 @@ function App() {
   };
   const getTickets = async () => {
     const data = await fetchTickets();
-    // console.log("getTickets: ", data);
+    console.log("getTickets: ", data);
     setTickets(data);
   };
 
@@ -69,9 +68,9 @@ function App() {
     getUser(token);
   }, [token]);
 
-  useEffect(() => {
-    setToken();
-  }, [token]);
+  // useEffect(() => {
+  //   setToken();
+  // }, [token]);
   return (
     <div className="App">
       <Nav
@@ -93,8 +92,14 @@ function App() {
           }
         />
         <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
-        <Route path="/login" element={<Login setToken={setToken} />} />
-        <Route path="/register" element={<Register setToken={setToken} />} />
+        <Route
+          path="/login"
+          element={<Login setToken={setToken} token={token} />}
+        />
+        <Route
+          path="/register"
+          element={<Register setToken={setToken} token={token} />}
+        />
         <Route path="/venues" element={<Venues />} />
         <Route
           path="/artists/:artistId"
@@ -107,7 +112,10 @@ function App() {
             />
           }
         />
-        <Route path="/cart" element={<Cart />} />
+        <Route
+          path="/cart"
+          element={<Cart cart={cart} setCart={setCart} tickets={tickets} />}
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/venues" element={<Venues />} />

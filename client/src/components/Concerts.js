@@ -6,18 +6,16 @@ import { Link } from "react-router-dom";
 const Concerts = ({ artists, venues, tickets }) => {
   const [genres, setGenres] = useState([]);
   const [genreOption, setGenreOption] = useState("any");
-
   const [cities, setCities] = useState([]);
   const [cityOption, setCityOption] = useState("any");
-
   const [dateRange, setDateRange] = useState([
     "Today",
     "This Weekend",
     "This Month",
   ]);
   const [dateOption, setDateOption] = useState();
-
   const [featured, setFeatured] = useState(artists);
+  const [featuredCity, setFeaturedCity] = useState(cities);
 
   const getGenres = async () => {
     const artistGenres = [];
@@ -78,6 +76,25 @@ const Concerts = ({ artists, venues, tickets }) => {
   useEffect(() => {
     filterArtists();
   }, [genreOption]);
+  //filter for city
+  //
+  //
+  // const filterCity = () => {
+  //   if (cityOption === "any") {
+  //     setFeaturedCity(cities);
+  //     // console.log(cities);
+  //   } else {
+  //     const filteredCities = featured.filter(
+  //       (ticket) => ticket.venue.city === cityOption
+  //     );
+  //     setFeaturedCity(filteredCities);
+  //   }
+  //   console.log("filteredCity", featuredCity);
+  // };
+
+  // useEffect(() => {
+  //   filterCity();
+  // }, [cityOption]);
 
   return (
     <div className="concerts">

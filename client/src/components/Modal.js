@@ -4,8 +4,8 @@ import "./Modal.css";
 
 const Modal = ({ displayMessage, success }) => {
   const [visible, setVisible] = useState(false);
-  console.log("visible", visible);
-  console.log(displayMessage);
+  // console.log("visible", visible);
+  // console.log(displayMessage);
 
   useEffect(() => {
     if (displayMessage) {
