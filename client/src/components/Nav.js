@@ -10,39 +10,35 @@ const Nav = ({
   suggest,
   setToken,
   setUser,
+  token,
+  setArtistPage,
 }) => {
-  const [names, setNames] = useState([]);
-
-  const getArtistsNames = () => {
-    const artistNames = [];
-    for (let artist of artists) {
-      if (!artistNames.includes(artist.name))
-        artistNames.push(artist.name.toLowerCase());
-    }
-    console.log("ARTISTS NAMES: ", artistNames);
-    setNames(artistNames);
-  };
-
   useEffect(() => {
-    getArtistsNames();
+    setToken("");
+    setUser("");
   }, []);
+
+  const handleLogOut = () => {
+    setToken("");
+    setUser("");
+    localStorage.clear();
+  };
 
   const handleInput = (e) => {
     setKeyword(e.target.value);
     console.log("KEYWORD: ", keyword);
-    searchResults();
   };
 
   const searchResults = () => {
     const filteredNames = [];
     if (!keyword) {
-      setSuggest(filteredNames);
-      console.log("filteredNames", filteredNames);
+      setSuggest([]);
     } else {
-      for (let name of names) {
-        if (name.includes(keyword)) filteredNames.push(name);
+      for (let artist of artists) {
+        if (artist.name.toLowerCase().includes(keyword)) {
+          filteredNames.push(artist);
+        }
       }
-      console.log("FILTERED NAMES: ", filteredNames);
       setSuggest(filteredNames);
     }
   };
@@ -51,19 +47,11 @@ const Nav = ({
     searchResults();
   }, [keyword]);
 
-  useEffect(() => {
-    setToken("");
-    setUser("");
-  }, []);
-  const handleLogOut = () => {
-    setToken("");
-    setUser("");
-    localStorage.clear();
-  };
-
   return (
     <div className="navbar">
-      <Link to="/">TickY</Link>
+      <Link className="link" to="/">
+        TickY
+      </Link>
       <input
         id="nav-search"
         type="text"
@@ -72,12 +60,22 @@ const Nav = ({
         onChange={handleInput}
       />
       <div className="links">
-        <Link to="/concerts">Concerts</Link>
-        <Link to="/cart">Cart</Link>
-        <Link to="/Login">Login</Link>
-        <Link to="/" onClick={handleLogOut}>
-          Log Out
+        <Link className="link" to="/concerts">
+          Concerts
         </Link>
+        <Link className="link" to="/cart">
+          Cart
+        </Link>
+        {!token && (
+          <Link className="link" to="/Login">
+            Login
+          </Link>
+        )}
+        {token && (
+          <Link className="link" to="/" onClick={handleLogOut}>
+            Log Out
+          </Link>
+        )}
       </div>
       {suggest.length > 0 && (
         <div className="suggested">
@@ -86,7 +84,15 @@ const Nav = ({
             {suggest.map((artist, idx) => {
               return (
                 <p key={idx}>
-                  <Link>{artist}</Link>
+                  <Link
+                    to={`/artists/${artist.id}`}
+                    onClick={() => {
+                      setArtistPage(artist);
+                      setKeyword("");
+                    }}
+                  >
+                    {artist.name}
+                  </Link>
                 </p>
               );
             })}

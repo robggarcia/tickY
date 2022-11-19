@@ -12,7 +12,7 @@ const Artists = ({ artistPage, tickets }) => {
     <div className="artist-detail">
       <h1>{artistPage.name}</h1>
       <img
-        classname="artistImage"
+        className="artistImage"
         src={artistPage.image}
         alt={artistPage.name}
       />

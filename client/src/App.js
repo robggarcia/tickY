@@ -72,6 +72,8 @@ function App() {
         suggest={suggest}
         setToken={setToken}
         setUser={setUser}
+        token={token}
+        setArtistPage={setArtistPage}
       />
       <Routes>
         <Route path="/" element={<Home />} />

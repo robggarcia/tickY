@@ -143,9 +143,11 @@ body {
   color: black;
 }
 
-.artist-detail img  {
+.artist-detail img {
   height: 200px;
   width: 300px;
+  object-fit: cover;
+  object-position: 0 0;
 }
 
 .tickets {
@@ -159,7 +161,7 @@ body {
 
 .suggested {
   background-color: #f7f8f9;
-  padding: 20px;
+  padding: 10px;
   border-radius: 20px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   position: absolute;

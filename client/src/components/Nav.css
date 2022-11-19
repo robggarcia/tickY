@@ -12,13 +12,16 @@
     margin-right: 10px;
 }
 
+.navbar .link {
+    font-weight: bold;
+    margin-left: 20px;
+}
+
 #nav-search {
     margin-left: 20px;
 }
 
 .navbar a {
-    margin-left: 10px;
-    font-weight: bold;
     text-decoration: none;
     color: black;
 }
