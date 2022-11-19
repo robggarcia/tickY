@@ -26,6 +26,7 @@ function App() {
   const [suggest, setSuggest] = useState([]);
   const [displayMessage, setDisplayMessage] = useState("");
   const [success, setSuccess] = useState(false);
+  const [cart, setCart] = useState([]);
 
   const getArtists = async () => {
     const data = await fetchArtists();
@@ -96,7 +97,14 @@ function App() {
         <Route path="/venues" element={<Venues />} />
         <Route
           path="/artists/:artistId"
-          element={<Artists artistPage={artistPage} tickets={tickets} />}
+          element={
+            <Artists
+              artistPage={artistPage}
+              tickets={tickets}
+              cart={cart}
+              setCart={setCart}
+            />
+          }
         />
       </Routes>
       <Modal displayMessage={displayMessage} success={success} />
