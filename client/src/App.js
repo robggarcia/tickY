@@ -1,3 +1,5 @@
+// test git eric
+
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { fetchArtists, fetchTickets, fetchUser, fetchVenues } from "./api";
