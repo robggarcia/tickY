@@ -1,67 +1,67 @@
 import { useEffect, useState } from "react";
+import { fetchTickets, monthByNumber } from "../api";
 
-const Cart = ({ cart, setCart, tickets }) => {
-  const [ticketsToDisplay, setTicketsToDisplay] = useState([]);
+const Cart = ({ cart, setCart }) => {
+  const [itemsToDisplay, setItemsToDisplay] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
-  const filterTickets = () => {
-    const ticketsArray = [];
+  const filterTickets = async () => {
+    const tickets = await fetchTickets();
+    console.log("AVAILABLE TICKETS: ", tickets);
+    const itemsArray = [];
     for (let item of cart) {
-      ticketsArray.push(tickets.find((ticket) => (ticket.id = item.ticketId)));
+      // ticketsArray.push(tickets.find((ticket) => ticket.id === item.ticketId));
+      item.ticket = tickets.find((ticket) => ticket.id === item.ticketId);
+      itemsArray.push(item);
     }
-    setTicketsToDisplay(ticketsArray);
+    let price = 0;
+    for (let item of itemsArray) {
+      item.ticket.month = monthByNumber(item.ticket.date.slice(5, 7));
+      item.ticket.day = item.ticket.date.slice(8, 10);
+      item.ticket.year = item.ticket.date.slice(0, 4);
+      price += item.ticket.price * item.quantity;
+    }
+    setItemsToDisplay(itemsArray);
+    setTotalPrice(price);
   };
 
   useEffect(() => {
     filterTickets();
   }, [cart]);
-  //testing git here
-  //testing git 2
+
   return (
     <div className="cart">
       <h1 className="banner">Cart</h1>
       {cart.length === 0 && <p>There are no items in your cart</p>}
-      {cart.length > 0 && (
-        <div className="cart-items">
-          {cart.map((ticket, idx) => {
-            return (
-              <form
-                className="tickets"
-                id={ticket.id}
-                key={ticket.id}
-                // onSubmit={handleAdd}
-              >
-                <div className="ticket-date">
-                  <p>{ticket.date}</p>
-                </div>
-                <div className="ticket-info">
-                  <p>{ticket.artist.name}</p>
-                  <p>
-                    {ticket.venue.name}, {ticket.venue.city},{" "}
-                    {ticket.venue.state}
-                  </p>
-                  <p>Price: {ticket.price}</p>
-                  <p>Tickets available: {ticket.quantity}</p>
-                </div>
-                <div className="ticket-quantity">
-                  <select value={ticket.quantity}>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                  </select>
-                  <button>Add to Cart</button>
-                </div>
-              </form>
-            );
-          })}
-        </div>
-      )}
+      {itemsToDisplay.length > 0 &&
+        itemsToDisplay.map((item, idx) => {
+          return (
+            <div className="item" key={idx}>
+              <div className="ticket-date">
+                <p>{item.ticket.month}</p>
+                <p>{item.ticket.day}</p>
+                <p>{item.ticket.year}</p>
+              </div>
+              <div className="ticket-info">
+                <p>{item.ticket.artist.name}</p>
+                <p>
+                  {item.ticket.venue.name}, {item.ticket.venue.city},{" "}
+                  {item.ticket.venue.state}
+                </p>
+                <p>${item.ticket.price} each</p>
+              </div>
+              <div className="order-info">
+                <p>Quantity: {item.quantity}</p>
+                <p>Price: ${item.quantity * item.ticket.price}</p>
+                <button>Remove</button>
+              </div>
+            </div>
+          );
+        })}
+      <div className="total">
+        <h4>Total Cost: ${totalPrice}</h4>
+        <button>Purchase Tickets</button>
+      </div>
     </div>
   );
 };

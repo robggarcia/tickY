@@ -111,7 +111,10 @@ function App() {
             />
           }
         />
-        <Route path="/cart" element={<Cart />} />
+        <Route
+          path="/cart"
+          element={<Cart cart={cart} setCart={setCart} tickets={tickets} />}
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/venues" element={<Venues />} />
