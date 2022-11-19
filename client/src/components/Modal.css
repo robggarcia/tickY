@@ -1,0 +1,31 @@
+.modal {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    width: 400px;
+    margin-left: -200px;
+    padding-left: 20px;
+    color: #fff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    z-index: 1;
+}
+
+.success {
+    background-color: #31b661;
+}
+
+.error {
+    background-color: #b63131;
+}
+
+.close {
+    margin-right: 20px;
+}
+
+.close:hover {
+    cursor: pointer;
+}
