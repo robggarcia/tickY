@@ -17,6 +17,9 @@ import {
   Profile,
 } from "./components";
 
+// rob test for pushing and pulling
+
+//Push/pull Test - Brandon
 function App() {
   const [artists, setArtists] = useState([]);
   const [venues, setVenues] = useState([]);
@@ -64,9 +67,9 @@ function App() {
     getUser(token);
   }, [token]);
 
-  useEffect(() => {
-    setToken();
-  }, [token]);
+  // useEffect(() => {
+  //   setToken();
+  // }, [token]);
   return (
     <div className="App">
       <Nav
@@ -87,12 +90,15 @@ function App() {
             <Concerts artists={artists} venues={venues} tickets={tickets} />
           }
         />
+        <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
         <Route
-          path="/cart"
-          element={<Cart cart={cart} setCart={setCart} tickets={tickets} />}
+          path="/login"
+          element={<Login setToken={setToken} token={token} />}
         />
-        <Route path="/login" element={<Login setToken={setToken} />} />
-        <Route path="/register" element={<Register setToken={setToken} />} />
+        <Route
+          path="/register"
+          element={<Register setToken={setToken} token={token} />}
+        />
         <Route path="/venues" element={<Venues />} />
         <Route
           path="/artists/:artistId"
