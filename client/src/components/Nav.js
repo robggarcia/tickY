@@ -71,6 +71,11 @@ const Nav = ({
           </Link>
         )}
         {token && (
+          <Link className="link" to="/profile">
+            Profile
+          </Link>
+        )}
+        {token && (
           <Link className="link" to="/" onClick={handleLogOut}>
             Log Out
           </Link>

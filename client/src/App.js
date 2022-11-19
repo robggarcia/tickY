@@ -10,12 +10,12 @@ import {
   Login,
   Modal,
   Nav,
+  Profile,
   Register,
   Venues,
 } from "./components";
 
 // rob test for pushing and pulling
-
 
 //Push/pull Test - Brandon
 function App() {
@@ -103,6 +103,7 @@ function App() {
             />
           }
         />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
       <Modal displayMessage={displayMessage} success={success} />
     </div>
