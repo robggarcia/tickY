@@ -17,10 +17,6 @@ import {
   Profile,
 } from "./components";
 
-// rob test for pushing and pulling
-// rob second test
-
-//Push/pull Test - Brandon
 function App() {
   const [artists, setArtists] = useState([]);
   const [venues, setVenues] = useState([]);
@@ -91,7 +87,10 @@ function App() {
             <Concerts artists={artists} venues={venues} tickets={tickets} />
           }
         />
-        <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
+        <Route
+          path="/cart"
+          element={<Cart cart={cart} setCart={setCart} tickets={tickets} />}
+        />
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/venues" element={<Venues />} />
