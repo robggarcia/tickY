@@ -15,6 +15,7 @@ const Cart = ({ cart, setCart, tickets }) => {
     filterTickets();
   }, [cart]);
   //testing git here
+  //testing git 2
   return (
     <div className="cart">
       <h1 className="banner">Cart</h1>
