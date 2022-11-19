@@ -67,9 +67,9 @@ function App() {
     getUser(token);
   }, [token]);
 
-  useEffect(() => {
-    setToken();
-  }, [token]);
+  // useEffect(() => {
+  //   setToken();
+  // }, [token]);
   return (
     <div className="App">
       <Nav
@@ -91,8 +91,14 @@ function App() {
           }
         />
         <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
-        <Route path="/login" element={<Login setToken={setToken} />} />
-        <Route path="/register" element={<Register setToken={setToken} />} />
+        <Route
+          path="/login"
+          element={<Login setToken={setToken} token={token} />}
+        />
+        <Route
+          path="/register"
+          element={<Register setToken={setToken} token={token} />}
+        />
         <Route path="/venues" element={<Venues />} />
         <Route
           path="/artists/:artistId"
