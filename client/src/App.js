@@ -11,6 +11,7 @@ import {
   Nav,
   Register,
   Venues,
+  Profile,
 } from "./components";
 
 function App() {
@@ -77,6 +78,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/venues" element={<Venues />} />
         <Route path="/artists" element={<Artists />} />
+        <Route path="/profile" element={<Profile user={user} myOrders={myOrders} />} />
       </Routes>
     </div>
   );
