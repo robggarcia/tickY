@@ -4,12 +4,12 @@ import { fetchTickets, monthByNumber } from "../api";
 import "../styles/Cart.css";
 
 const Cart = ({ cart, setCart }) => {
-  const [itemsToDisplay, setItemsToDisplay] = useState([]);
+  const [itemsToDisplay, setItemsToDisplay] = useState(cart);
   const [totalPrice, setTotalPrice] = useState(0);
 
   console.log("cart", cart);
 
-  const filterTickets = async () => {
+  /*   const filterTickets = async () => {
     const tickets = await fetchTickets();
     console.log("AVAILABLE TICKETS: ", tickets);
     const itemsArray = [];
@@ -31,10 +31,26 @@ const Cart = ({ cart, setCart }) => {
 
   useEffect(() => {
     filterTickets();
+  }, [cart]); */
+
+  const updateItems = () => {
+    let price = 0;
+    for (let item of cart) {
+      price += item.ticket.price * item.quantity;
+    }
+    console.log("price", price);
+    setItemsToDisplay(cart);
+    setTotalPrice(price);
+  };
+
+  useEffect(() => {
+    updateItems();
   }, [cart]);
 
   const handleChange = (e, idx) => {
+    console.log("INDEX: ", idx);
     const { value, name } = e.target;
+    console.log("VALUE, NAME: ", value, name);
     const newCart = [...cart];
     newCart[idx] = {
       ...newCart[idx],
@@ -91,10 +107,12 @@ const Cart = ({ cart, setCart }) => {
           })}
         </div>
       )}
-      <div className="total">
-        <h4>Total Cost: ${totalPrice}</h4>
-        <button>Purchase Tickets</button>
-      </div>
+      {cart.length > 0 && (
+        <div className="total">
+          <h4>Total Cost: ${totalPrice}</h4>
+          <button>Secure Checkout</button>
+        </div>
+      )}
     </div>
   );
 };

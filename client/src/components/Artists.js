@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { monthByNumber } from "../api";
+
+import "../styles/Artists.css";
 
 const Artists = ({ artists, artistPage, tickets, cart, setCart }) => {
   const { artistId } = useParams();
@@ -20,6 +23,13 @@ const Artists = ({ artists, artistPage, tickets, cart, setCart }) => {
         return ticket;
       }
     });
+    for (let item of allArtistsTicket) {
+      item.month = monthByNumber(item.date.slice(5, 7));
+      item.day = item.date.slice(8, 10);
+      item.year = item.date.slice(0, 4);
+      item.count = 0;
+    }
+    console.log("allArtistsTicket", allArtistsTicket);
     setArtistTickets(allArtistsTicket);
   };
 
@@ -31,69 +41,80 @@ const Artists = ({ artists, artistPage, tickets, cart, setCart }) => {
     setQuantity(+e.target.value);
   };
 
-  const handleAdd = (e) => {
-    e.preventDefault();
-    const ticketId = +e.target.id;
-    const numTickets = +e.target[0].value;
+  const handleAdd = (e, idx) => {
+    const ticket = artistTickets[idx];
+    const numTickets = artistTickets[idx].count;
     const newCartItem = {
-      ticketId,
+      ticket,
       quantity: numTickets,
     };
     console.log("newCartItem", newCartItem);
     setCart([...cart, newCartItem]);
   };
 
+  const handleChange = (e, idx) => {
+    const { value, name } = e.target;
+    const newTickets = [...artistTickets];
+    newTickets[idx] = {
+      ...newTickets[idx],
+      [name]: value,
+    };
+    console.log(newTickets);
+    setArtistTickets(newTickets);
+  };
+
   console.log(artistDetail);
   console.log(tickets);
   console.log(artistTickets);
   return (
-    <div className="artist-detail">
-      <h1>{artistDetail.name}</h1>
-      <img
-        className="artistImage"
-        src={artistDetail.image}
-        alt={artistDetail.name}
-      />
-      <p>{artistDetail.description}</p>
+    <div className="artists">
+      <div className="artist-div">
+        <div className="artist-details">
+          <h1>{artistDetail.name}</h1>
+          <p>{artistDetail.description}</p>
+        </div>
+        <img
+          className="artistImage"
+          src={artistDetail.image}
+          alt={artistDetail.name}
+        />
+      </div>
       <h3>Tickets</h3>
-      {artistTickets &&
-        artistTickets.map((ticket) => {
-          return (
-            <form
-              className="tickets"
-              id={ticket.id}
-              key={ticket.id}
-              onSubmit={handleAdd}
-            >
-              <div className="ticket-date">
-                <p>{ticket.date}</p>
+      {artistTickets.length > 0 && (
+        <div className="cart-items">
+          {artistTickets.map((ticket, idx) => {
+            return (
+              <div className="item" key={idx}>
+                <div className="ticket-date">
+                  <p>{ticket.month}</p>
+                  <p>{ticket.day}</p>
+                  <p>{ticket.year}</p>
+                </div>
+                <div className="ticket-info">
+                  <p>{ticket.artist.name}</p>
+                  <p>
+                    {ticket.venue.name}, {ticket.venue.city},{" "}
+                    {ticket.venue.state}
+                  </p>
+                  <p>Price: ${ticket.price} each</p>
+                  <p>Tickets available: {ticket.quantity}</p>
+                </div>
+                <div className="quantity">
+                  <input
+                    name="count"
+                    type="number"
+                    value={artistTickets[idx].count}
+                    onChange={(e) => handleChange(e, idx)}
+                  />
+                  <button onClick={(e) => handleAdd(e, idx)}>
+                    Add To Cart
+                  </button>
+                </div>
               </div>
-              <div className="ticket-info">
-                <p>{artistDetail.name}</p>
-                <p>
-                  {ticket.venue.name}, {ticket.venue.city}, {ticket.venue.state}
-                </p>
-                <p>Price: {ticket.price}</p>
-                <p>Tickets available: {ticket.quantity}</p>
-              </div>
-              <div className="ticket-quantity">
-                <select value={quantity} onChange={handleSelect}>
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                  <option>6</option>
-                  <option>7</option>
-                  <option>8</option>
-                  <option>9</option>
-                  <option>10</option>
-                </select>
-                <button>Add to Cart</button>
-              </div>
-            </form>
-          );
-        })}
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

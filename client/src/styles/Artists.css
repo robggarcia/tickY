@@ -1,0 +1,53 @@
+.artists {
+    grid-row: 2;
+}
+
+.artist-div {
+    display: flex;
+}
+
+.artistImage {
+    width: 450px;
+    height: 300px;
+    object-fit: cover;
+    object-position: 0 auto;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.artists .item {
+    display: flex;
+    align-items: center;
+    width: 90vw;
+    margin-bottom: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.artists .ticket-date {
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.artists .ticket-info {
+    width: 40vw;
+    margin-left: 10px;
+}
+
+.artists button {
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.artists .quantity {
+    display: flex;
+    margin-right: 20px;
+}
+
+.artists .quantity input {
+    width: 50px;
+    margin-left: 5px;
+}
