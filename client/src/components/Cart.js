@@ -33,12 +33,30 @@ const Cart = ({ cart, setCart }) => {
     filterTickets();
   }, [cart]);
 
+  const handleChange = (e, idx) => {
+    const { value, name } = e.target;
+    const newCart = [...cart];
+    newCart[idx] = {
+      ...newCart[idx],
+      [name]: value,
+    };
+    console.log(newCart);
+    setCart(newCart);
+  };
+
+  const handleRemove = (e, idx) => {
+    const newCart = [...cart];
+    newCart.splice(idx, 1);
+    console.log(newCart);
+    setCart(newCart);
+  };
+
   return (
     <div className="cart">
       <h1 className="banner">Cart</h1>
       {cart.length === 0 && <p>There are no items in your cart</p>}
       {itemsToDisplay.length > 0 && (
-        <form>
+        <div className="cart-items">
           {itemsToDisplay.map((item, idx) => {
             return (
               <div className="item" key={idx}>
@@ -55,15 +73,23 @@ const Cart = ({ cart, setCart }) => {
                   </p>
                   <p>${item.ticket.price} each</p>
                 </div>
-                <div className="order-info">
-                  <p>Quantity: {item.quantity}</p>
-                  <p>Price: ${item.quantity * item.ticket.price}</p>
+                <div className="quantity">
+                  <p>Quantity: </p>
+                  <input
+                    name="quantity"
+                    type="number"
+                    value={itemsToDisplay[idx].quantity}
+                    onChange={(e) => handleChange(e, idx)}
+                  />
                 </div>
-                <button>Remove</button>
+                <div className="subtotal">
+                  <p>Subtotal: ${item.quantity * item.ticket.price}</p>
+                </div>
+                <button onClick={(e) => handleRemove(e, idx)}>Remove</button>
               </div>
             );
           })}
-        </form>
+        </div>
       )}
       <div className="total">
         <h4>Total Cost: ${totalPrice}</h4>

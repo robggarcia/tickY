@@ -42,6 +42,16 @@
     margin-right: 10px;
 }
 
-.cart .order-info {
-    margin-left: auto;
+.cart .quantity {
+    display: flex;
+    margin-right: 20px;
+}
+
+.cart .quantity input {
+    width: 50px;
+    margin-left: 5px;
+}
+
+.cart .subtotal {
+    font-weight: bold;
 }
