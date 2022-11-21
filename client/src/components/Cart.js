@@ -9,30 +9,6 @@ const Cart = ({ cart, setCart }) => {
 
   console.log("cart", cart);
 
-  /*   const filterTickets = async () => {
-    const tickets = await fetchTickets();
-    console.log("AVAILABLE TICKETS: ", tickets);
-    const itemsArray = [];
-    for (let item of cart) {
-      // ticketsArray.push(tickets.find((ticket) => ticket.id === item.ticketId));
-      item.ticket = tickets.find((ticket) => ticket.id === item.ticketId);
-      itemsArray.push(item);
-    }
-    let price = 0;
-    for (let item of itemsArray) {
-      item.ticket.month = monthByNumber(item.ticket.date.slice(5, 7));
-      item.ticket.day = item.ticket.date.slice(8, 10);
-      item.ticket.year = item.ticket.date.slice(0, 4);
-      price += item.ticket.price * item.quantity;
-    }
-    setItemsToDisplay(itemsArray);
-    setTotalPrice(price);
-  };
-
-  useEffect(() => {
-    filterTickets();
-  }, [cart]); */
-
   const updateItems = () => {
     let price = 0;
     for (let item of cart) {
@@ -48,9 +24,7 @@ const Cart = ({ cart, setCart }) => {
   }, [cart]);
 
   const handleChange = (e, idx) => {
-    console.log("INDEX: ", idx);
     const { value, name } = e.target;
-    console.log("VALUE, NAME: ", value, name);
     const newCart = [...cart];
     newCart[idx] = {
       ...newCart[idx],
@@ -94,6 +68,7 @@ const Cart = ({ cart, setCart }) => {
                   <input
                     name="quantity"
                     type="number"
+                    min="0"
                     value={itemsToDisplay[idx].quantity}
                     onChange={(e) => handleChange(e, idx)}
                   />

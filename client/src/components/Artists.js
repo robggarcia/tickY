@@ -103,6 +103,7 @@ const Artists = ({ artists, artistPage, tickets, cart, setCart }) => {
                   <input
                     name="count"
                     type="number"
+                    min="0"
                     value={artistTickets[idx].count}
                     onChange={(e) => handleChange(e, idx)}
                   />
