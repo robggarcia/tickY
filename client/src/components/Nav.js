@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "./Nav.css";
+import "../styles/Nav.css";
 
 const Nav = ({
   keyword,
@@ -49,7 +49,10 @@ const Nav = ({
   return (
     <div className="navbar">
       <Link className="link" to="/">
-        TickY
+        <div className="logo-container">
+          <h1 className="logo">tickY</h1>
+          <div className="logo-end"></div>
+        </div>
       </Link>
       <input
         id="nav-search"

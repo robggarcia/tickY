@@ -29,3 +29,26 @@
 .navbar a:hover {
     color: #5720ee;
 }
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    color: #fff;
+    font-size: 50px;
+    padding-left: 15px;
+    padding-right: 5px;
+    background-color: lightblue;
+    line-height: 50px;
+    width: fit-content;
+}
+
+.logo-end {
+    height: 0;
+    width: 0;
+    border-right: 22px solid transparent;
+    border-top: 50px solid lightblue;
+
+}
