@@ -10,6 +10,7 @@ import {
   fetchUser,
   fetchUsersOrders,
   fetchVenues,
+  monthByNumber,
 } from "./api";
 import "./App.css";
 import {
@@ -33,7 +34,7 @@ function App() {
   const [tickets, setTickets] = useState([]);
   const [artistTickets, setArtistTickets] = useState([]);
   const [token, setToken] = useState("");
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const [myOrders, setMyOrders] = useState([]);
   const [currentOrderId, setCurrentOrderId] = useState(null);
   const [keyword, setKeyword] = useState("");
@@ -55,6 +56,11 @@ function App() {
   const getTickets = async () => {
     const data = await fetchTickets();
     // console.log("getTickets: ", data);
+    for (let ticket of data) {
+      ticket.month = monthByNumber(ticket.date.slice(5, 7));
+      ticket.day = ticket.date.slice(8, 10);
+      ticket.year = ticket.date.slice(0, 4);
+    }
     setTickets(data);
     // push non duplicate artist tickets
     const ticketsArray = [];
@@ -70,9 +76,13 @@ function App() {
   };
 
   const getUser = async (token) => {
+    console.log("GET USER CALLED");
     // check local storage to see if a token is available
     if (localStorage.getItem("token")) setToken(localStorage.getItem("token"));
-    if (!token) return;
+    if (!token) {
+      console.log("THE USER IS NOT DEFINED");
+      return;
+    }
     const info = await fetchUser(token);
     // console.log("THE USER INFO: ", info);
     if (info.id) {
@@ -80,7 +90,7 @@ function App() {
       const orderData = await fetchUsersOrders(token, info.id);
       console.log("orderData", orderData);
       setMyOrders(orderData);
-      // find the highest orderId
+      // sort the returned data by orderId
       orderData.sort((a, b) => a.id - b.id);
       console.log("SORTED orderData", orderData);
       // if the most recent order is not purchased, update the cart
@@ -93,8 +103,8 @@ function App() {
         let newCart = [...cart];
         if (orderData[orderData.length - 1].tickets.length > 0) {
           // setCart([...cart, ...orderData[orderData.length - 1]]);
-          for (let item of orderData[orderData.length - 1]) {
-            newCart.push(item);
+          for (let ticket of orderData[orderData.length - 1].tickets) {
+            newCart.push(ticket);
           }
         }
         setCart(newCart);

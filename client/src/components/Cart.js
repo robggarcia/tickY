@@ -37,6 +37,7 @@ const Cart = ({ token, user, cart, setCart, myOrders, currentOrderId }) => {
       });
     }
     navigate(`/cart/${currentOrderId}/checkout`);
+    // if user decides to go back and revise order, need to update ticket_orders!
   };
 
   return (
@@ -67,9 +68,10 @@ const Cart = ({ token, user, cart, setCart, myOrders, currentOrderId }) => {
               // display message to login in order to proceed
               if (!user) {
                 navigate("/Login");
+              } else {
+                // if a user is logged in, when button is pressed, add the tickets to the current order and navigate to checkout
+                attachTicketsToOrder();
               }
-              // if a user is logged in, when button is pressed, add the tickets to the current order
-              attachTicketsToOrder();
             }}
           >
             Secure Checkout

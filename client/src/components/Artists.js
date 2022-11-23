@@ -22,12 +22,9 @@ const Artists = ({ artists, artistPage, tickets, cart, setCart }) => {
         return ticket;
       }
     });
-    for (let item of allArtistsTicket) {
-      item.month = monthByNumber(item.date.slice(5, 7));
-      item.day = item.date.slice(8, 10);
-      item.year = item.date.slice(0, 4);
-      item.count = 0;
-    }
+    // for (let item of allArtistsTicket) {
+    //   item.count = 0;
+    // }
     console.log("allArtistsTicket", allArtistsTicket);
     setArtistTickets(allArtistsTicket);
   };
