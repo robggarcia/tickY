@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createTicketOrder } from "../api";
 
 import "../styles/Cart.css";
 import Ticket from "./Ticket";
 
-const Cart = ({ user, cart, setCart }) => {
+const Cart = ({ token, user, cart, setCart, myOrders, currentOrderId }) => {
   const [itemsToDisplay, setItemsToDisplay] = useState(cart);
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -25,6 +26,18 @@ const Cart = ({ user, cart, setCart }) => {
   useEffect(() => {
     updateItems();
   }, [cart]);
+
+  const attachTicketsToOrder = () => {
+    for (let item of itemsToDisplay) {
+      createTicketOrder({
+        token,
+        orderId: currentOrderId,
+        ticketId: item.ticket.id,
+        quantity: item.quantity,
+      });
+    }
+    navigate(`/cart/${currentOrderId}/checkout`);
+  };
 
   return (
     <div className="cart">
@@ -55,6 +68,8 @@ const Cart = ({ user, cart, setCart }) => {
               if (!user) {
                 navigate("/Login");
               }
+              // if a user is logged in, when button is pressed, add the tickets to the current order
+              attachTicketsToOrder();
             }}
           >
             Secure Checkout

@@ -15,6 +15,7 @@ import "./App.css";
 import {
   Artists,
   Cart,
+  Checkout,
   Concerts,
   Home,
   Login,
@@ -34,12 +35,12 @@ function App() {
   const [token, setToken] = useState("");
   const [user, setUser] = useState({});
   const [myOrders, setMyOrders] = useState([]);
+  const [currentOrderId, setCurrentOrderId] = useState(null);
   const [keyword, setKeyword] = useState("");
   const [suggest, setSuggest] = useState([]);
   const [displayMessage, setDisplayMessage] = useState("");
   const [success, setSuccess] = useState(false);
   const [cart, setCart] = useState([]);
-  const [currentOrderId, setCurrentOrderId] = useState(null);
 
   const getArtists = async () => {
     const data = await fetchArtists();
@@ -79,17 +80,30 @@ function App() {
       const orderData = await fetchUsersOrders(token, info.id);
       console.log("orderData", orderData);
       setMyOrders(orderData);
-      // if an order is not yet purchased, update the cart
-      for (let order of orderData) {
-        if (!order.purchased) {
-          setCurrentOrderId(order.id);
-          setCart([...cart, ...order]);
-        } else {
-          // create a new order for the user
-          const order = await createOrder(token, info.id);
-          console.log(order);
-          setCurrentOrderId(order.id);
+      // find the highest orderId
+      orderData.sort((a, b) => a.id - b.id);
+      console.log("SORTED orderData", orderData);
+      // if the most recent order is not purchased, update the cart
+      if (!orderData[orderData.length - 1].purchased) {
+        console.log(
+          "MOST RECENT ORDER IS NOT PURCHASED",
+          orderData[orderData.length - 1]
+        );
+        setCurrentOrderId(orderData[orderData.length - 1].id);
+        let newCart = [...cart];
+        if (orderData[orderData.length - 1].tickets.length > 0) {
+          // setCart([...cart, ...orderData[orderData.length - 1]]);
+          for (let item of orderData[orderData.length - 1]) {
+            newCart.push(item);
+          }
         }
+        setCart(newCart);
+      } else {
+        // create a new order for the user
+        console.log("CREATING A NEW ORDER: ");
+        const newOrder = await createOrder(token, info.id);
+        console.log(newOrder);
+        setCurrentOrderId(newOrder.id);
       }
     }
   };
@@ -129,8 +143,20 @@ function App() {
         <Route
           path="/cart"
           element={
-            <Cart user={user} cart={cart} setCart={setCart} tickets={tickets} />
+            <Cart
+              token={token}
+              user={user}
+              cart={cart}
+              setCart={setCart}
+              tickets={tickets}
+              myOrders={myOrders}
+              currentOrderId={currentOrderId}
+            />
           }
+        />
+        <Route
+          path="/cart/:orderId/checkout"
+          element={<Checkout token={token} user={user} myOrders={myOrders} />}
         />
         <Route
           path="/login"
