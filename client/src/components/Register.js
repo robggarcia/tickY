@@ -13,7 +13,7 @@ const Register = (props) => {
     event.preventDefault();
 
     var myHeaders = new Headers();
-    myHeaders.append("apikey", "uxhoU6ktXcPHPVSzJwn7rTJrWZ6cwfH8");
+    myHeaders.append("apikey", "NaWa96nugUm0Dzl2QvZ8VnleGWQBHm1o");
 
     var requestOptions = {
       method: "GET",

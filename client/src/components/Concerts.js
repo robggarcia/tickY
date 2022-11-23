@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { monthByNumber } from "../api";
 
 const Concerts = ({ artists, venues, tickets, artistTickets }) => {
   const [genres, setGenres] = useState([]);
@@ -15,7 +16,6 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
   ]);
   const [dateOption, setDateOption] = useState();
   const [featured, setFeatured] = useState(artistTickets);
-  const [featuredCity, setFeaturedCity] = useState(cities);
 
   const getGenres = async () => {
     const artistGenres = [];
@@ -60,6 +60,80 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
     setDateOption(e.target.value);
   };
 
+  //get todays date
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, "0");
+  let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+  if (mm == 1) {
+    mm = "Jan";
+  } else if (mm == 2) {
+    mm = "Feb";
+  } else if (mm == 3) {
+    mm = "Mar";
+  } else if (mm == 4) {
+    mm = "Apr";
+  } else if (mm == 5) {
+    mm = "May";
+  } else if (mm == 6) {
+    mm = "Jun";
+  } else if (mm == 7) {
+    mm = "Jul";
+  } else if (mm == 8) {
+    mm = "Aug";
+  } else if (mm == 9) {
+    mm = "Sep";
+  } else if (mm == 10) {
+    mm = "Oct";
+  } else if (mm == 11) {
+    mm = "Nov";
+  } else if (mm == 12) {
+    mm = "Dec";
+  }
+
+  var yyyy = today.getFullYear();
+  // console.log(typeof yyyy);
+  today = mm + " " + dd + ", " + yyyy;
+  // console.log(today);
+
+  // check for weekends
+  // if undefine then not a weekend , if output is weekend the nweekend
+  var is_weekend = function (date1) {
+    var dt = new Date(date1);
+
+    if (dt.getDay() == 6 || dt.getDay() == 0) {
+      return "weekend";
+    }
+  };
+
+  // console.log(tickets);
+
+  function dateMap(todayDate) {
+    for (let item of tickets) {
+      item.month = monthByNumber(item.date.slice(5, 7));
+      item.day = item.date.slice(8, 10);
+      item.year = item.date.slice(0, 4);
+      console.log(item);
+    }
+  }
+
+  dateMap(today);
+
+  // function testingWeekend(numDD) {
+  //   // console.log(dd);
+  //   for (let i = 0; i < 8; i++) {
+  //     if (numMM === 11 && numDD <= 30) {
+  //       let newDate = numMM + " " + (numDD + i) + ", " + numYYYY;
+  //       console.log(newDate);
+  //     } else if (numMM === 11 && numDD > 30) {
+  //       let newDate = numMM + 1 + " " + i + ", " + numYYYY;
+  //     }
+  //   }
+  // }
+
+  // testingWeekend(numDD);
+
+  // console.log(is_weekend(today));
+  // console.log(isWeekend(today));
   // need to filter artists based on user filters
   const filterTickets = () => {
     let filteredArtists = [...artistTickets];
