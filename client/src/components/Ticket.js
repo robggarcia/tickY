@@ -15,7 +15,11 @@ const Ticket = ({ ticket, index, item, cart, setCart }) => {
     if (item) setNumTickets(item.quantity);
   }, []);
 
-  const handleChange = (e) => {
+  const handleArtistChange = (e) => {
+    setNumTickets(e.target.value);
+  };
+
+  const handleCartChange = (e) => {
     setNumTickets(e.target.value);
     // update cart state
     const cartToUpdate = [...cart];
@@ -65,7 +69,7 @@ const Ticket = ({ ticket, index, item, cart, setCart }) => {
               type="number"
               min="0"
               value={numTickets}
-              onChange={handleChange}
+              onChange={handleArtistChange}
             />
           </div>
           <button onClick={handleAdd}>Add To Cart</button>
@@ -81,7 +85,7 @@ const Ticket = ({ ticket, index, item, cart, setCart }) => {
                 type="number"
                 min="0"
                 value={numTickets}
-                onChange={handleChange}
+                onChange={handleCartChange}
               />
             </div>
             <p className="subtotal">

@@ -57,7 +57,13 @@ const Artists = ({ artists, artistPage, tickets, cart, setCart }) => {
         <div className="cart-items">
           {artistTickets.map((ticket, idx) => {
             return (
-              <Ticket key={idx} ticket={ticket} cart={cart} setCart={setCart} />
+              <Ticket
+                key={idx}
+                index={idx}
+                ticket={ticket}
+                cart={cart}
+                setCart={setCart}
+              />
             );
           })}
         </div>

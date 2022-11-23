@@ -99,7 +99,12 @@ export const createOrder = async (token, userId) => {
   }
 };
 
-export const createTicketOrder = async (token, orderId, ticketId, quantity) => {
+export const createTicketOrder = async ({
+  token,
+  orderId,
+  ticketId,
+  quantity,
+}) => {
   try {
     const response = await fetch(`api/tickets_orders`, {
       method: "POST",
@@ -119,6 +124,23 @@ export const createTicketOrder = async (token, orderId, ticketId, quantity) => {
     console.error(error);
   }
 };
+
+// if we ned to delete an order, we have to create the DB adapter funciton
+/* export const deleteOrder = async (token, orderId) => {
+  try {
+    const response = await fetch(`api/orders/${orderId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}; */
 
 export const monthByNumber = (num) => {
   switch (`${num}`) {
