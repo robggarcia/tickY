@@ -36,6 +36,7 @@ ordersRouter.get("/", requireAdmin, async (req, res, next) => {
   }
 });
 
+// GET /api/orders/:orderId
 ordersRouter.get(
   "/:orderId",
   requireUser,

@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import { fetchArtists, fetchTickets, fetchUser, fetchVenues } from "./api";
+import {
+  fetchArtists,
+  fetchTickets,
+  fetchUser,
+  fetchUsersOrders,
+  fetchVenues,
+} from "./api";
 import "./App.css";
 import {
   Artists,
@@ -26,7 +32,7 @@ function App() {
   const [tickets, setTickets] = useState([]);
   const [token, setToken] = useState("");
   const [user, setUser] = useState({});
-  const [myOrders, setMyOrders] = useState({});
+  const [myOrders, setMyOrders] = useState([]);
   const [keyword, setKeyword] = useState("");
   const [suggest, setSuggest] = useState([]);
   const [displayMessage, setDisplayMessage] = useState("");
@@ -57,6 +63,8 @@ function App() {
     // console.log("THE USER INFO: ", info);
     if (info.id) {
       setUser(info);
+      const orderData = await fetchUsersOrders(token, info.id);
+      setMyOrders(orderData);
     }
   };
 
@@ -118,7 +126,9 @@ function App() {
         <Route path="/artists" element={<Artists />} />
         <Route
           path="/profile"
-          element={<Profile user={user} myOrders={myOrders} />}
+          element={
+            <Profile user={user} myOrders={myOrders} tickets={tickets} />
+          }
         />
       </Routes>
       <Modal displayMessage={displayMessage} success={success} />
