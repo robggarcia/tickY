@@ -33,6 +33,7 @@ const Cart = ({ user, cart, setCart }) => {
       [name]: value,
     };
     console.log(newCart);
+    // update database for individual ticket_order
     setCart(newCart);
   };
 

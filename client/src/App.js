@@ -82,7 +82,7 @@ function App() {
       for (let order of orderData) {
         if (!order.purchased) {
           setCurrentOrderId(order.id);
-          setCart([...cart, order]);
+          setCart([...cart, ...order]);
         } else {
           // create a new order for the user
           const order = await createOrder(token, info.id);
