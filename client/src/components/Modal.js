@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import "./Modal.css";
+import "../styles/Modal.css";
 
 const Modal = ({ displayMessage, success }) => {
   const [visible, setVisible] = useState(false);
