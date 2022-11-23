@@ -1,38 +1,28 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Profile = ({ user, myOrders, tickets }) => {
-  console.log(tickets);
+  const [usersTickets, setUsersTickets] = useState([]);
+
   const grabTicketById = async () => {
-    console.log(myOrders);
-    // myOrders.map((order) => {
-    //   order.tickets.map(async (ticket) => {
-    //     console.log(ticket);
-    //     ticket.info = await fetch(`api/tickets/${ticket.id}`, {
-    //       method: "GET",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     });
-    //   });
-    // });
-    // console.log(myOrders);
+    const savedTickets = [];
     for (let order of myOrders) {
       if (order.purchased) {
-        console.log("grabbing info");
         for (let ticket of order.tickets) {
-          const response = await fetch(`api/tickets/${ticket.id}`, {
-            method: "GET",
-          });
-          const info = await response.json();
-          console.log(info);
+          savedTickets.push(
+            tickets.find((tick) => {
+              return tick.id === ticket.id;
+            })
+          );
         }
+        setUsersTickets(savedTickets);
+        console.log(savedTickets);
       }
     }
   };
 
   useEffect(() => {
     grabTicketById();
-  });
+  }, []);
 
   if (!user.username) return <></>;
   return (
@@ -40,15 +30,16 @@ const Profile = ({ user, myOrders, tickets }) => {
       <h1>Welcome {user.username}!</h1>
       <div className="order-history">
         <h2>Order History</h2>
-        {myOrders[0].tickets.map((ticket) => {
-          return (
-            <div key={ticket.id}>
-              <p>Date Purchased: {ticket.date}</p>
-              <p>Quanity: {ticket.quantity}</p>
-              <p>Price : {ticket.price}</p>
-            </div>
-          );
-        })}
+        {myOrders.length > 0 &&
+          myOrders[0].tickets.map((ticket) => {
+            return (
+              <div key={ticket.id}>
+                <p>Date Purchased: {ticket.date}</p>
+                <p>Quanity: {ticket.quantity}</p>
+                <p>Price : {ticket.price}</p>
+              </div>
+            );
+          })}
       </div>
     </div>
   );

@@ -22,14 +22,13 @@ import {
   Register,
   Venues,
 } from "./components";
+import Admin from "./components/Admin";
 
-// rob test for pushing and pulling
-
-//Push/pull Test - Brandon
 function App() {
   const [artists, setArtists] = useState([]);
   const [venues, setVenues] = useState([]);
   const [tickets, setTickets] = useState([]);
+  const [artistTickets, setArtistTickets] = useState([]);
   const [token, setToken] = useState("");
   const [user, setUser] = useState({});
   const [myOrders, setMyOrders] = useState([]);
@@ -53,6 +52,17 @@ function App() {
     const data = await fetchTickets();
     // console.log("getTickets: ", data);
     setTickets(data);
+    // push non duplicate artist tickets
+    const ticketsArray = [];
+    const artistArray = [];
+    for (let ticket of data) {
+      if (!artistArray.includes(ticket.artistId)) {
+        artistArray.push(ticket.artistId);
+        ticketsArray.push(ticket);
+      }
+    }
+    // console.log("ticketsArray", ticketsArray);
+    setArtistTickets(ticketsArray);
   };
 
   const getUser = async (token) => {
@@ -95,7 +105,12 @@ function App() {
         <Route
           path="/concerts"
           element={
-            <Concerts artists={artists} venues={venues} tickets={tickets} />
+            <Concerts
+              artists={artists}
+              venues={venues}
+              tickets={tickets}
+              artistTickets={artistTickets}
+            />
           }
         />
         <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
@@ -119,7 +134,10 @@ function App() {
             />
           }
         />
-        <Route path="/cart" element={<Cart />} />
+        <Route
+          path="/cart"
+          element={<Cart cart={cart} setCart={setCart} tickets={tickets} />}
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/venues" element={<Venues />} />
@@ -128,6 +146,17 @@ function App() {
           path="/profile"
           element={
             <Profile user={user} myOrders={myOrders} tickets={tickets} />
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <Admin
+              venues={venues}
+              artists={artists}
+              tickets={tickets}
+              user={user}
+            />
           }
         />
       </Routes>

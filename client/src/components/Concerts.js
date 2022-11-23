@@ -3,21 +3,19 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Concerts = ({ artists, venues, tickets }) => {
+const Concerts = ({ artists, venues, tickets, artistTickets }) => {
   const [genres, setGenres] = useState([]);
   const [genreOption, setGenreOption] = useState("any");
-
   const [cities, setCities] = useState([]);
   const [cityOption, setCityOption] = useState("any");
-
   const [dateRange, setDateRange] = useState([
     "Today",
     "This Weekend",
     "This Month",
   ]);
   const [dateOption, setDateOption] = useState();
-
-  const [featured, setFeatured] = useState(artists);
+  const [featured, setFeatured] = useState(artistTickets);
+  const [featuredCity, setFeaturedCity] = useState(cities);
 
   const getGenres = async () => {
     const artistGenres = [];
@@ -63,21 +61,27 @@ const Concerts = ({ artists, venues, tickets }) => {
   };
 
   // need to filter artists based on user filters
-  const filterArtists = () => {
-    if (genreOption === "any") {
-      setFeatured(artists);
-    } else {
-      const filteredArtists = artists.filter(
-        (artist) => artist.genre === genreOption
+  const filterTickets = () => {
+    let filteredArtists = [...artistTickets];
+    // filter by genre
+    if (genreOption !== "any") {
+      filteredArtists = filteredArtists.filter(
+        (ticket) => ticket.artist.genre === genreOption
       );
-      setFeatured(filteredArtists);
     }
-    console.log("filteredArtists", featured);
+    // filter by city
+    if (cityOption !== "any") {
+      filteredArtists = filteredArtists.filter(
+        (ticket) => ticket.venue.city === cityOption
+      );
+    }
+    // console.log("filteredArtists", filteredArtists);
+    setFeatured(filteredArtists);
   };
 
   useEffect(() => {
-    filterArtists();
-  }, [genreOption]);
+    filterTickets();
+  }, [genreOption, cityOption]);
 
   return (
     <div className="concerts">
@@ -120,13 +124,13 @@ const Concerts = ({ artists, venues, tickets }) => {
         </div>
       </div>
       <div className="artists">
-        {featured &&
-          featured.map((artist, idx) => {
+        {featured.length > 0 &&
+          featured.map((ticket, idx) => {
             return (
               <div className="artist" key={idx}>
-                <Link to={`/artists/${artist.id}`}>
-                  <img src={artist.image} alt={artist.name} />
-                  <h4 className="artist-name">{artist.name}</h4>
+                <Link to={`/artists/${ticket.artist.id}`}>
+                  <img src={ticket.artist.image} alt={ticket.artist.name} />
+                  <h4 className="artist-name">{ticket.artist.name}</h4>
                 </Link>
               </div>
             );
