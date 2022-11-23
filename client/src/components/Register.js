@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Register = (props) => {
+const Register = ({ cart, setToken, token }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,8 +48,12 @@ const Register = (props) => {
       if (data.error) {
         setError(data.error);
       } else {
-        props.setToken(data.token);
-        navigate("/");
+        setToken(data.token);
+        if (cart.length > 0) {
+          navigate("/cart");
+        } else {
+          navigate("/");
+        }
       }
       setError(error);
     }

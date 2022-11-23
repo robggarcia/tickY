@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { fetchTickets, monthByNumber } from "../api";
+import { useNavigate } from "react-router-dom";
 
 import "../styles/Cart.css";
 
-const Cart = ({ cart, setCart }) => {
+const Cart = ({ user, cart, setCart }) => {
   const [itemsToDisplay, setItemsToDisplay] = useState(cart);
   const [totalPrice, setTotalPrice] = useState(0);
 
   console.log("cart", cart);
+
+  const navigate = useNavigate();
 
   const updateItems = () => {
     let price = 0;
@@ -85,7 +87,16 @@ const Cart = ({ cart, setCart }) => {
       {cart.length > 0 && (
         <div className="total">
           <h4>Total Cost: ${totalPrice}</h4>
-          <button>Secure Checkout</button>
+          <button
+            onClick={() => {
+              // display message to login in order to proceed
+              if (!user) {
+                navigate("/Login");
+              }
+            }}
+          >
+            Secure Checkout
+          </button>
         </div>
       )}
     </div>
