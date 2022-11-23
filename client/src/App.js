@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import {
+  createOrder,
+  createTicketOrder,
   fetchArtists,
   fetchTickets,
   fetchUser,
@@ -37,6 +39,7 @@ function App() {
   const [displayMessage, setDisplayMessage] = useState("");
   const [success, setSuccess] = useState(false);
   const [cart, setCart] = useState([]);
+  const [currentOrderId, setCurrentOrderId] = useState(null);
 
   const getArtists = async () => {
     const data = await fetchArtists();
@@ -74,7 +77,20 @@ function App() {
     if (info.id) {
       setUser(info);
       const orderData = await fetchUsersOrders(token, info.id);
+      console.log("orderData", orderData);
       setMyOrders(orderData);
+      // if an order is not yet purchased, update the cart
+      for (let order of orderData) {
+        if (!order.purchased) {
+          setCurrentOrderId(order.id);
+          setCart([...cart, ...order]);
+        } else {
+          // create a new order for the user
+          const order = await createOrder(token, info.id);
+          console.log(order);
+          setCurrentOrderId(order.id);
+        }
+      }
     }
   };
 
@@ -85,9 +101,6 @@ function App() {
     getUser(token);
   }, [token]);
 
-  // useEffect(() => {
-  //   setToken();
-  // }, [token]);
   return (
     <div className="App">
       <Nav
@@ -113,14 +126,19 @@ function App() {
             />
           }
         />
-        <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
+        <Route
+          path="/cart"
+          element={
+            <Cart user={user} cart={cart} setCart={setCart} tickets={tickets} />
+          }
+        />
         <Route
           path="/login"
-          element={<Login setToken={setToken} token={token} />}
+          element={<Login cart={cart} setToken={setToken} token={token} />}
         />
         <Route
           path="/register"
-          element={<Register setToken={setToken} token={token} />}
+          element={<Register cart={cart} setToken={setToken} token={token} />}
         />
         <Route path="/venues" element={<Venues />} />
         <Route
@@ -135,18 +153,8 @@ function App() {
           }
         />
         <Route
-          path="/cart"
-          element={<Cart cart={cart} setCart={setCart} tickets={tickets} />}
-        />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/venues" element={<Venues />} />
-        <Route path="/artists" element={<Artists />} />
-        <Route
           path="/profile"
-          element={
-            <Profile user={user} myOrders={myOrders} tickets={tickets} />
-          }
+          element={<Profile user={user} myOrders={myOrders} />}
         />
         <Route
           path="/admin"

@@ -1,0 +1,16 @@
+.usersTicket {
+  display: flex;
+}
+
+.usersTicketInfo {
+  margin-left: 10px;
+  min-width: 180px;
+  flex-grow: 1;
+}
+
+.usersTicketBought {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: 50px;
+}

@@ -54,12 +54,6 @@ async function attachArtistAndVenueToTicket(ticket) {
 
 async function getAllTickets() {
   try {
-    /* const { rows: tickets } = await client.query(`
-      SELECT tickets.*, venues.name AS venue, artists.name AS artist, artists.image AS image
-      FROM tickets
-      JOIN venues ON "venueId"=venues.id
-      JOIN artists ON "artistId"=artists.id;
-    `); */
     const { rows: tickets } = await client.query(`
       SELECT *
       FROM tickets;
@@ -76,7 +70,7 @@ async function getAllTickets() {
 
 async function getTicketById(id) {
   try {
-    const {
+    let {
       rows: [ticket],
     } = await client.query(
       `
@@ -86,6 +80,8 @@ async function getTicketById(id) {
     `,
       [id]
     );
+    ticket = await attachArtistAndVenueToTicket(ticket);
+    console.log("GET TICKET BY ID: ", ticket);
     return ticket;
   } catch (error) {
     console.error("Error in getTicketById");
@@ -111,7 +107,7 @@ async function updateTicket({ id, ...fields }) {
     );
     return ticket;
   } catch (error) {
-    console.log("Error in updateTicket");
+    console.error("Error in updateTicket");
     throw error;
   }
 }

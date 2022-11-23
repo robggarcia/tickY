@@ -1,29 +1,7 @@
-import { useEffect, useState } from "react";
+import "../styles/Profile.css";
 
-const Profile = ({ user, myOrders, tickets }) => {
-  const [usersTickets, setUsersTickets] = useState([]);
+const Profile = ({ user, myOrders }) => {
   console.log(myOrders);
-
-  const grabTicketById = async () => {
-    const savedTickets = [];
-    for (let order of myOrders) {
-      if (order.purchased) {
-        for (let ticket of order.tickets) {
-          savedTickets.push(
-            tickets.find((tick) => {
-              return tick.id === ticket.id;
-            })
-          );
-        }
-        setUsersTickets(savedTickets);
-      }
-    }
-  };
-  console.log(usersTickets, myOrders);
-
-  useEffect(() => {
-    grabTicketById();
-  }, []);
 
   if (!user.username) return <></>;
   return (
@@ -31,6 +9,36 @@ const Profile = ({ user, myOrders, tickets }) => {
       <h1>Welcome {user.username}!</h1>
       <div className="order-history">
         <h2>Order History</h2>
+        {myOrders.length > 0 &&
+          myOrders.map((order) => {
+            return (
+              <div key={order.id} className="order-div">
+                {order.purchased &&
+                  order.tickets.map((ticket) => {
+                    console.log(ticket);
+                    return (
+                      <div className="usersTicket" key={ticket.id}>
+                        <div>
+                          <p className="usersTicketDate">{ticket.date}</p>
+                        </div>
+                        <div className="usersTicketInfo">
+                          <p>{ticket.artist.name}</p>
+                          <p>
+                            {ticket.venue.name}, {ticket.venue.city},{" "}
+                            {ticket.venue.state}
+                          </p>
+                        </div>
+                        <div className="usersTicketsBought">
+                          <p>Price: {ticket.price}</p>
+                          <p>Amount Purchased: {ticket.quantity}</p>
+                          <p>Total: ${ticket.price * ticket.quantity} </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            );
+          })}
       </div>
     </div>
   );

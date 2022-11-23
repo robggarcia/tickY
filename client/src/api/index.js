@@ -30,7 +30,7 @@ export const fetchArtists = async () => {
   }
 };
 
-// Venues
+// VENUES
 export const fetchVenues = async () => {
   try {
     const response = await fetch(`api/venues`, {
@@ -46,7 +46,7 @@ export const fetchVenues = async () => {
   }
 };
 
-// Tickets
+// TICKETS
 export const fetchTickets = async () => {
   try {
     const response = await fetch(`api/tickets`, {
@@ -62,6 +62,7 @@ export const fetchTickets = async () => {
   }
 };
 
+// ORDERS
 export const fetchUsersOrders = async (token, userId) => {
   try {
     const response = await fetch(`api/users/${userId}/orders`, {
@@ -69,6 +70,48 @@ export const fetchUsersOrders = async (token, userId) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const createOrder = async (token, userId) => {
+  const purchased = false;
+  try {
+    const response = await fetch(`api/orders`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        userId,
+        purchased,
+      }),
+    });
+    const data = response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const createTicketOrder = async (token, orderId, ticketId, quantity) => {
+  try {
+    const response = await fetch(`api/tickets_orders`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        orderId,
+        ticketId,
+        quantity,
+      }),
     });
     const data = await response.json();
     return data;

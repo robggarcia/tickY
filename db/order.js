@@ -58,6 +58,7 @@ async function getOrderById(id) {
     );
     const tickets = [];
     for (let ticket_order of ticket_orders) {
+      console.log("ticket_order.ticketId", ticket_order.ticketId);
       const ticket = await getTicketById(ticket_order.ticketId);
       ticket.quantity = ticket_order.quantity;
       tickets.push(ticket);

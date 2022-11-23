@@ -1,0 +1,31 @@
+.navbar {
+    grid-row: 1;
+    display: flex;
+    margin-top: 20px;
+    justify-items: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.navbar .links {
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.navbar .link {
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+#nav-search {
+    margin-left: 20px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+}
+
+.navbar a:hover {
+    color: #5720ee;
+}
