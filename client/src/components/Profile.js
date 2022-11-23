@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 const Profile = ({ user, myOrders, tickets }) => {
   const [usersTickets, setUsersTickets] = useState([]);
+  console.log(myOrders);
 
   const grabTicketById = async () => {
     const savedTickets = [];
@@ -15,10 +16,10 @@ const Profile = ({ user, myOrders, tickets }) => {
           );
         }
         setUsersTickets(savedTickets);
-        console.log(savedTickets);
       }
     }
   };
+  console.log(usersTickets, myOrders);
 
   useEffect(() => {
     grabTicketById();
@@ -30,16 +31,6 @@ const Profile = ({ user, myOrders, tickets }) => {
       <h1>Welcome {user.username}!</h1>
       <div className="order-history">
         <h2>Order History</h2>
-        {myOrders.length > 0 &&
-          myOrders[0].tickets.map((ticket) => {
-            return (
-              <div key={ticket.id}>
-                <p>Date Purchased: {ticket.date}</p>
-                <p>Quanity: {ticket.quantity}</p>
-                <p>Price : {ticket.price}</p>
-              </div>
-            );
-          })}
       </div>
     </div>
   );
