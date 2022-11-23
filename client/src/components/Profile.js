@@ -16,6 +16,7 @@ const Profile = ({ user, myOrders, tickets }) => {
         }
         setUsersTickets(savedTickets);
         console.log(savedTickets);
+        console.log("myOrders", myOrders);
       }
     }
   };

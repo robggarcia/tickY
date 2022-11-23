@@ -54,12 +54,6 @@ async function attachArtistAndVenueToTicket(ticket) {
 
 async function getAllTickets() {
   try {
-    /* const { rows: tickets } = await client.query(`
-      SELECT tickets.*, venues.name AS venue, artists.name AS artist, artists.image AS image
-      FROM tickets
-      JOIN venues ON "venueId"=venues.id
-      JOIN artists ON "artistId"=artists.id;
-    `); */
     const { rows: tickets } = await client.query(`
       SELECT *
       FROM tickets;
@@ -87,6 +81,7 @@ async function getTicketById(id) {
       [id]
     );
     ticket = await attachArtistAndVenueToTicket(ticket);
+    console.log("GET TICKET BY ID: ", ticket);
     return ticket;
   } catch (error) {
     console.error("Error in getTicketById");

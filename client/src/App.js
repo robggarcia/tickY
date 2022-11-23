@@ -77,6 +77,7 @@ function App() {
     if (info.id) {
       setUser(info);
       const orderData = await fetchUsersOrders(token, info.id);
+      console.log("orderData", orderData);
       setMyOrders(orderData);
       // if an order is not yet purchased, update the cart
       for (let order of orderData) {
