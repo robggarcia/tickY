@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "../styles/Cart.css";
+import Ticket from "./Ticket";
 
 const Cart = ({ user, cart, setCart }) => {
   const [itemsToDisplay, setItemsToDisplay] = useState(cart);
@@ -25,25 +26,6 @@ const Cart = ({ user, cart, setCart }) => {
     updateItems();
   }, [cart]);
 
-  const handleChange = (e, idx) => {
-    const { value, name } = e.target;
-    const newCart = [...cart];
-    newCart[idx] = {
-      ...newCart[idx],
-      [name]: value,
-    };
-    console.log(newCart);
-    // update database for individual ticket_order
-    setCart(newCart);
-  };
-
-  const handleRemove = (e, idx) => {
-    const newCart = [...cart];
-    newCart.splice(idx, 1);
-    console.log(newCart);
-    setCart(newCart);
-  };
-
   return (
     <div className="cart">
       <h1 className="banner">Cart</h1>
@@ -52,35 +34,14 @@ const Cart = ({ user, cart, setCart }) => {
         <div className="cart-items">
           {itemsToDisplay.map((item, idx) => {
             return (
-              <div className="item" key={idx}>
-                <div className="ticket-date">
-                  <p>{item.ticket.month}</p>
-                  <p>{item.ticket.day}</p>
-                  <p>{item.ticket.year}</p>
-                </div>
-                <div className="ticket-info">
-                  <p>{item.ticket.artist.name}</p>
-                  <p>
-                    {item.ticket.venue.name}, {item.ticket.venue.city},{" "}
-                    {item.ticket.venue.state}
-                  </p>
-                  <p>${item.ticket.price} each</p>
-                </div>
-                <div className="quantity">
-                  <p>Quantity: </p>
-                  <input
-                    name="quantity"
-                    type="number"
-                    min="0"
-                    value={itemsToDisplay[idx].quantity}
-                    onChange={(e) => handleChange(e, idx)}
-                  />
-                </div>
-                <div className="subtotal">
-                  <p>Subtotal: ${item.quantity * item.ticket.price}</p>
-                </div>
-                <button onClick={(e) => handleRemove(e, idx)}>Remove</button>
-              </div>
+              <Ticket
+                key={idx}
+                index={idx}
+                item={item}
+                ticket={item.ticket}
+                cart={cart}
+                setCart={setCart}
+              />
             );
           })}
         </div>

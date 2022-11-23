@@ -112,7 +112,7 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
       item.month = monthByNumber(item.date.slice(5, 7));
       item.day = item.date.slice(8, 10);
       item.year = item.date.slice(0, 4);
-      console.log(item);
+      // console.log(item);
     }
   }
 

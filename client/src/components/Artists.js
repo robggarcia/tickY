@@ -4,18 +4,17 @@ import { useParams } from "react-router-dom";
 import { monthByNumber } from "../api";
 
 import "../styles/Artists.css";
+import Ticket from "./Ticket";
 
 const Artists = ({ artists, artistPage, tickets, cart, setCart }) => {
   const { artistId } = useParams();
   const [artistDetail, setArtistDetail] = useState({});
   const [artistTickets, setArtistTickets] = useState([]);
-  const [quantity, setQuantity] = useState(1);
 
   const grabArtistDetails = async () => {
     for (let artist of artists) {
       if (artist.id === +artistId) {
         setArtistDetail(artist);
-        // console.log("artist", artist);
       }
     }
     const allArtistsTicket = tickets.filter((ticket) => {
@@ -36,32 +35,6 @@ const Artists = ({ artists, artistPage, tickets, cart, setCart }) => {
   useEffect(() => {
     grabArtistDetails();
   }, []);
-
-  const handleSelect = (e) => {
-    setQuantity(+e.target.value);
-  };
-
-  const handleAdd = (e, idx) => {
-    const ticket = artistTickets[idx];
-    const numTickets = artistTickets[idx].count;
-    const newCartItem = {
-      ticket,
-      quantity: numTickets,
-    };
-    console.log("newCartItem", newCartItem);
-    setCart([...cart, newCartItem]);
-  };
-
-  const handleChange = (e, idx) => {
-    const { value, name } = e.target;
-    const newTickets = [...artistTickets];
-    newTickets[idx] = {
-      ...newTickets[idx],
-      [name]: value,
-    };
-    console.log(newTickets);
-    setArtistTickets(newTickets);
-  };
 
   console.log(artistDetail);
   console.log(tickets);
@@ -84,34 +57,7 @@ const Artists = ({ artists, artistPage, tickets, cart, setCart }) => {
         <div className="cart-items">
           {artistTickets.map((ticket, idx) => {
             return (
-              <div className="item" key={idx}>
-                <div className="ticket-date">
-                  <p>{ticket.month}</p>
-                  <p>{ticket.day}</p>
-                  <p>{ticket.year}</p>
-                </div>
-                <div className="ticket-info">
-                  <p>{ticket.artist.name}</p>
-                  <p>
-                    {ticket.venue.name}, {ticket.venue.city},{" "}
-                    {ticket.venue.state}
-                  </p>
-                  <p>Price: ${ticket.price} each</p>
-                  <p>Tickets available: {ticket.quantity}</p>
-                </div>
-                <div className="quantity">
-                  <input
-                    name="count"
-                    type="number"
-                    min="0"
-                    value={artistTickets[idx].count}
-                    onChange={(e) => handleChange(e, idx)}
-                  />
-                  <button onClick={(e) => handleAdd(e, idx)}>
-                    Add To Cart
-                  </button>
-                </div>
-              </div>
+              <Ticket key={idx} ticket={ticket} cart={cart} setCart={setCart} />
             );
           })}
         </div>

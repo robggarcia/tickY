@@ -8,3 +8,4 @@ export { default as Home } from "./Home";
 export { default as Venues } from "./Venues";
 export { default as Artists } from "./Artists";
 export { default as Modal } from "./Modal";
+export { default as Ticket } from "./Ticket";
