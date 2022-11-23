@@ -76,7 +76,7 @@ async function getAllTickets() {
 
 async function getTicketById(id) {
   try {
-    const {
+    let {
       rows: [ticket],
     } = await client.query(
       `
@@ -86,6 +86,7 @@ async function getTicketById(id) {
     `,
       [id]
     );
+    ticket = await attachArtistAndVenueToTicket(ticket);
     return ticket;
   } catch (error) {
     console.error("Error in getTicketById");
