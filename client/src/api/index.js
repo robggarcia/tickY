@@ -56,6 +56,11 @@ export const fetchTickets = async () => {
       },
     });
     const data = await response.json();
+    for (let ticket of data) {
+      ticket.month = monthByNumber(ticket.date.slice(5, 7));
+      ticket.day = ticket.date.slice(8, 10);
+      ticket.year = ticket.date.slice(0, 4);
+    }
     return data;
   } catch (error) {
     console.error(error);
@@ -106,7 +111,7 @@ export const createTicketOrder = async ({
   quantity,
 }) => {
   try {
-    const response = await fetch(`api/tickets_orders`, {
+    const response = await fetch(`../api/tickets_orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -117,6 +122,41 @@ export const createTicketOrder = async ({
         ticketId,
         quantity,
       }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const editTicketOrder = async ({ token, ticketOrderId, quantity }) => {
+  try {
+    const response = await fetch(`api/tickets_orders/${ticketOrderId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        quantity,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const deleteTicketOrder = async ({ token, ticketOrderId }) => {
+  try {
+    const response = await fetch(`api/tickets_orders/${ticketOrderId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
     const data = await response.json();
     return data;

@@ -56,6 +56,7 @@ async function getOrderById(id) {
     `,
       [order.id]
     );
+    order.ticketOrders = ticket_orders;
     const tickets = [];
     for (let ticket_order of ticket_orders) {
       console.log("ticket_order.ticketId", ticket_order.ticketId);

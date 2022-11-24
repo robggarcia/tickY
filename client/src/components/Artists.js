@@ -6,7 +6,15 @@ import { monthByNumber } from "../api";
 import "../styles/Artists.css";
 import Ticket from "./Ticket";
 
-const Artists = ({ artists, artistPage, tickets, cart, setCart }) => {
+const Artists = ({
+  token,
+  currentOrderId,
+  artists,
+  artistPage,
+  tickets,
+  cart,
+  setCart,
+}) => {
   const { artistId } = useParams();
   const [artistDetail, setArtistDetail] = useState({});
   const [artistTickets, setArtistTickets] = useState([]);
@@ -57,9 +65,11 @@ const Artists = ({ artists, artistPage, tickets, cart, setCart }) => {
               <Ticket
                 key={idx}
                 index={idx}
+                token={token}
                 ticket={ticket}
                 cart={cart}
                 setCart={setCart}
+                currentOrderId={currentOrderId}
               />
             );
           })}

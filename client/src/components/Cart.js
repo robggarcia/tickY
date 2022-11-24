@@ -14,6 +14,7 @@ const Cart = ({ token, user, cart, setCart, myOrders, currentOrderId }) => {
   const navigate = useNavigate();
 
   const updateItems = () => {
+    console.log("UPDATE ITEMS USE EFFECT CALLED");
     let price = 0;
     for (let item of cart) {
       price += item.ticket.price * item.quantity;
@@ -51,10 +52,12 @@ const Cart = ({ token, user, cart, setCart, myOrders, currentOrderId }) => {
               <Ticket
                 key={idx}
                 index={idx}
+                token={token}
                 item={item}
                 ticket={item.ticket}
                 cart={cart}
                 setCart={setCart}
+                currentOrderId={currentOrderId}
               />
             );
           })}
@@ -70,7 +73,7 @@ const Cart = ({ token, user, cart, setCart, myOrders, currentOrderId }) => {
                 navigate("/Login");
               } else {
                 // if a user is logged in, when button is pressed, add the tickets to the current order and navigate to checkout
-                attachTicketsToOrder();
+                // attachTicketsToOrder();
               }
             }}
           >

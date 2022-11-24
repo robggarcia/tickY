@@ -11,6 +11,7 @@ const Nav = ({
   setToken,
   setUser,
   token,
+  setCart,
 }) => {
   useEffect(() => {
     setToken("");
@@ -18,6 +19,8 @@ const Nav = ({
   }, []);
 
   const handleLogOut = () => {
+    // clear the current cart when logging out
+    setCart([]);
     setToken("");
     setUser("");
     localStorage.clear();

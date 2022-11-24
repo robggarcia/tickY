@@ -55,12 +55,12 @@ function App() {
   };
   const getTickets = async () => {
     const data = await fetchTickets();
-    // console.log("getTickets: ", data);
-    for (let ticket of data) {
+    console.log("getTickets: ", data);
+    /*     for (let ticket of data) {
       ticket.month = monthByNumber(ticket.date.slice(5, 7));
       ticket.day = ticket.date.slice(8, 10);
       ticket.year = ticket.date.slice(0, 4);
-    }
+    } */
     setTickets(data);
     // push non duplicate artist tickets
     const ticketsArray = [];
@@ -136,6 +136,7 @@ function App() {
         setToken={setToken}
         setUser={setUser}
         token={token}
+        setCart={setCart}
       />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -181,6 +182,8 @@ function App() {
           path="/artists/:artistId"
           element={
             <Artists
+              token={token}
+              currentOrderId={currentOrderId}
               artists={artists}
               tickets={tickets}
               cart={cart}
