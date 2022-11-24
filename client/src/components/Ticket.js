@@ -32,9 +32,9 @@ const Ticket = ({
 
   useEffect(() => {
     if (item) setNumTickets(item.quantity);
-    setMonth(monthByNumber(ticket.date.slice(5, 7)));
-    setDay(ticket.date.slice(8, 10));
-    setYear(ticket.date.slice(0, 4));
+    // setMonth(monthByNumber(ticket.date.slice(5, 7)));
+    // setDay(ticket.date.slice(8, 10));
+    // setYear(ticket.date.slice(0, 4));
   }, []);
 
   const handleArtistChange = (e) => {
@@ -46,8 +46,9 @@ const Ticket = ({
       ticket,
       quantity: numTickets,
     };
-    console.log("newCartItem", newCartItem);
-    setCart([...cart, newCartItem]);
+    // console.log("newCartItem", newCartItem);
+    // setCart([...cart, newCartItem]);
+
     // if the user is logged in, create a new ticket_order
     if (token) {
       console.log("CREATING TICKET ORDER");
@@ -57,9 +58,12 @@ const Ticket = ({
         ticketId: ticket.id,
         quantity: numTickets,
       });
+      newCartItem.ticketOrder = ticketOrder;
       console.log("ticketOrder", ticketOrder);
       setTicketOrderId(ticketOrder.id);
     }
+    console.log("newCartItem", newCartItem);
+    setCart([...cart, newCartItem]);
   };
 
   const handleCartChange = async (e) => {
@@ -71,11 +75,13 @@ const Ticket = ({
     setCart(cartToUpdate);
     // if the user is logged in, update the ticket_order
     if (token) {
-      await editTicketOrder({
+      console.log("EDIT TICKET ORDER CALLED!");
+      const updatedTicketOrder = await editTicketOrder({
         token,
-        ticketOrderId,
+        ticketOrderId: item.ticketOrderId,
         quantity: numTickets,
       });
+      console.log("updatedTicketOrder", updatedTicketOrder);
     }
   };
 
@@ -86,7 +92,7 @@ const Ticket = ({
     setCart(newCart);
     // if user is logged in, delete ticket_order
     if (token) {
-      await deleteTicketOrder({ token, ticketOrderId });
+      await deleteTicketOrder({ token, ticketOrderId: item.ticketOrderId });
     }
   };
 

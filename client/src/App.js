@@ -99,14 +99,26 @@ function App() {
           "MOST RECENT ORDER IS NOT PURCHASED",
           orderData[orderData.length - 1]
         );
-        setCurrentOrderId(orderData[orderData.length - 1].id);
+        const currentOrder = orderData[orderData.length - 1];
+        setCurrentOrderId(currentOrder.id);
         let newCart = [...cart];
-        if (orderData[orderData.length - 1].tickets.length > 0) {
-          // setCart([...cart, ...orderData[orderData.length - 1]]);
-          for (let ticket of orderData[orderData.length - 1].tickets) {
-            newCart.push(ticket);
+        if (currentOrder.tickets.length > 0) {
+          // setCart([...cart, ...currentOrder]);
+          for (let ticket of currentOrder.tickets) {
+            const ticketOrder = currentOrder.ticketOrders.find(
+              (ticketOrder) => ticketOrder.ticketId === ticket.id
+            );
+
+            const item = {
+              quantity: ticketOrder.quantity,
+              ticketOrderId: ticketOrder.id,
+              ticket,
+            };
+            console.log("ITEM FOR CART: ", item);
+            newCart.push(item);
           }
         }
+        console.log("NEW CART SET: ", newCart);
         setCart(newCart);
       } else {
         // create a new order for the user

@@ -10,6 +10,7 @@ const Cart = ({ token, user, cart, setCart, myOrders, currentOrderId }) => {
   const [totalPrice, setTotalPrice] = useState(0);
 
   console.log("cart", cart);
+  console.log("itemsToDisplay", itemsToDisplay);
 
   const navigate = useNavigate();
 
@@ -74,6 +75,7 @@ const Cart = ({ token, user, cart, setCart, myOrders, currentOrderId }) => {
               } else {
                 // if a user is logged in, when button is pressed, add the tickets to the current order and navigate to checkout
                 // attachTicketsToOrder();
+                navigate(`/cart/${currentOrderId}/checkout`);
               }
             }}
           >

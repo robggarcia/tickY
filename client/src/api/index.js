@@ -77,6 +77,14 @@ export const fetchUsersOrders = async (token, userId) => {
       },
     });
     const data = await response.json();
+    for (let order of data) {
+      for (let ticket of order.tickets) {
+        ticket.month = monthByNumber(ticket.date.slice(5, 7));
+        ticket.day = ticket.date.slice(8, 10);
+        ticket.year = ticket.date.slice(0, 4);
+      }
+    }
+
     return data;
   } catch (error) {
     console.error(error);
