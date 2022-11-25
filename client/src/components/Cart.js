@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createTicketOrder } from "../api";
 
 import "../styles/Cart.css";
 import Ticket from "./Ticket";
 
-const Cart = ({ token, user, cart, setCart, myOrders, currentOrderId }) => {
+const Cart = ({
+  token,
+  user,
+  cart,
+  setCart,
+  myOrders,
+  setMyOrders,
+  currentOrderId,
+}) => {
   const [itemsToDisplay, setItemsToDisplay] = useState(cart);
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -29,19 +36,6 @@ const Cart = ({ token, user, cart, setCart, myOrders, currentOrderId }) => {
     updateItems();
   }, [cart]);
 
-  const attachTicketsToOrder = () => {
-    for (let item of itemsToDisplay) {
-      createTicketOrder({
-        token,
-        orderId: currentOrderId,
-        ticketId: item.ticket.id,
-        quantity: item.quantity,
-      });
-    }
-    navigate(`/cart/${currentOrderId}/checkout`);
-    // if user decides to go back and revise order, need to update ticket_orders!
-  };
-
   return (
     <div className="cart">
       <h1 className="banner">Cart</h1>
@@ -54,11 +48,14 @@ const Cart = ({ token, user, cart, setCart, myOrders, currentOrderId }) => {
                 key={idx}
                 index={idx}
                 token={token}
+                user={user}
+                setMyOrders={setMyOrders}
                 item={item}
                 ticket={item.ticket}
                 cart={cart}
                 setCart={setCart}
                 currentOrderId={currentOrderId}
+                myOrders={myOrders}
               />
             );
           })}
@@ -73,8 +70,6 @@ const Cart = ({ token, user, cart, setCart, myOrders, currentOrderId }) => {
               if (!user) {
                 navigate("/Login");
               } else {
-                // if a user is logged in, when button is pressed, add the tickets to the current order and navigate to checkout
-                // attachTicketsToOrder();
                 navigate(`/cart/${currentOrderId}/checkout`);
               }
             }}

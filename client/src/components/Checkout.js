@@ -9,18 +9,19 @@ const Checkout = ({ token, user, myOrders }) => {
   const [currentOrder, setCurrentOrder] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  useEffect(() => {
-    console.log("myOrders", myOrders);
+  const getCurrentOrder = async () => {
     const order = myOrders.find((order) => order.id === +orderId);
-    console.log("CURRENT ORDER: ", order);
     setCurrentOrder(order);
     let price = 0;
     for (let ticket of order.tickets) {
       price += ticket.price * ticket.quantity;
     }
-    console.log("price", price);
     setTotalPrice(price);
-  }, []);
+  };
+
+  useEffect(() => {
+    getCurrentOrder();
+  }, [myOrders]);
 
   return (
     <div className="checkout">
@@ -33,7 +34,7 @@ const Checkout = ({ token, user, myOrders }) => {
                 <div key={idx} className="ticket-prev">
                   <img src={ticket.artist.image} alt={ticket.artist.name} />
                   <h3>{ticket.artist.name}</h3>
-                  <p>Quantity: {ticket.quantity}</p>
+                  <p>Quantity: {currentOrder.ticketOrders[idx].quantity}</p>
                 </div>
               );
             })}

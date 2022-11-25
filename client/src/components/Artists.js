@@ -14,6 +14,8 @@ const Artists = ({
   tickets,
   cart,
   setCart,
+  myOrders,
+  setMyOrders,
 }) => {
   const { artistId } = useParams();
   const [artistDetail, setArtistDetail] = useState({});
@@ -30,9 +32,6 @@ const Artists = ({
         return ticket;
       }
     });
-    // for (let item of allArtistsTicket) {
-    //   item.count = 0;
-    // }
     console.log("allArtistsTicket", allArtistsTicket);
     setArtistTickets(allArtistsTicket);
   };
@@ -70,6 +69,8 @@ const Artists = ({
                 cart={cart}
                 setCart={setCart}
                 currentOrderId={currentOrderId}
+                myOrders={myOrders}
+                setMyOrders={setMyOrders}
               />
             );
           })}

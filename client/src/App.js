@@ -174,6 +174,7 @@ function App() {
               tickets={tickets}
               myOrders={myOrders}
               currentOrderId={currentOrderId}
+              setMyOrders={setMyOrders}
             />
           }
         />
@@ -200,6 +201,8 @@ function App() {
               tickets={tickets}
               cart={cart}
               setCart={setCart}
+              myOrders={myOrders}
+              setMyOrders={setMyOrders}
             />
           }
         />

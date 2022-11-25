@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  createTicketOrder,
-  deleteTicketOrder,
-  editTicketOrder,
-  monthByNumber,
-} from "../api";
+import { createTicketOrder, deleteTicketOrder, editTicketOrder } from "../api";
 
 import "../styles/Ticket.css";
 
@@ -18,23 +13,17 @@ const Ticket = ({
   item,
   cart,
   setCart,
+  myOrders,
+  user,
+  setMyOrders,
 }) => {
   const url = useParams();
-  console.log("url", url);
-  console.log("index", index);
-  console.log("TICKET: ", ticket);
 
   const [numTickets, setNumTickets] = useState(1);
   const [ticketOrderId, setTicketOrderId] = useState(null);
-  const [month, setMonth] = useState("");
-  const [day, setDay] = useState("");
-  const [year, setYear] = useState("");
 
   useEffect(() => {
     if (item) setNumTickets(item.quantity);
-    // setMonth(monthByNumber(ticket.date.slice(5, 7)));
-    // setDay(ticket.date.slice(8, 10));
-    // setYear(ticket.date.slice(0, 4));
   }, []);
 
   const handleArtistChange = (e) => {
@@ -46,8 +35,6 @@ const Ticket = ({
       ticket,
       quantity: numTickets,
     };
-    // console.log("newCartItem", newCartItem);
-    // setCart([...cart, newCartItem]);
 
     // if the user is logged in, create a new ticket_order
     if (token) {
@@ -61,6 +48,14 @@ const Ticket = ({
       newCartItem.ticketOrder = ticketOrder;
       console.log("ticketOrder", ticketOrder);
       setTicketOrderId(ticketOrder.id);
+      // add ticket_order to current order
+      const myOrdersUpdate = [...myOrders];
+      const currentOrder = myOrdersUpdate.find(
+        (order) => order.id === currentOrderId
+      );
+      currentOrder.ticketOrders.push(ticketOrder);
+      currentOrder.tickets.push(ticket);
+      setMyOrders(myOrdersUpdate);
     }
     console.log("newCartItem", newCartItem);
     setCart([...cart, newCartItem]);
@@ -71,17 +66,24 @@ const Ticket = ({
     // update cart state
     const cartToUpdate = [...cart];
     cartToUpdate[index].quantity = e.target.value;
-    console.log("cartToUpdate", cartToUpdate);
     setCart(cartToUpdate);
     // if the user is logged in, update the ticket_order
     if (token) {
-      console.log("EDIT TICKET ORDER CALLED!");
       const updatedTicketOrder = await editTicketOrder({
         token,
         ticketOrderId: item.ticketOrderId,
         quantity: numTickets,
       });
-      console.log("updatedTicketOrder", updatedTicketOrder);
+      // update ticket_order
+      const myOrdersUpdate = [...myOrders];
+      const currentOrder = myOrdersUpdate.find(
+        (order) => order.id === currentOrderId
+      );
+      const ticOrderUpdate = currentOrder.ticketOrders.find(
+        (tOrder) => tOrder.id === item.ticketOrderId
+      );
+      ticOrderUpdate.quantity = +e.target.value;
+      setMyOrders(myOrdersUpdate);
     }
   };
 
@@ -93,15 +95,28 @@ const Ticket = ({
     // if user is logged in, delete ticket_order
     if (token) {
       await deleteTicketOrder({ token, ticketOrderId: item.ticketOrderId });
+      // update current order
+      const myOrdersUpdate = [...myOrders];
+      const currentOrder = myOrdersUpdate.find(
+        (order) => order.id === currentOrderId
+      );
+      currentOrder.ticketOrders = currentOrder.ticketOrders.filter(
+        (tOrder) => tOrder.id !== item.ticketOrderId
+      );
+      currentOrder.tickets = currentOrder.tickets.filter(
+        (tic) => tic.id !== ticket.id
+      );
+      console.log("currentOrder", currentOrder);
+      setMyOrders(myOrdersUpdate);
     }
   };
 
   return (
     <div className="item">
       <div className="ticket-date">
-        <p>{month}</p>
-        <p>{day}</p>
-        <p>{year}</p>
+        <p>{ticket.month}</p>
+        <p>{ticket.day}</p>
+        <p>{ticket.year}</p>
       </div>
       <div className="ticket-info">
         <p>{ticket.artist.name}</p>
