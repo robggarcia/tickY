@@ -160,15 +160,24 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
           const tickDate = new Date(ticket.date.slice(0, 10));
           const diff = tickDate - current;
           const day = 24 * 60 * 60 * 1e3;
-          return diff > day;
+          if (diff < day) {
+            console.log("FOUND TICKET: diff < day", diff, day);
+            return true;
+          }
         });
+        console.log("filteredArtists", filteredArtists);
       } else if (dateOption === "This Week") {
         console.log("filtering this week");
         filteredArtists = filteredArtists.filter((ticket) => {
           const tickDate = new Date(ticket.date.slice(0, 10));
+          console.log("tickDate", tickDate);
           const diff = tickDate - current;
+          console.log("diff", diff);
           const week = 7 * 24 * 60 * 60 * 1e3;
-          return diff > week;
+          if (diff < week) {
+            console.log("FOUND TICKET: diff < day", diff, week);
+            return true;
+          }
         });
       } else if (dateOption === "This Month") {
         console.log("filtering this month");
@@ -176,7 +185,10 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
           const tickDate = new Date(ticket.date.slice(0, 10));
           const diff = tickDate - current;
           const month = 31 * 24 * 60 * 60 * 1e3;
-          return diff > month;
+          if (diff < month) {
+            console.log("FOUND TICKET: diff < day", diff, month);
+            return true;
+          }
         });
       }
     }
