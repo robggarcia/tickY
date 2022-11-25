@@ -390,8 +390,15 @@ async function createInitialTickets() {
         artistId: 2,
         venueId: 3,
         date: "2024-02-14",
-        quantity: 0,
+        quantity: 20,
         price: 220,
+      },
+      {
+        artistId: 2,
+        venueId: 1,
+        date: "2022-12-14",
+        quantity: 100,
+        price: 215,
       },
       {
         artistId: 3,

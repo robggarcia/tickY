@@ -11,7 +11,7 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
   const [cityOption, setCityOption] = useState("any");
   const [dateRange, setDateRange] = useState([
     "Today",
-    "This Weekend",
+    "This Week",
     "This Month",
   ]);
   const [dateOption, setDateOption] = useState();
@@ -59,7 +59,7 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
   const handleDateOption = (e) => {
     setDateOption(e.target.value);
   };
-
+  /* 
   //get todays date
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, "0");
@@ -104,7 +104,7 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
       return "weekend";
     }
   };
-
+ */
   // console.log(tickets);
 
   /* function dateMap(todayDate) {
@@ -134,6 +134,7 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
 
   // console.log(is_weekend(today));
   // console.log(isWeekend(today));
+
   // need to filter artists based on user filters
   const filterTickets = () => {
     let filteredArtists = [...artistTickets];
@@ -149,13 +150,43 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
         (ticket) => ticket.venue.city === cityOption
       );
     }
+    // filter by date
+    if (dateOption !== "any") {
+      const current = new Date();
+      // difference between current and ticket.date will be in MS
+      if (dateOption === "Today") {
+        console.log("filtering for today");
+        filteredArtists = filteredArtists.filter((ticket) => {
+          const tickDate = new Date(ticket.date.slice(0, 10));
+          const diff = tickDate - current;
+          const day = 24 * 60 * 60 * 1e3;
+          return diff > day;
+        });
+      } else if (dateOption === "This Week") {
+        console.log("filtering this week");
+        filteredArtists = filteredArtists.filter((ticket) => {
+          const tickDate = new Date(ticket.date.slice(0, 10));
+          const diff = tickDate - current;
+          const week = 7 * 24 * 60 * 60 * 1e3;
+          return diff > week;
+        });
+      } else if (dateOption === "This Month") {
+        console.log("filtering this month");
+        filteredArtists = filteredArtists.filter((ticket) => {
+          const tickDate = new Date(ticket.date.slice(0, 10));
+          const diff = tickDate - current;
+          const month = 31 * 24 * 60 * 60 * 1e3;
+          return diff > month;
+        });
+      }
+    }
     // console.log("filteredArtists", filteredArtists);
     setFeatured(filteredArtists);
   };
 
   useEffect(() => {
     filterTickets();
-  }, [genreOption, cityOption]);
+  }, [genreOption, cityOption, dateOption]);
 
   return (
     <div className="concerts">
