@@ -1,8 +1,10 @@
 const express = require("express");
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET, STRIPE_KEY } = process.env;
 const jwt = require("jsonwebtoken");
 const apiRouter = express.Router();
 const { getUserById } = require("../db/users");
+// This is your test secret API key.
+const stripe = require("stripe")(`${STRIPE_KEY}`);
 
 // GET /api/health
 apiRouter.get("/health", async (req, res) => {
@@ -72,7 +74,26 @@ apiRouter.use("/tickets_orders", ticketOrdersRouter);
 
 // ROUTER: /api/orders
 const ordersRouter = require("./orders");
+const { requireUser } = require("./utils");
 apiRouter.use("/orders", ordersRouter);
+
+// CHECKOUT with STRIPE /api/checkout
+apiRouter.post("/create-payment-intent", async (req, res) => {
+  const { items, totalPrice } = req.body;
+  console.log("totalPrice", totalPrice);
+  // Create a PaymentIntent with the order amount and currency
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: totalPrice,
+    currency: "usd",
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+});
 
 apiRouter.get("*", (req, res) => {
   res.status(404);

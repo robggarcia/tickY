@@ -1,5 +1,7 @@
 .checkout {
     grid-row: 2;
+    display: flex;
+    justify-content: space-around;
 }
 
 .checkout .item-container {

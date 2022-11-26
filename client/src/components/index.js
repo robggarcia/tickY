@@ -10,3 +10,4 @@ export { default as Artists } from "./Artists";
 export { default as Modal } from "./Modal";
 export { default as Ticket } from "./Ticket";
 export { default as Checkout } from "./Checkout";
+export { default as CheckoutForm } from "./CheckoutForm";
