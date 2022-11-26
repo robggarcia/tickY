@@ -56,14 +56,9 @@ function App() {
   const getTickets = async () => {
     const data = await fetchTickets();
     console.log("getTickets: ", data);
-    /*     for (let ticket of data) {
-      ticket.month = monthByNumber(ticket.date.slice(5, 7));
-      ticket.day = ticket.date.slice(8, 10);
-      ticket.year = ticket.date.slice(0, 4);
-    } */
     setTickets(data);
     // push non duplicate artist tickets
-    const ticketsArray = [];
+    let ticketsArray = [];
     const artistArray = [];
     for (let ticket of data) {
       if (!artistArray.includes(ticket.artistId)) {
@@ -71,7 +66,15 @@ function App() {
         ticketsArray.push(ticket);
       }
     }
-    // console.log("ticketsArray", ticketsArray);
+    // don't display tickets that have a past date
+    const current = new Date();
+    ticketsArray = ticketsArray.filter((ticket) => {
+      const tickDate = new Date(ticket.date.slice(0, 10));
+      if (tickDate > current) {
+        return true;
+      }
+    });
+
     setArtistTickets(ticketsArray);
   };
 

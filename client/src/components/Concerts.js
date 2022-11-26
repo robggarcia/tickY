@@ -59,81 +59,6 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
   const handleDateOption = (e) => {
     setDateOption(e.target.value);
   };
-  /* 
-  //get todays date
-  var today = new Date();
-  var dd = String(today.getDate()).padStart(2, "0");
-  let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-  if (mm == 1) {
-    mm = "Jan";
-  } else if (mm == 2) {
-    mm = "Feb";
-  } else if (mm == 3) {
-    mm = "Mar";
-  } else if (mm == 4) {
-    mm = "Apr";
-  } else if (mm == 5) {
-    mm = "May";
-  } else if (mm == 6) {
-    mm = "Jun";
-  } else if (mm == 7) {
-    mm = "Jul";
-  } else if (mm == 8) {
-    mm = "Aug";
-  } else if (mm == 9) {
-    mm = "Sep";
-  } else if (mm == 10) {
-    mm = "Oct";
-  } else if (mm == 11) {
-    mm = "Nov";
-  } else if (mm == 12) {
-    mm = "Dec";
-  }
-
-  var yyyy = today.getFullYear();
-  // console.log(typeof yyyy);
-  today = mm + " " + dd + ", " + yyyy;
-  // console.log(today);
-
-  // check for weekends
-  // if undefine then not a weekend , if output is weekend the nweekend
-  var is_weekend = function (date1) {
-    var dt = new Date(date1);
-
-    if (dt.getDay() == 6 || dt.getDay() == 0) {
-      return "weekend";
-    }
-  };
- */
-  // console.log(tickets);
-
-  /* function dateMap(todayDate) {
-    for (let item of tickets) {
-      item.month = monthByNumber(item.date.slice(5, 7));
-      item.day = item.date.slice(8, 10);
-      item.year = item.date.slice(0, 4);
-      // console.log(item);
-    }
-  } */
-
-  // dateMap(today);
-
-  // function testingWeekend(numDD) {
-  //   // console.log(dd);
-  //   for (let i = 0; i < 8; i++) {
-  //     if (numMM === 11 && numDD <= 30) {
-  //       let newDate = numMM + " " + (numDD + i) + ", " + numYYYY;
-  //       console.log(newDate);
-  //     } else if (numMM === 11 && numDD > 30) {
-  //       let newDate = numMM + 1 + " " + i + ", " + numYYYY;
-  //     }
-  //   }
-  // }
-
-  // testingWeekend(numDD);
-
-  // console.log(is_weekend(today));
-  // console.log(isWeekend(today));
 
   // need to filter artists based on user filters
   const filterTickets = () => {
@@ -155,44 +80,34 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
       const current = new Date();
       // difference between current and ticket.date will be in MS
       if (dateOption === "Today") {
-        console.log("filtering for today");
         filteredArtists = filteredArtists.filter((ticket) => {
           const tickDate = new Date(ticket.date.slice(0, 10));
           const diff = tickDate - current;
           const day = 24 * 60 * 60 * 1e3;
           if (diff < day) {
-            console.log("FOUND TICKET: diff < day", diff, day);
             return true;
           }
         });
-        console.log("filteredArtists", filteredArtists);
       } else if (dateOption === "This Week") {
-        console.log("filtering this week");
         filteredArtists = filteredArtists.filter((ticket) => {
           const tickDate = new Date(ticket.date.slice(0, 10));
-          console.log("tickDate", tickDate);
           const diff = tickDate - current;
-          console.log("diff", diff);
           const week = 7 * 24 * 60 * 60 * 1e3;
           if (diff < week) {
-            console.log("FOUND TICKET: diff < day", diff, week);
             return true;
           }
         });
       } else if (dateOption === "This Month") {
-        console.log("filtering this month");
         filteredArtists = filteredArtists.filter((ticket) => {
           const tickDate = new Date(ticket.date.slice(0, 10));
           const diff = tickDate - current;
           const month = 31 * 24 * 60 * 60 * 1e3;
           if (diff < month) {
-            console.log("FOUND TICKET: diff < day", diff, month);
             return true;
           }
         });
       }
     }
-    // console.log("filteredArtists", filteredArtists);
     setFeatured(filteredArtists);
   };
 
