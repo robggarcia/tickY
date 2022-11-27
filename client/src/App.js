@@ -190,18 +190,20 @@ function App() {
             }
           />
         )}
+        {artistTickets && (
+          <Route
+            path="/concerts"
+            element={
+              <Concerts
+                artists={artists}
+                venues={venues}
+                tickets={tickets}
+                artistTickets={artistTickets}
+              />
+            }
+          />
+        )}
 
-        <Route
-          path="/concerts"
-          element={
-            <Concerts
-              artists={artists}
-              venues={venues}
-              tickets={tickets}
-              artistTickets={artistTickets}
-            />
-          }
-        />
         <Route
           path="/cart"
           element={
@@ -230,21 +232,24 @@ function App() {
           element={<Register cart={cart} setToken={setToken} token={token} />}
         />
         <Route path="/venues" element={<Venues />} />
-        <Route
-          path="/artists/:artistId"
-          element={
-            <Artists
-              token={token}
-              currentOrderId={currentOrderId}
-              artists={artists}
-              tickets={tickets}
-              cart={cart}
-              setCart={setCart}
-              myOrders={myOrders}
-              setMyOrders={setMyOrders}
-            />
-          }
-        />
+        {myOrders && (
+          <Route
+            path="/artists/:artistId"
+            element={
+              <Artists
+                token={token}
+                currentOrderId={currentOrderId}
+                artists={artists}
+                tickets={tickets}
+                cart={cart}
+                setCart={setCart}
+                myOrders={myOrders}
+                setMyOrders={setMyOrders}
+              />
+            }
+          />
+        )}
+
         <Route
           path="/profile"
           element={<Profile user={user} myOrders={myOrders} />}
