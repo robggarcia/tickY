@@ -17,6 +17,7 @@ import {
   Artists,
   Cart,
   Checkout,
+  CheckoutSuccess,
   Concerts,
   Home,
   Login,
@@ -185,6 +186,7 @@ function App() {
           path="/cart/:orderId/checkout"
           element={<Checkout token={token} user={user} myOrders={myOrders} />}
         />
+        <Route path="/success" element={<CheckoutSuccess />} />
         <Route
           path="/login"
           element={<Login cart={cart} setToken={setToken} token={token} />}

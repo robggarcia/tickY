@@ -31,7 +31,7 @@ const Checkout = ({ token, user, myOrders }) => {
     fetch("/api/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: [{ id: "xl-tshirt" }], totalPrice: price }),
+      body: JSON.stringify({ items: currentOrder, totalPrice: price }),
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
@@ -42,17 +42,6 @@ const Checkout = ({ token, user, myOrders }) => {
   }, [myOrders]);
 
   const [clientSecret, setClientSecret] = useState("");
-
-  /*   useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
-    fetch("/api/create-payment-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: [{ id: "xl-tshirt" }], totalPrice }),
-    })
-      .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret));
-  }, []); */
 
   const appearance = {
     theme: "stripe",

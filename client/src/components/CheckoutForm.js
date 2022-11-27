@@ -5,6 +5,12 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 
+import "../styles/CheckoutForm.css";
+
+// HOW TO TEST
+// Fill out the credit card form using the credit card number
+// 4242 4242 4242 4242 with any expiration, CVC, and postal code.
+
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
@@ -28,6 +34,7 @@ const CheckoutForm = () => {
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
       switch (paymentIntent.status) {
         case "succeeded":
+          console.log("PAYMENT SUCCESSFUL");
           setMessage("Payment succeeded!");
           break;
         case "processing":
