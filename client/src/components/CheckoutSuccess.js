@@ -7,7 +7,7 @@ const CheckoutSuccess = ({
   user,
   tickets,
   artistTickets,
-  setArtistTickets,
+  setTickets,
   myOrders,
   setMyOrders,
   setCart,
@@ -31,9 +31,11 @@ const CheckoutSuccess = ({
       currentOrder.purchased = true;
       setMyOrders(myOrdersUpdate);
       // update tickets
-      const tickets = [...artistTickets];
+      const ticketsToEdit = [...tickets];
+      console.log("tickets in CHECKOUT SUCCESSs", tickets);
       for (let purchase of currentOrder.ticketOrders) {
-        const ticket = tickets.find(
+        console.log("purchase.ticketId", purchase.ticketId);
+        const ticket = ticketsToEdit.find(
           (ticket) => ticket.id === purchase.ticketId
         );
         console.log("ticket", ticket);
@@ -44,7 +46,7 @@ const CheckoutSuccess = ({
         });
         console.log("updatedTicket", purchase.quantity, updatedTicket);
       }
-      setArtistTickets(tickets);
+      setTickets(tickets);
       // empty the cart
       setCart([]);
       // create a new order for the user

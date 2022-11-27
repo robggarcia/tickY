@@ -33,10 +33,10 @@ function App() {
   const [artists, setArtists] = useState([]);
   const [venues, setVenues] = useState([]);
   const [tickets, setTickets] = useState([]);
-  const [artistTickets, setArtistTickets] = useState([]);
+  const [artistTickets, setArtistTickets] = useState(null);
   const [token, setToken] = useState("");
   const [user, setUser] = useState(null);
-  const [myOrders, setMyOrders] = useState([]);
+  const [myOrders, setMyOrders] = useState(null);
   const [currentOrderId, setCurrentOrderId] = useState(null);
   const [keyword, setKeyword] = useState("");
   const [suggest, setSuggest] = useState([]);
@@ -170,22 +170,27 @@ function App() {
             />
           }
         />
-        <Route
-          path="/checkout-success"
-          element={
-            <CheckoutSuccess
-              token={token}
-              user={user}
-              myOrders={myOrders}
-              setCart={setCart}
-              currentOrderId={currentOrderId}
-              setMyOrders={setMyOrders}
-              setCurrentOrderId={setCurrentOrderId}
-              artistTickets={artistTickets}
-              setArtistTickets={setArtistTickets}
-            />
-          }
-        />
+        {myOrders && artistTickets.length > 0 && (
+          <Route
+            path="/checkout-success"
+            element={
+              <CheckoutSuccess
+                token={token}
+                user={user}
+                myOrders={myOrders}
+                setCart={setCart}
+                currentOrderId={currentOrderId}
+                setMyOrders={setMyOrders}
+                setCurrentOrderId={setCurrentOrderId}
+                artistTickets={artistTickets}
+                setArtistTickets={setArtistTickets}
+                tickets={tickets}
+                setTickets={setTickets}
+              />
+            }
+          />
+        )}
+
         <Route
           path="/concerts"
           element={
