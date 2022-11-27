@@ -17,13 +17,17 @@ const Checkout = ({ token, user, myOrders }) => {
   const { orderId } = useParams();
   const [currentOrder, setCurrentOrder] = useState(null);
   const [totalPrice, setTotalPrice] = useState(null);
+  console.log("totalPrice", totalPrice);
 
   const getCurrentOrder = async () => {
     const order = myOrders.find((order) => order.id === +orderId);
     setCurrentOrder(order);
     let price = 0;
     for (let ticket of order.tickets) {
-      price += ticket.price * ticket.quantity;
+      const numTics = order.ticketOrders.find(
+        (tOrder) => tOrder.ticketId === ticket.id
+      ).quantity;
+      price += ticket.price * numTics;
     }
     setTotalPrice(price);
 

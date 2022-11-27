@@ -4,7 +4,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { monthByNumber } from "../api";
 
-const Concerts = ({ artists, venues, tickets, artistTickets }) => {
+const Concerts = ({
+  artists,
+  venues,
+  tickets,
+  artistTickets,
+  setArtistTickets,
+}) => {
   const [genres, setGenres] = useState([]);
   const [genreOption, setGenreOption] = useState("any");
   const [cities, setCities] = useState([]);
@@ -46,7 +52,48 @@ const Concerts = ({ artists, venues, tickets, artistTickets }) => {
   useEffect(() => {
     getGenres();
     getCities();
+    // push non duplicate artist tickets
+    console.log("UPDATE ARTIST TICKETS");
+    let ticketsArray = [];
+    const artistArray = [];
+    for (let ticket of tickets) {
+      if (!artistArray.includes(ticket.artistId)) {
+        artistArray.push(ticket.artistId);
+        ticketsArray.push(ticket);
+      }
+    }
+    // don't display tickets that have a past date
+    const current = new Date();
+    ticketsArray = ticketsArray.filter((ticket) => {
+      const tickDate = new Date(ticket.date.slice(0, 10));
+      if (tickDate > current) {
+        return true;
+      }
+    });
+    setArtistTickets(ticketsArray);
   }, []);
+
+  /*   useEffect(() => {
+    // push non duplicate artist tickets
+    console.log("UPDATE ARTIST TICKETS");
+    let ticketsArray = [];
+    const artistArray = [];
+    for (let ticket of tickets) {
+      if (!artistArray.includes(ticket.artistId)) {
+        artistArray.push(ticket.artistId);
+        ticketsArray.push(ticket);
+      }
+    }
+    // don't display tickets that have a past date
+    const current = new Date();
+    ticketsArray = ticketsArray.filter((ticket) => {
+      const tickDate = new Date(ticket.date.slice(0, 10));
+      if (tickDate > current) {
+        return true;
+      }
+    });
+    setArtistTickets(ticketsArray);
+  }, [tickets]); */
 
   const handleGenreOption = (e) => {
     setGenreOption(e.target.value);
