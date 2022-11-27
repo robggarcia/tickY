@@ -16,7 +16,7 @@ const stripePromise = loadStripe(PUBLIC_KEY);
 const Checkout = ({ token, user, myOrders }) => {
   const { orderId } = useParams();
   const [currentOrder, setCurrentOrder] = useState(null);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(null);
 
   const getCurrentOrder = async () => {
     const order = myOrders.find((order) => order.id === +orderId);
@@ -43,7 +43,7 @@ const Checkout = ({ token, user, myOrders }) => {
 
   useEffect(() => {
     getCurrentOrder();
-  }, [myOrders]);
+  }, []);
 
   const [clientSecret, setClientSecret] = useState("");
 
@@ -57,24 +57,27 @@ const Checkout = ({ token, user, myOrders }) => {
 
   return (
     <div className="checkout">
-      <div className="checkout-items">
-        <h1>Checkout</h1>
-        <div className="items-for-checkout">
-          <div className="item-container">
-            {currentOrder &&
-              currentOrder.tickets.map((ticket, idx) => {
-                return (
-                  <div key={idx} className="ticket-prev">
-                    <img src={ticket.artist.image} alt={ticket.artist.name} />
-                    <h3>{ticket.artist.name}</h3>
-                    <p>Quantity: {currentOrder.ticketOrders[idx].quantity}</p>
-                  </div>
-                );
-              })}
+      {totalPrice && (
+        <div className="checkout-items">
+          <h1>Checkout</h1>
+          <div className="items-for-checkout">
+            <div className="item-container">
+              {currentOrder &&
+                currentOrder.tickets.map((ticket, idx) => {
+                  return (
+                    <div key={idx} className="ticket-prev">
+                      <img src={ticket.artist.image} alt={ticket.artist.name} />
+                      <h3>{ticket.artist.name}</h3>
+                      <p>Quantity: {currentOrder.ticketOrders[idx].quantity}</p>
+                    </div>
+                  );
+                })}
+            </div>
           </div>
+          <h3 className="total-cost">Total Charge: ${totalPrice}</h3>
         </div>
-        <h3 className="total-cost">Total Charge: ${totalPrice}</h3>
-      </div>
+      )}
+
       <div className="stripe-container">
         {clientSecret && (
           <Elements options={options} stripe={stripePromise}>

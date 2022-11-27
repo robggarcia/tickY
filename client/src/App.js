@@ -54,6 +54,7 @@ function App() {
     // console.log("getVenues: ", data);
     setVenues(data);
   };
+
   const getTickets = async () => {
     const data = await fetchTickets();
     console.log("getTickets: ", data);
@@ -199,6 +200,8 @@ function App() {
                 venues={venues}
                 tickets={tickets}
                 artistTickets={artistTickets}
+                setArtistTickets={setArtistTickets}
+                setTickets={setTickets}
               />
             }
           />

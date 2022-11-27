@@ -13,6 +13,7 @@ const CheckoutSuccess = ({
   setCart,
   currentOrderId,
   setCurrentOrderId,
+  setArtistTickets,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const result = searchParams.get("redirect_status");
@@ -60,6 +61,28 @@ const CheckoutSuccess = ({
   useEffect(() => {
     updateOrder();
   }, []);
+
+  useEffect(() => {
+    // push non duplicate artist tickets
+    console.log("UPDATE ARTIST TICKETS");
+    let ticketsArray = [];
+    const artistArray = [];
+    for (let ticket of tickets) {
+      if (!artistArray.includes(ticket.artistId)) {
+        artistArray.push(ticket.artistId);
+        ticketsArray.push(ticket);
+      }
+    }
+    // don't display tickets that have a past date
+    const current = new Date();
+    ticketsArray = ticketsArray.filter((ticket) => {
+      const tickDate = new Date(ticket.date.slice(0, 10));
+      if (tickDate > current) {
+        return true;
+      }
+    });
+    setArtistTickets(ticketsArray);
+  }, [tickets]);
 
   return (
     <div>
