@@ -71,7 +71,7 @@ ticketsRouter.post("/", requireAdmin, async (req, res, next) => {
 });
 
 // PATCH /api/tickets/:ticketId
-ticketsRouter.patch("/:ticketId", requireAdmin, async (req, res, next) => {
+ticketsRouter.patch("/:ticketId", requireUser, async (req, res, next) => {
   const ticketId = req.params.ticketId;
   const inputFields = req.body;
   try {

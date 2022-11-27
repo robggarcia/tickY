@@ -13,10 +13,11 @@ const Nav = ({
   token,
   setCart,
 }) => {
-  useEffect(() => {
+  // why would this be clearing out the token and user?
+  /*  useEffect(() => {
     setToken("");
     setUser("");
-  }, []);
+  }, []); */
 
   const handleLogOut = () => {
     // clear the current cart when logging out

@@ -75,7 +75,6 @@ function App() {
         return true;
       }
     });
-
     setArtistTickets(ticketsArray);
   };
 
@@ -155,7 +154,38 @@ function App() {
         setCart={setCart}
       />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={
+            <Home
+              token={token}
+              user={user}
+              myOrders={myOrders}
+              setCart={setCart}
+              currentOrderId={currentOrderId}
+              setMyOrders={setMyOrders}
+              setCurrentOrderId={setCurrentOrderId}
+              artistTickets={artistTickets}
+              setArtistTickets={setArtistTickets}
+            />
+          }
+        />
+        <Route
+          path="/checkout-success"
+          element={
+            <CheckoutSuccess
+              token={token}
+              user={user}
+              myOrders={myOrders}
+              setCart={setCart}
+              currentOrderId={currentOrderId}
+              setMyOrders={setMyOrders}
+              setCurrentOrderId={setCurrentOrderId}
+              artistTickets={artistTickets}
+              setArtistTickets={setArtistTickets}
+            />
+          }
+        />
         <Route
           path="/concerts"
           element={
@@ -186,7 +216,6 @@ function App() {
           path="/cart/:orderId/checkout"
           element={<Checkout token={token} user={user} myOrders={myOrders} />}
         />
-        <Route path="/success" element={<CheckoutSuccess />} />
         <Route
           path="/login"
           element={<Login cart={cart} setToken={setToken} token={token} />}
