@@ -6,12 +6,15 @@ const Nav = ({
   keyword,
   setKeyword,
   setSuggest,
+  setSuggestVenue,
   artists,
   suggest,
+  suggestVenue,
   setToken,
   setUser,
   token,
   setCart,
+  venues,
 }) => {
   // why would this be clearing out the token and user?
   /*  useEffect(() => {
@@ -34,6 +37,7 @@ const Nav = ({
 
   const searchResults = () => {
     const filteredNames = [];
+    const filteredCities = [];
     if (!keyword) {
       setSuggest([]);
     } else {
@@ -42,7 +46,15 @@ const Nav = ({
           filteredNames.push(artist);
         }
       }
+      for (let venue of venues) {
+        if (venue.name.toLowerCase().includes(keyword)) {
+          filteredCities.push(venue);
+        }
+      }
+      // console.log(filteredCities);
       setSuggest(filteredNames);
+      setSuggestVenue(filteredCities);
+      console.log(suggestVenue);
     }
   };
 
@@ -102,6 +114,23 @@ const Nav = ({
                     }}
                   >
                     {artist.name}
+                  </Link>
+                </p>
+              );
+            })}
+          </div>
+          <h4>Suggested Venues: </h4>
+          <div>
+            {suggestVenue.map((venue, idx) => {
+              return (
+                <p key={idx}>
+                  <Link
+                    to={`/venue/${venue.id}`}
+                    onClick={() => {
+                      setKeyword("");
+                    }}
+                  >
+                    {venue.name}
                   </Link>
                 </p>
               );
