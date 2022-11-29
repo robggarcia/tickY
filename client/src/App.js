@@ -40,6 +40,7 @@ function App() {
   const [currentOrderId, setCurrentOrderId] = useState(null);
   const [keyword, setKeyword] = useState("");
   const [suggest, setSuggest] = useState([]);
+  const [suggestVenue, setSuggestVenue] = useState([]);
   const [displayMessage, setDisplayMessage] = useState("");
   const [success, setSuccess] = useState(false);
   const [cart, setCart] = useState([]);
@@ -51,7 +52,7 @@ function App() {
   };
   const getVenues = async () => {
     const data = await fetchVenues();
-    // console.log("getVenues: ", data);
+    console.log("getVenues: ", data);
     setVenues(data);
   };
 
@@ -146,8 +147,11 @@ function App() {
       <Nav
         keyword={keyword}
         artists={artists}
+        venues={venues}
         setKeyword={setKeyword}
         setSuggest={setSuggest}
+        setSuggestVenue={setSuggestVenue}
+        suggestVenue={suggestVenue}
         suggest={suggest}
         setToken={setToken}
         setUser={setUser}
