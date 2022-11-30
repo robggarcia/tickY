@@ -12,6 +12,7 @@ body {
   display: grid;
   grid-auto-rows: 8vh 92vh;
   min-width: 600px;
+  margin: auto;
 }
 
 .login, .register {
