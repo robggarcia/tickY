@@ -62,9 +62,6 @@ const Register = ({ cart, setToken, token }) => {
   return (
     <div className="register">
       <div className="form">
-        <Link to="/" className="title">
-          TickY
-        </Link>
         <p>Create account</p>
         <p>{error}</p>
         <form onSubmit={handleRegister}>
@@ -96,7 +93,7 @@ const Register = ({ cart, setToken, token }) => {
             />
           </div>
           <div className="input-field button">
-            <button>Create account</button>
+            <input type="submit" value="Create Account" />
           </div>
           <Link to="/login">Have a TickY account? Sign in</Link>
         </form>

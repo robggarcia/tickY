@@ -38,9 +38,6 @@ const Login = ({ cart, setToken, token }) => {
   return (
     <div className="login">
       <div className="form">
-        <Link to="/" className="title">
-          TickY
-        </Link>
         <p>Sign in to TickY</p>
         <p>{error}</p>
         <form onSubmit={handleLogin}>

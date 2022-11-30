@@ -52,13 +52,13 @@ function App() {
   };
   const getVenues = async () => {
     const data = await fetchVenues();
-    console.log("getVenues: ", data);
+    // console.log("getVenues: ", data);
     setVenues(data);
   };
 
   const getTickets = async () => {
     const data = await fetchTickets();
-    console.log("getTickets: ", data);
+    // console.log("getTickets: ", data);
     setTickets(data);
     // push non duplicate artist tickets
     let ticketsArray = [];
@@ -81,11 +81,11 @@ function App() {
   };
 
   const getUser = async (token) => {
-    console.log("GET USER CALLED");
+    // console.log("GET USER CALLED");
     // check local storage to see if a token is available
     if (localStorage.getItem("token")) setToken(localStorage.getItem("token"));
     if (!token) {
-      console.log("THE USER IS NOT DEFINED");
+      // console.log("THE USER IS NOT DEFINED");
       return;
     }
     const info = await fetchUser(token);
@@ -93,17 +93,17 @@ function App() {
     if (info.id) {
       setUser(info);
       const orderData = await fetchUsersOrders(token, info.id);
-      console.log("orderData", orderData);
+      // console.log("orderData", orderData);
       setMyOrders(orderData);
       // sort the returned data by orderId
       orderData.sort((a, b) => a.id - b.id);
-      console.log("SORTED orderData", orderData);
+      // console.log("SORTED orderData", orderData);
       // if the most recent order is not purchased, update the cart
       if (!orderData[orderData.length - 1].purchased) {
-        console.log(
-          "MOST RECENT ORDER IS NOT PURCHASED",
-          orderData[orderData.length - 1]
-        );
+        // console.log(
+        //   "MOST RECENT ORDER IS NOT PURCHASED",
+        //   orderData[orderData.length - 1]
+        // );
         const currentOrder = orderData[orderData.length - 1];
         setCurrentOrderId(currentOrder.id);
         let newCart = [...cart];
@@ -119,17 +119,17 @@ function App() {
               ticketOrderId: ticketOrder.id,
               ticket,
             };
-            console.log("ITEM FOR CART: ", item);
+            // console.log("ITEM FOR CART: ", item);
             newCart.push(item);
           }
         }
-        console.log("NEW CART SET: ", newCart);
+        // console.log("NEW CART SET: ", newCart);
         setCart(newCart);
       } else {
         // create a new order for the user
-        console.log("CREATING A NEW ORDER: ");
+        // console.log("CREATING A NEW ORDER: ");
         const newOrder = await createOrder(token, info.id);
-        console.log(newOrder);
+        //  
         setCurrentOrderId(newOrder.id);
       }
     }
