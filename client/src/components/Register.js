@@ -34,7 +34,7 @@ const Register = ({ cart, setToken, token }) => {
       return;
     } else {
       // add api for register
-      const register = await fetch("/api/users/register", {
+      const register = await fetch("api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -49,6 +49,7 @@ const Register = ({ cart, setToken, token }) => {
         setError(data.error);
       } else {
         setToken(data.token);
+        localStorage.setItem("token", data.token);
         if (cart.length > 0) {
           navigate("/cart");
         } else {

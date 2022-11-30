@@ -28,6 +28,7 @@ import {
   Venues,
 } from "./components";
 import Admin from "./components/Admin";
+import "./App.css";
 
 function App() {
   const [artists, setArtists] = useState([]);
@@ -81,25 +82,25 @@ function App() {
   };
 
   const getUser = async (token) => {
-    // console.log("GET USER CALLED");
+    console.log("GET USER CALLED");
     // check local storage to see if a token is available
     if (localStorage.getItem("token")) setToken(localStorage.getItem("token"));
     if (!token) {
-      // console.log("THE USER IS NOT DEFINED");
+      console.log("THE USER IS NOT DEFINED");
       return;
     }
     const info = await fetchUser(token);
-    // console.log("THE USER INFO: ", info);
+    console.log("THE USER INFO: ", info);
     if (info.id) {
       setUser(info);
       const orderData = await fetchUsersOrders(token, info.id);
-      // console.log("orderData", orderData);
+      console.log("orderData", orderData);
       setMyOrders(orderData);
       // sort the returned data by orderId
       orderData.sort((a, b) => a.id - b.id);
-      // console.log("SORTED orderData", orderData);
+      console.log("SORTED orderData", orderData);
       // if the most recent order is not purchased, update the cart
-      if (!orderData[orderData.length - 1].purchased) {
+      if (orderData.length > 0 && !orderData[orderData.length - 1].purchased) {
         console.log(
           "MOST RECENT ORDER IS NOT PURCHASED",
           orderData[orderData.length - 1]
@@ -108,7 +109,7 @@ function App() {
         setCurrentOrderId(currentOrder.id);
         let newCart = [...cart];
         if (currentOrder.tickets.length > 0) {
-          // setCart([...cart, ...currentOrder]);
+          setCart([...cart, currentOrder]);
           for (let ticket of currentOrder.tickets) {
             const ticketOrder = currentOrder.ticketOrders.find(
               (ticketOrder) => ticketOrder.ticketId === ticket.id
@@ -123,11 +124,11 @@ function App() {
             newCart.push(item);
           }
         }
-        // console.log("NEW CART SET: ", newCart);
+        console.log("NEW CART SET: ", newCart);
         setCart(newCart);
       } else {
         // create a new order for the user
-        // console.log("CREATING A NEW ORDER: ");
+        console.log("CREATING A NEW ORDER: ");
         const newOrder = await createOrder(token, info.id);
         //
         setCurrentOrderId(newOrder.id);
@@ -157,6 +158,7 @@ function App() {
         setUser={setUser}
         token={token}
         setCart={setCart}
+        cart={cart}
       />
       <Routes>
         <Route

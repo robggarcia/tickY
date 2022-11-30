@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { createOrder, updateTicket } from "../api";
+import { createOrder, orderSuccess, updateTicket } from "../api";
 
 const CheckoutSuccess = ({
   token,
@@ -24,7 +24,8 @@ const CheckoutSuccess = ({
     } else {
       // set order.purchased to true, update ticket quantities, and empty cart
       // first set purchased to true
-      // *** NEED TO UPDATE THE DATABASE!
+      const successOrderUpdate = await orderSuccess(token, currentOrderId);
+      console.log("purchased = true: ", successOrderUpdate);
       const myOrdersUpdate = [...myOrders];
       const currentOrder = myOrdersUpdate.find(
         (order) => order.id === currentOrderId
