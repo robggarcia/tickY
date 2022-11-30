@@ -14,6 +14,21 @@ export const fetchUser = async (token) => {
   }
 };
 
+export const grabAllUsers = async (token) => {
+  try {
+    const response = await fetch(`api/users`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const users = await response.json();
+    return users;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // ARTISTS
 export const fetchArtists = async () => {
   try {

@@ -271,6 +271,7 @@ function App() {
               artists={artists}
               tickets={tickets}
               user={user}
+              token={token}
             />
           }
         />
