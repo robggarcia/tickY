@@ -100,10 +100,10 @@ function App() {
       // console.log("SORTED orderData", orderData);
       // if the most recent order is not purchased, update the cart
       if (!orderData[orderData.length - 1].purchased) {
-        // console.log(
-        //   "MOST RECENT ORDER IS NOT PURCHASED",
-        //   orderData[orderData.length - 1]
-        // );
+        console.log(
+          "MOST RECENT ORDER IS NOT PURCHASED",
+          orderData[orderData.length - 1]
+        );
         const currentOrder = orderData[orderData.length - 1];
         setCurrentOrderId(currentOrder.id);
         let newCart = [...cart];
