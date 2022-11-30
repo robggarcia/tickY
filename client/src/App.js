@@ -157,6 +157,7 @@ function App() {
         setUser={setUser}
         token={token}
         setCart={setCart}
+        cart={cart}
       />
       <Routes>
         <Route

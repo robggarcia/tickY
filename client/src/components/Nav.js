@@ -15,6 +15,7 @@ const Nav = ({
   token,
   setCart,
   venues,
+  cart,
 }) => {
   // why would this be clearing out the token and user?
   /*  useEffect(() => {
@@ -100,6 +101,7 @@ const Nav = ({
           </Link>
         )}
       </div>
+
       {suggest.length > 0 && (
         <div className="suggested">
           <h4>Suggested Artists: </h4>
@@ -136,6 +138,11 @@ const Nav = ({
               );
             })}
           </div>
+        </div>
+      )}
+      {cart.length > 0 && (
+        <div className="cart-bubble-container">
+          <p className="cart-bubble">{cart.length}</p>
         </div>
       )}
     </div>
