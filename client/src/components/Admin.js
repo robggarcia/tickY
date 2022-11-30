@@ -107,8 +107,54 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
             </table>
           </div>
         )}
-        {showArtists && <div className="admin-artists"></div>}
-        {showVenues && <div className="admin-venues"></div>}
+        {showArtists && (
+          <div className="admin-artists">
+            <table>
+              <tr>
+                <th>Name</th>
+                <th>Genre</th>
+                <th>Image</th>
+                <th>Description</th>
+                <th>Edit</th>
+              </tr>
+              {artists.map((artist, idx) => {
+                <tr key={idx} id={artist.id}>
+                  <th>{artist.name}</th>
+                  <th>{artist.genre}</th>
+                  <th>{artist.image}</th>
+                  <th>{artist.description}</th>
+                  <td>
+                    <button>Edit</button>
+                  </td>
+                </tr>;
+              })}
+            </table>
+          </div>
+        )}
+        {showVenues && (
+          <div className="admin-venues">
+            <table>
+              <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Capacity</th>
+                <th>Edit</th>
+              </tr>
+              {venues.map((venue, idx) => {
+                <tr key={idx} id={venue.id}>
+                  <th>{venue.name}</th>
+                  <th>{venue.city}</th>
+                  <th>{venue.state}</th>
+                  <th>{venue.capacity}</th>
+                  <td>
+                    <button>Edit</button>
+                  </td>
+                </tr>;
+              })}
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
