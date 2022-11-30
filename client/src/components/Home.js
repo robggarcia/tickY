@@ -11,7 +11,7 @@ const Home = () => {
       <div className="home">
         <h1>No Fees. Just Easy Tickets.</h1>
         <p>let us save you money on sold out shows</p>
-        <p>hello</p>
+        <p>hello everyone</p>
         {/* <BootstrapCarousel /> */}
       </div>
     </>

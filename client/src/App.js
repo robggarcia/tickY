@@ -129,7 +129,7 @@ function App() {
         // create a new order for the user
         // console.log("CREATING A NEW ORDER: ");
         const newOrder = await createOrder(token, info.id);
-        //  
+        //
         setCurrentOrderId(newOrder.id);
       }
     }
