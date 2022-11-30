@@ -50,7 +50,8 @@ ticketsRouter.post("/", requireAdmin, async (req, res, next) => {
     if (existingTickets) {
       for (let ticket of existingTickets) {
         if (ticket.venueId === req.body.venueId) {
-          if (ticket.date === req.body.date) {
+          const date = new Date(req.body.date);
+          if (ticket.date.toString() == date) {
             const err = new Error(
               `A ticket with artist and venue on date ${req.body.date} already exists`
             );

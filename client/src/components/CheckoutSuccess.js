@@ -24,6 +24,7 @@ const CheckoutSuccess = ({
     } else {
       // set order.purchased to true, update ticket quantities, and empty cart
       // first set purchased to true
+      // *** NEED TO UPDATE THE DATABASE!
       const myOrdersUpdate = [...myOrders];
       const currentOrder = myOrdersUpdate.find(
         (order) => order.id === currentOrderId
