@@ -131,6 +131,26 @@ export const createOrder = async (token, userId) => {
   }
 };
 
+export const orderSuccess = async (token, orderId) => {
+  const purchased = true;
+  try {
+    const response = await fetch(`/api/orders/${orderId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        purchased,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const createTicketOrder = async ({
   token,
   orderId,
