@@ -1,14 +1,35 @@
 import { useState } from "react";
 import "../styles/Profile.css";
 
-const Profile = ({ user, myOrders }) => {
+const Profile = ({ user, myOrders, token }) => {
   const [editProfile, setEditProfile] = useState(false);
-  const [newUserName, setNewUserName] = useState("");
-  const [newPassWord, setNewPassWord] = useState("");
+  const [usersUserName, setUsersUserName] = useState("");
+  const [usersPassword, setUsersPassword] = useState("");
+  const [usersEmail, setUsersEmail] = useState("");
+  console.log(user);
 
   const createEditForm = (event) => {
     event.preventDefault();
     setEditProfile(true);
+  };
+
+  const handleUpdateUserInfo = async (event) => {
+    event.preventDefault();
+    const response = await fetch(`api/users/${user.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        username: usersUserName,
+        password: usersPassword,
+        email: usersEmail,
+      }),
+    });
+
+    const data = await response.json();
+    console.log(data);
   };
 
   if (!user.username) return <></>;
@@ -45,21 +66,48 @@ const Profile = ({ user, myOrders }) => {
                           <p>Amount Purchased: {ticket.quantity}</p>
                           <p>Total: ${ticket.price * ticket.quantity} </p>
                         </div>
-                        {editProfile && (
-                          <div className="edit-profile">
-                            <form>
-                              <div>
-                                <input type="text" />
-                              </div>
-                            </form>
-                          </div>
-                        )}
                       </div>
                     );
                   })}
               </div>
             );
           })}
+        {editProfile && (
+          <div className="edit-profile">
+            <form onSubmit={handleUpdateUserInfo}>
+              <div>
+                <p>Current username: {user.username}</p>
+                <input
+                  type="text"
+                  placeholder="New Username"
+                  value={usersUserName}
+                  onChange={(event) => {
+                    setUsersUserName(event.target.value);
+                  }}
+                />
+                <p>Current email: {user.email}</p>
+                <input
+                  type="text"
+                  placeholder="New Email"
+                  value={usersEmail}
+                  onChange={(event) => {
+                    setUsersEmail(event.target.value);
+                  }}
+                />
+                <p>Update Password</p>
+                <input
+                  type="password"
+                  placeholder="New Password"
+                  value={usersPassword}
+                  onChange={(event) => {
+                    setUsersPassword(event.target.value);
+                  }}
+                />
+                <button>Submit Changes</button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

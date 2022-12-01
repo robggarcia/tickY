@@ -100,10 +100,10 @@ function App() {
       // console.log("SORTED orderData", orderData);
       // if the most recent order is not purchased, update the cart
       if (!orderData[orderData.length - 1].purchased) {
-        // console.log(
-        //   "MOST RECENT ORDER IS NOT PURCHASED",
-        //   orderData[orderData.length - 1]
-        // );
+        console.log(
+          "MOST RECENT ORDER IS NOT PURCHASED",
+          orderData[orderData.length - 1]
+        );
         const currentOrder = orderData[orderData.length - 1];
         setCurrentOrderId(currentOrder.id);
         let newCart = [...cart];
@@ -129,7 +129,7 @@ function App() {
         // create a new order for the user
         // console.log("CREATING A NEW ORDER: ");
         const newOrder = await createOrder(token, info.id);
-        //  
+        //
         setCurrentOrderId(newOrder.id);
       }
     }
@@ -259,7 +259,7 @@ function App() {
 
         <Route
           path="/profile"
-          element={<Profile user={user} myOrders={myOrders} />}
+          element={<Profile user={user} myOrders={myOrders} token={token} />}
         />
         <Route
           path="/admin"
