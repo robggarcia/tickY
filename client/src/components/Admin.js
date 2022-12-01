@@ -124,7 +124,7 @@ export default Admin;
 // TABLE COMPONENTS TO EDIT INDIVIDUAL ITEMS
 const UserTable = ({ user, idx }) => {
   const [edit, setEdit] = useState(false);
-  const [username, setusername] = useState(user.username);
+  const [username, setUsername] = useState(user.username);
   const [email, setEmail] = useState(user.email);
   const [admin, setAdmin] = userState(user.admin);
 
