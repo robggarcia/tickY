@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { grabAllUsers } from "../api";
-import { updateUser, adminUpdateTicket } from "./api";
+import { updateUser, adminUpdateTicket, updateArtist } from "./api";
 
 import "../styles/Admin.css";
 
@@ -245,20 +245,24 @@ const TicketTable = ({ token, ticket, idx }) => {
             />
           </td>
           <td>
-            <input type="text" value={date} onChange={() => setDate(!admin)} />
+            <input
+              type="text"
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
+            />
           </td>
           <td>
             <input
               type="text"
               value={price}
-              onChange={() => setPrice(!admin)}
+              onChange={(event) => setPrice(event.target.value)}
             />
           </td>
           <td>
             <input
               type="number"
               value={quantity}
-              onChange={() => setQuantity(!admin)}
+              onChange={(event) => setQuantity(event.target.value)}
             />
           </td>
           <td>
@@ -273,8 +277,27 @@ const TicketTable = ({ token, ticket, idx }) => {
 };
 
 const ArtistTable = ({ artist, idx }) => {
-  const editArtist = async (e) => {
-    console.log("button clicked: ", e.target.id);
+  const [edit, setEdit] = useState(false);
+  const [name, setName] = useState(artist.name);
+  const [genre, setGenre] = useState(artist.genre);
+  const [image, setImage] = useState(artist.image);
+  const [description, setDescription] = userState(artist.description);
+
+  const editArtist = () => {
+    setEdit(!edit);
+  };
+
+  const submitArtist = async () => {
+    const updatedArtist = await updateArtist({
+      token,
+      artistId: artist.id,
+      name,
+      genre,
+      image,
+      description,
+    });
+    console.log("ARTIST UPDATED: ", updatedArtist);
+    setEdit(!edit);
   };
 
   return (
@@ -290,6 +313,43 @@ const ArtistTable = ({ artist, idx }) => {
           </button>
         </td>
       </tr>
+      {edit && (
+        <tr>
+          <td>
+            <input
+              type="text"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
+          </td>
+          <td>
+            <input
+              type="text"
+              value={genre}
+              onChange={(event) => setGenre(event.target.value)}
+            />
+          </td>
+          <td>
+            <input
+              type="text"
+              value={image}
+              onChange={(event) => setImage(event.target.value)}
+            />
+          </td>
+          <td>
+            <input
+              type="text"
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+            />
+          </td>
+          <td>
+            <button id={ticket.id} onClick={submitArtist}>
+              Edit
+            </button>
+          </td>
+        </tr>
+      )}
     </tbody>
   );
 };

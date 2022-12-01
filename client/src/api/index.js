@@ -65,6 +65,34 @@ export const fetchArtists = async () => {
   }
 };
 
+export const updateArtist = async ({
+  token,
+  artistId,
+  name,
+  genre,
+  image,
+  description,
+}) => {
+  try {
+    const response = await patch(`api/artists/${artistId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name,
+        genre,
+        image,
+        description,
+      }),
+    });
+    const updatedArtist = await response.json();
+    return updatedArtist;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // VENUES
 export const fetchVenues = async () => {
   try {
