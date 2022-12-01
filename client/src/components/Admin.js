@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { grabAllUsers } from "../api";
+import { updateUser } from "./api";
 
 import "../styles/Admin.css";
 
@@ -51,9 +52,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                   <th>Edit</th>
                 </tr>
               </thead>
-              <tbody>
-                {users.map((user, idx) => UserTable({ user, idx }))}
-              </tbody>
+              {users.map((user, idx) => UserTable({ user, idx }))}
             </table>
           </div>
         )}
@@ -124,21 +123,70 @@ export default Admin;
 
 // TABLE COMPONENTS TO EDIT INDIVIDUAL ITEMS
 const UserTable = ({ user, idx }) => {
-  const editUser = async (e) => {
-    console.log("button clicked: ", e.target.id);
+  const [edit, setEdit] = useState(false);
+  const [username, setusername] = useState(user.username);
+  const [email, setEmail] = useState(user.email);
+  const [admin, setAdmin] = userState(user.admin);
+
+  const editUser = async () => {
+    setEdit(!edit);
+  };
+
+  const submitUser = async () => {
+    const updatedUser = await updatedUser({
+      token,
+      userId: user.id,
+      username,
+      quantity,
+      email,
+    });
+    console.log("USER UPDATED: ", updatedUser);
+    setEdit(!edit);
   };
 
   return (
-    <tr key={idx}>
-      <td>{user.username}</td>
-      <td>{user.email}</td>
-      <td>{user.admin}</td>
-      <td>
-        <button id={user.id} onClick={editUser}>
-          Edit
-        </button>
-      </td>
-    </tr>
+    <tbody key={idx}>
+      <tr key={idx}>
+        <td>{user.username}</td>
+        <td>{user.email}</td>
+        <td>{user.admin}</td>
+        <td>
+          <button id={user.id} onClick={editUser}>
+            Edit
+          </button>
+        </td>
+      </tr>
+      {edit && (
+        <tr>
+          <td>
+            <input
+              type="text"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
+          </td>
+          <td>
+            <input
+              type="text"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </td>
+          <td>
+            <input
+              type="checkbox"
+              value={admin}
+              onChange={() => setAdmin(!admin)}
+            />
+          </td>
+          <td>
+            <button id={user.id} onClick={submitUser}>
+              Edit
+            </button>
+          </td>
+        </tr>
+      )}
+    </tbody>
   );
 };
 

@@ -29,6 +29,26 @@ export const grabAllUsers = async (token) => {
   }
 };
 
+export const updateUser = async ({ token, userId, username, email, admin }) => {
+  try {
+    const response = await patch(`api/users/${userId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        admin,
+      }),
+    });
+    const updatedUser = await response.json();
+    return updatedUser;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // ARTISTS
 export const fetchArtists = async () => {
   try {
