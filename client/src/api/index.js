@@ -121,6 +121,37 @@ export const updateTicket = async ({ token, ticketId, quantity }) => {
   }
 };
 
+export const adminUpdateTicket = async ({
+  token,
+  ticketId,
+  artistId,
+  venueId,
+  date,
+  price,
+  quantity,
+}) => {
+  try {
+    const response = await fetch(`api/tickets/${ticketId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        artistId,
+        venueId,
+        date,
+        price,
+        quantity,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // ORDERS
 export const fetchUsersOrders = async (token, userId) => {
   try {

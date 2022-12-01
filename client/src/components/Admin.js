@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { grabAllUsers } from "../api";
-import { updateUser } from "./api";
+import { updateUser, adminUpdateTicket } from "./api";
 
 import "../styles/Admin.css";
 
@@ -52,7 +52,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                   <th>Edit</th>
                 </tr>
               </thead>
-              {users.map((user, idx) => UserTable({ user, idx }))}
+              {users.map((user, idx) => UserTable({ token, user, idx }))}
             </table>
           </div>
         )}
@@ -70,7 +70,9 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                   <th>Edit</th>
                 </tr>
               </thead>
-              {tickets.map((ticket, idx) => TicketTable({ ticket, idx }))}
+              {tickets.map((ticket, idx) =>
+                TicketTable({ token, ticket, idx })
+              )}
             </table>
           </div>
         )}
@@ -87,7 +89,9 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                   <th>Edit</th>
                 </tr>
               </thead>
-              {artists.map((artist, idx) => ArtistTable({ artist, idx }))}
+              {artists.map((artist, idx) =>
+                ArtistTable({ token, artist, idx })
+              )}
             </table>
           </div>
         )}
@@ -104,7 +108,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                   <th>Edit</th>
                 </tr>
               </thead>
-              {venues.map((venue, idx) => VenuesTable({ venue, idx }))}
+              {venues.map((venue, idx) => VenuesTable({ token, venue, idx }))}
             </table>
           </div>
         )}
@@ -116,18 +120,18 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
 export default Admin;
 
 // TABLE COMPONENTS TO EDIT INDIVIDUAL ITEMS
-const UserTable = ({ user, idx }) => {
+const UserTable = ({ token, user, idx }) => {
   const [edit, setEdit] = useState(false);
   const [username, setUsername] = useState(user.username);
   const [email, setEmail] = useState(user.email);
   const [admin, setAdmin] = userState(user.admin);
 
-  const editUser = async () => {
+  const editUser = () => {
     setEdit(!edit);
   };
 
   const submitUser = async () => {
-    const updatedUser = await updatedUser({
+    const updatedUser = await updateUser({
       token,
       userId: user.id,
       username,
@@ -184,9 +188,30 @@ const UserTable = ({ user, idx }) => {
   );
 };
 
-const TicketTable = ({ ticket, idx }) => {
-  const editTicket = async (e) => {
-    console.log("button clicked: ", e.target.id);
+const TicketTable = ({ token, ticket, idx }) => {
+  const [edit, setEdit] = useState(false);
+  const [artistName, setArtistName] = useState(ticket.artist.name);
+  const [venueName, setVenueName] = useState(ticket.venue.name);
+  const [date, setDate] = useState(ticket.date.slice(0, 10));
+  const [price, setPrice] = userState(ticket.price);
+  const [quantity, setQuantity] = userState(ticket.quantity);
+
+  const editTicket = () => {
+    setEdit(!edit);
+  };
+
+  const submitTicket = async () => {
+    const updatedTicket = await adminUpdateTicket({
+      token,
+      ticketId: ticket.id,
+      artistName,
+      venueName,
+      date,
+      price,
+      quantity,
+    });
+    console.log("TICKET UPDATED: ", updatedTicket);
+    setEdit(!edit);
   };
 
   return (
@@ -203,6 +228,46 @@ const TicketTable = ({ ticket, idx }) => {
           </button>
         </td>
       </tr>
+      {edit && (
+        <tr>
+          <td>
+            <input
+              type="text"
+              value={artistName}
+              onChange={(event) => setArtistName(event.target.value)}
+            />
+          </td>
+          <td>
+            <input
+              type="text"
+              value={venueName}
+              onChange={(event) => setVenueName(event.target.value)}
+            />
+          </td>
+          <td>
+            <input type="text" value={date} onChange={() => setDate(!admin)} />
+          </td>
+          <td>
+            <input
+              type="text"
+              value={price}
+              onChange={() => setPrice(!admin)}
+            />
+          </td>
+          <td>
+            <input
+              type="number"
+              value={quantity}
+              onChange={() => setQuantity(!admin)}
+            />
+          </td>
+          <td>
+            <button id={ticket.id} onClick={submitTicket}>
+              Edit
+            </button>
+          </td>
+        </tr>
+      )}
     </tbody>
   );
 };
