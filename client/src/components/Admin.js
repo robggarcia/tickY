@@ -23,14 +23,6 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
     fetchUsersAdmin();
   }, []);
 
-  const testButton = (event) => {
-    setIsShown(true);
-  };
-
-  const fetchUsersAdmin = async (e) => {
-    setIsShown(true);
-  };
-
   const fetchTicketsAdmin = async (e) => {};
 
   const fetchArtistsAdmin = async (e) => {};
@@ -42,116 +34,132 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
       <h1>Admin Dashboard</h1>
       <div className="admin-container">
         <div className="admin-sidebar">
-          <button onClick={fetchUsersAdmin}>Users</button>
-          {isShown && (
-            <div>
-              <h2>Users button works!</h2>
-            </div>
-          )}
           <button onClick={() => setShowUsers(!showUsers)}>Users</button>
           <button onClick={() => setShowTickets(!showTickets)}>Tickets</button>
           <button onClick={() => setShowArtists(!showArtists)}>Artists</button>
           <button onClick={() => setShowVenues(!showVenues)}>Venues</button>
-          <button onClick={testButton}>Test</button>
-          {isShown && (
-            <div>
-              <h2>Hi</h2>
-            </div>
-          )}
         </div>
         {showUsers && (
           <div className="admin-users">
+            <h2>Users</h2>
             <table>
-              <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Admin</th>
-                <th>Edit</th>
-              </tr>
-              {users.map((user, idx) => {
-                <tr key={idx} id={user.id}>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.admin}</td>
-                  <td>
-                    <button>Edit</button>
-                  </td>
-                </tr>;
-              })}
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Admin</th>
+                  <th>Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user, idx) => {
+                  return (
+                    <tr key={idx} id={user.id}>
+                      <td>{user.username}</td>
+                      <td>{user.email}</td>
+                      <td>{user.admin}</td>
+                      <td>
+                        <button>Edit</button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
         )}
         {showTickets && (
           <div className="admin-tickets">
+            <h2>Tickets</h2>
             <table>
-              <tr>
-                <th>Artist</th>
-                <th>Venue</th>
-                <th>Date</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Edit</th>
-              </tr>
-              {tickets.map((ticket, idx) => {
-                <tr key={idx} id={ticket.id}>
-                  <th>{ticket.artist.name}</th>
-                  <th>{ticket.venue.name}</th>
-                  <th>{ticket.date.slice(0, 10)}</th>
-                  <th>{ticket.price}</th>
-                  <th>{ticket.quantity}</th>
-                  <td>
-                    <button>Edit</button>
-                  </td>
-                </tr>;
-              })}
+              <thead>
+                <tr>
+                  <th>Artist</th>
+                  <th>Venue</th>
+                  <th>Date</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tickets.map((ticket, idx) => {
+                  return (
+                    <tr key={idx} id={ticket.id}>
+                      <td>{ticket.artist.name}</td>
+                      <td>{ticket.venue.name}</td>
+                      <td>{ticket.date.slice(0, 10)}</td>
+                      <td>{ticket.price}</td>
+                      <td>{ticket.quantity}</td>
+                      <td>
+                        <button>Edit</button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
         )}
         {showArtists && (
           <div className="admin-artists">
+            <h2>Artists</h2>
             <table>
-              <tr>
-                <th>Name</th>
-                <th>Genre</th>
-                <th>Image</th>
-                <th>Description</th>
-                <th>Edit</th>
-              </tr>
-              {artists.map((artist, idx) => {
-                <tr key={idx} id={artist.id}>
-                  <th>{artist.name}</th>
-                  <th>{artist.genre}</th>
-                  <th>{artist.image}</th>
-                  <th>{artist.description}</th>
-                  <td>
-                    <button>Edit</button>
-                  </td>
-                </tr>;
-              })}
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Genre</th>
+                  <th>Image</th>
+                  <th>Description</th>
+                  <th>Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {artists.map((artist, idx) => {
+                  return (
+                    <tr key={idx} id={artist.id}>
+                      <td>{artist.name}</td>
+                      <td>{artist.genre}</td>
+                      <td className="image-url">{artist.image}</td>
+                      <td className="description">{artist.description}</td>
+                      <td>
+                        <button>Edit</button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
         )}
         {showVenues && (
           <div className="admin-venues">
+            <h2>Venues</h2>
             <table>
-              <tr>
-                <th>Name</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Capacity</th>
-                <th>Edit</th>
-              </tr>
-              {venues.map((venue, idx) => {
-                <tr key={idx} id={venue.id}>
-                  <th>{venue.name}</th>
-                  <th>{venue.city}</th>
-                  <th>{venue.state}</th>
-                  <th>{venue.capacity}</th>
-                  <td>
-                    <button>Edit</button>
-                  </td>
-                </tr>;
-              })}
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>City</th>
+                  <th>State</th>
+                  <th>Capacity</th>
+                  <th>Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {venues.map((venue, idx) => {
+                  return (
+                    <tr key={idx} id={venue.id}>
+                      <td>{venue.name}</td>
+                      <td>{venue.city}</td>
+                      <td>{venue.state}</td>
+                      <td>{venue.capacity}</td>
+                      <td>
+                        <button>Edit</button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
         )}

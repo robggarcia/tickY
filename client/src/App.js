@@ -146,6 +146,7 @@ function App() {
   return (
     <div className="App">
       <Nav
+        user={user}
         keyword={keyword}
         artists={artists}
         venues={venues}
