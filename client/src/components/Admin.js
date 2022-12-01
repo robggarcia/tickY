@@ -70,9 +70,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                   <th>Edit</th>
                 </tr>
               </thead>
-              <tbody>
-                {tickets.map((ticket, idx) => TicketTable({ ticket, idx }))}
-              </tbody>
+              {tickets.map((ticket, idx) => TicketTable({ ticket, idx }))}
             </table>
           </div>
         )}
@@ -89,9 +87,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                   <th>Edit</th>
                 </tr>
               </thead>
-              <tbody>
-                {artists.map((artist, idx) => ArtistTable({ artist, idx }))}
-              </tbody>
+              {artists.map((artist, idx) => ArtistTable({ artist, idx }))}
             </table>
           </div>
         )}
@@ -108,9 +104,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                   <th>Edit</th>
                 </tr>
               </thead>
-              <tbody>
-                {venues.map((venue, idx) => VenuesTable({ venue, idx }))}
-              </tbody>
+              {venues.map((venue, idx) => VenuesTable({ venue, idx }))}
             </table>
           </div>
         )}
@@ -196,18 +190,20 @@ const TicketTable = ({ ticket, idx }) => {
   };
 
   return (
-    <tr key={idx} id={ticket.id}>
-      <td>{ticket.artist.name}</td>
-      <td>{ticket.venue.name}</td>
-      <td>{ticket.date.slice(0, 10)}</td>
-      <td>{ticket.price}</td>
-      <td>{ticket.quantity}</td>
-      <td>
-        <button id={ticket.id} onClick={editTicket}>
-          Edit
-        </button>
-      </td>
-    </tr>
+    <tbody key={idx}>
+      <tr id={ticket.id}>
+        <td>{ticket.artist.name}</td>
+        <td>{ticket.venue.name}</td>
+        <td>{ticket.date.slice(0, 10)}</td>
+        <td>{ticket.price}</td>
+        <td>{ticket.quantity}</td>
+        <td>
+          <button id={ticket.id} onClick={editTicket}>
+            Edit
+          </button>
+        </td>
+      </tr>
+    </tbody>
   );
 };
 
@@ -217,17 +213,19 @@ const ArtistTable = ({ artist, idx }) => {
   };
 
   return (
-    <tr key={idx} id={artist.id}>
-      <td>{artist.name}</td>
-      <td>{artist.genre}</td>
-      <td className="image-url">{artist.image}</td>
-      <td className="description">{artist.description}</td>
-      <td>
-        <button id={artist.id} onClick={editArtist}>
-          Edit
-        </button>
-      </td>
-    </tr>
+    <tbody key={idx}>
+      <tr id={artist.id}>
+        <td>{artist.name}</td>
+        <td>{artist.genre}</td>
+        <td className="image-url">{artist.image}</td>
+        <td className="description">{artist.description}</td>
+        <td>
+          <button id={artist.id} onClick={editArtist}>
+            Edit
+          </button>
+        </td>
+      </tr>
+    </tbody>
   );
 };
 
@@ -237,16 +235,18 @@ const VenuesTable = ({ venue, idx }) => {
   };
 
   return (
-    <tr key={idx} id={venue.id}>
-      <td>{venue.name}</td>
-      <td>{venue.city}</td>
-      <td>{venue.state}</td>
-      <td>{venue.capacity}</td>
-      <td>
-        <button id={venue.id} onClick={editVenue}>
-          Edit
-        </button>
-      </td>
-    </tr>
+    <tbody>
+      <tr key={idx} id={venue.id}>
+        <td>{venue.name}</td>
+        <td>{venue.city}</td>
+        <td>{venue.state}</td>
+        <td>{venue.capacity}</td>
+        <td>
+          <button id={venue.id} onClick={editVenue}>
+            Edit
+          </button>
+        </td>
+      </tr>
+    </tbody>
   );
 };
