@@ -52,18 +52,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user, idx) => {
-                  return (
-                    <tr key={idx} id={user.id}>
-                      <td>{user.username}</td>
-                      <td>{user.email}</td>
-                      <td>{user.admin}</td>
-                      <td>
-                        <button>Edit</button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {users.map((user, idx) => UserTable({ user, idx }))}
               </tbody>
             </table>
           </div>
@@ -83,20 +72,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                 </tr>
               </thead>
               <tbody>
-                {tickets.map((ticket, idx) => {
-                  return (
-                    <tr key={idx} id={ticket.id}>
-                      <td>{ticket.artist.name}</td>
-                      <td>{ticket.venue.name}</td>
-                      <td>{ticket.date.slice(0, 10)}</td>
-                      <td>{ticket.price}</td>
-                      <td>{ticket.quantity}</td>
-                      <td>
-                        <button>Edit</button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {tickets.map((ticket, idx) => TicketTable({ ticket, idx }))}
               </tbody>
             </table>
           </div>
@@ -115,19 +91,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                 </tr>
               </thead>
               <tbody>
-                {artists.map((artist, idx) => {
-                  return (
-                    <tr key={idx} id={artist.id}>
-                      <td>{artist.name}</td>
-                      <td>{artist.genre}</td>
-                      <td className="image-url">{artist.image}</td>
-                      <td className="description">{artist.description}</td>
-                      <td>
-                        <button>Edit</button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {artists.map((artist, idx) => ArtistTable({ artist, idx }))}
               </tbody>
             </table>
           </div>
@@ -146,19 +110,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                 </tr>
               </thead>
               <tbody>
-                {venues.map((venue, idx) => {
-                  return (
-                    <tr key={idx} id={venue.id}>
-                      <td>{venue.name}</td>
-                      <td>{venue.city}</td>
-                      <td>{venue.state}</td>
-                      <td>{venue.capacity}</td>
-                      <td>
-                        <button>Edit</button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {venues.map((venue, idx) => VenuesTable({ venue, idx }))}
               </tbody>
             </table>
           </div>
@@ -169,3 +121,84 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
 };
 
 export default Admin;
+
+// TABLE COMPONENTS TO EDIT INDIVIDUAL ITEMS
+const UserTable = ({ user, idx }) => {
+  const editUser = async (e) => {
+    console.log("button clicked: ", e.target.id);
+  };
+
+  return (
+    <tr key={idx}>
+      <td>{user.username}</td>
+      <td>{user.email}</td>
+      <td>{user.admin}</td>
+      <td>
+        <button id={user.id} onClick={editUser}>
+          Edit
+        </button>
+      </td>
+    </tr>
+  );
+};
+
+const TicketTable = ({ ticket, idx }) => {
+  const editTicket = async (e) => {
+    console.log("button clicked: ", e.target.id);
+  };
+
+  return (
+    <tr key={idx} id={ticket.id}>
+      <td>{ticket.artist.name}</td>
+      <td>{ticket.venue.name}</td>
+      <td>{ticket.date.slice(0, 10)}</td>
+      <td>{ticket.price}</td>
+      <td>{ticket.quantity}</td>
+      <td>
+        <button id={ticket.id} onClick={editTicket}>
+          Edit
+        </button>
+      </td>
+    </tr>
+  );
+};
+
+const ArtistTable = ({ artist, idx }) => {
+  const editArtist = async (e) => {
+    console.log("button clicked: ", e.target.id);
+  };
+
+  return (
+    <tr key={idx} id={artist.id}>
+      <td>{artist.name}</td>
+      <td>{artist.genre}</td>
+      <td className="image-url">{artist.image}</td>
+      <td className="description">{artist.description}</td>
+      <td>
+        <button id={artist.id} onClick={editArtist}>
+          Edit
+        </button>
+      </td>
+    </tr>
+  );
+};
+
+const VenuesTable = ({ venue, idx }) => {
+  const editVenue = async (e) => {
+    console.log("button clicked: ", e.target.id);
+  };
+
+  return (
+    <tr key={idx} id={venue.id}>
+      <td>{venue.name}</td>
+      <td>{venue.city}</td>
+      <td>{venue.state}</td>
+      <td>{venue.capacity}</td>
+      <td>
+        <button id={venue.id} onClick={editVenue}>
+          Edit
+        </button>
+      </td>
+    </tr>
+  );
+};
