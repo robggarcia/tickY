@@ -46,7 +46,7 @@ const Register = ({ cart, setToken, token }) => {
       const data = await register.json();
       console.log(data);
       if (data.error) {
-        setError(data.error);
+        setError(data.message);
       } else {
         setToken(data.token);
         localStorage.setItem("token", data.token);

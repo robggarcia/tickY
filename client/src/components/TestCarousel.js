@@ -1,5 +1,5 @@
 import Carousel from "react-bootstrap/Carousel";
-
+import "../App.css";
 const TestCarousel = () => {
   return (
     <>
@@ -9,37 +9,24 @@ const TestCarousel = () => {
             <div className="carouselImg">
               <img
                 className="d-block w-100"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNSjz4D9d6d--7uxAwRUG3pjD71yNDGu03Nw&usqp=CAU"
+                src="https://media.vsstatic.com/image/upload/f_auto,q_auto/hero/category/68-other-concerts/other-concerts-tickets-1.jpg"
                 // src="holder.js/800x400?text=Second slide&bg=282c34"
               />
             </div>
-            Test caption 1
+            <h3>No Fees. Just Easy Tickets.</h3>
           </Carousel.Item>
           <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src="holder.js/800x400?text=Second slide&bg=282c34"
-              alt="Second slide"
-            />
-            <div className="carouselCaption">
-              <Carousel.Caption>
-                <h3>2 slide label TESffffffT</h3>
-                <p>Here we can add the first sentence.</p>
-              </Carousel.Caption>
+            <div classname="carouselImg">
+              <img
+                className="d-block ml-1 w-75 "
+                src="https://www.jonesaroundtheworld.com/wp-content/uploads/2019/05/Electric-Zoo-New-York-Electronic-Music-Festival-2021.jpeg"
+                // src="holder.js/800x400?text=Second slide&bg=282c34"
+              />
             </div>
-          </Carousel.Item>
-          <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src="holder.js/800x400?text=Third slide&bg=20232a"
-              alt="Third slide"
-            />
-            <div className="carouselCaption">
-              <Carousel.Caption>
-                <h3>3 slide label TESffffffT</h3>
-                <p>Here we can add the first sentence.</p>
-              </Carousel.Caption>
-            </div>
+            <h3>
+              All tickets are 100% guaranteed to be valid. If there's ever an
+              issue, we'll replace them on the spot.
+            </h3>
           </Carousel.Item>
         </Carousel>
       </div>
