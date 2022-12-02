@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { grabAllUsers } from "../api";
+import { adminUpdateVenue, grabAllUsers } from "../api";
 import { updateUser, adminUpdateTicket, adminUpdateArtist } from "../api";
 
 import "../styles/Admin.css";
@@ -58,16 +58,16 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
     setEditUser(!editUser);
   };
 
-  // EDIT TICKETS  -- uncomment when ready to test
+  // EDIT TICKETS
   const canEditTicket = async (e) => {
     const ticket = tickets.find((ticket) => ticket.id === +e.target.id);
     console.log("TICKET FOUND: ", ticket);
     setTicketId(ticket.id);
-    setTicketArtistName(ticket.artistName);
-    setTicketVenueName(ticket.venueName);
-    setDate(ticket.date);
+    setTicketArtistName(ticket.artist.name);
+    setTicketVenueName(ticket.venue.name);
+    setDate(ticket.date.slice(0, 10));
     setPrice(ticket.price);
-    setQuantity(ticket.quantitiy);
+    setQuantity(ticket.quantity);
     setEditTicket(!editTicket);
     console.log("TICKET ID: ", e.target.id);
   };
@@ -142,7 +142,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
     setEditArtist(!editArtist);
   };
 
-  /*  // EDIT VENUES  -- uncomment when ready to test
+  // EDIT VENUES  -- uncomment when ready to test
   const canEditVenues = async (e) => {
     const venue = venues.find((venue) => venue.id === +e.target.id);
     console.log("VENUE FOUND: ", venue);
@@ -161,8 +161,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
   const [capacity, setCapacity] = useState("");
   const [editVenue, setEditVenue] = useState(false);
   const submitVenue = async () => {
-    const venue = venues.find((venue) => venue.id === +e.target.id);
-
+    const venue = venues.find((venue) => venue.id === venueId);
     const inputFields = {
       token,
       venueId,
@@ -172,14 +171,14 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
       capacity,
     };
     if (venueName === venue.name) delete inputFields.name;
-    if (city === artist.city) delete inputFields.city;
-    if (state === user.state) delete inputFields.state;
-    if (capacity === user.capacity) delete inputFields.capacity;
+    if (city === venue.city) delete inputFields.city;
+    if (state === venue.state) delete inputFields.state;
+    if (capacity === venue.capacity) delete inputFields.capacity;
     console.log("ITEMS TO CHANGE: ", inputFields);
     const updatedVenue = await adminUpdateVenue(inputFields);
     console.log("VENUE UPDATED: ", updatedVenue);
-    setEditVenue(!editVenuesetEditVenue);
-  }; */
+    setEditVenue(!editVenue);
+  };
 
   return (
     <div className="admin">
@@ -297,7 +296,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                   </td>
                   <td>
                     <button id={ticketId} onClick={submitTicket}>
-                      Edit
+                      Submit
                     </button>
                   </td>
                 </tr>
@@ -353,7 +352,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                   </td>
                   <td>
                     <button id={artistId} onClick={submitArtist}>
-                      Edit
+                      Submit
                     </button>
                   </td>
                 </tr>
@@ -374,7 +373,46 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                   <th>Edit</th>
                 </tr>
               </thead>
-              {venues.map((venue, idx) => VenuesTable({ token, venue, idx }))}
+              {venues.map((venue, idx) =>
+                VenuesTable({ token, venue, idx, canEditVenues })
+              )}
+              {editVenue && (
+                <tr>
+                  <td>
+                    <input
+                      type="text"
+                      value={venueName}
+                      onChange={(event) => setVenueName(event.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={city}
+                      onChange={(event) => setCity(event.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={state}
+                      onChange={(event) => setState(event.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={capacity}
+                      onChange={(event) => setCapacity(event.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <button id={venueId} onClick={submitVenue}>
+                      Submit
+                    </button>
+                  </td>
+                </tr>
+              )}
             </table>
           </div>
         )}
@@ -382,8 +420,6 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
     </div>
   );
 };
-
-export default Admin;
 
 // TABLE COMPONENTS TO EDIT INDIVIDUAL ITEMS
 const UserTable = ({ token, user, idx, canEditUser }) => {
@@ -404,31 +440,6 @@ const UserTable = ({ token, user, idx, canEditUser }) => {
 };
 
 const TicketTable = ({ token, ticket, idx, canEditTicket }) => {
-  // const [edit, setEdit] = useState(false);
-  /* const [artistName, setArtistName] = useState(ticket.artist.name);
-  const [venueName, setVenueName] = useState(ticket.venue.name);
-  const [date, setDate] = useState(ticket.date.slice(0, 10));
-  const [price, setPrice] = useState(ticket.price);
-  const [quantity, setQuantity] = useState(ticket.quantity); */
-
-  // const editTicket = () => {
-  //   setEdit(!edit);
-  // };
-
-  /*   const submitTicket = async () => {
-    const updatedTicket = await adminUpdateTicket({
-      token,
-      ticketId: ticket.id,
-      artistName,
-      venueName,
-      date,
-      price,
-      quantity,
-    });
-    console.log("TICKET UPDATED: ", updatedTicket);
-    setEdit(!edit);
-  }; */
-
   return (
     <tbody key={idx}>
       <tr id={ticket.id}>
@@ -443,78 +454,11 @@ const TicketTable = ({ token, ticket, idx, canEditTicket }) => {
           </button>
         </td>
       </tr>
-      {/* {edit && (
-        <tr>
-          <td>
-            <input
-              type="text"
-              value={artistName}
-              onChange={(event) => setArtistName(event.target.value)}
-            />
-          </td>
-          <td>
-            <input
-              type="text"
-              value={venueName}
-              onChange={(event) => setVenueName(event.target.value)}
-            />
-          </td>
-          <td>
-            <input
-              type="text"
-              value={date}
-              onChange={(event) => setDate(event.target.value)}
-            />
-          </td>
-          <td>
-            <input
-              type="text"
-              value={price}
-              onChange={(event) => setPrice(event.target.value)}
-            />
-          </td>
-          <td>
-            <input
-              type="number"
-              value={quantity}
-              onChange={(event) => setQuantity(event.target.value)}
-            />
-          </td>
-          <td>
-            <button id={ticket.id} onClick={submitTicket}>
-              Edit
-            </button>
-          </td>
-        </tr>
-      )} */}
     </tbody>
   );
 };
 
 const ArtistTable = ({ token, artist, idx, canEditArtist }) => {
-  // const [edit, setEdit] = useState(false);
-  /* const [name, setName] = useState(artist.name);
-  const [genre, setGenre] = useState(artist.genre);
-  const [image, setImage] = useState(artist.image);
-  const [description, setDescription] = useState(artist.description); */
-
-  // const editArtist = () => {
-  //   setEdit(!edit);
-  // };
-
-  /*   const submitArtist = async () => {
-    const updatedArtist = await updateArtist({
-      token,
-      artistId: artist.id,
-      name,
-      genre,
-      image,
-      description,
-    });
-    console.log("ARTIST UPDATED: ", updatedArtist);
-    setEdit(!edit);
-  }; */
-
   return (
     <tbody key={idx}>
       <tr id={artist.id}>
@@ -528,61 +472,20 @@ const ArtistTable = ({ token, artist, idx, canEditArtist }) => {
           </button>
         </td>
       </tr>
-      {/* {edit && (
-        <tr>
-          <td>
-            <input
-              type="text"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-            />
-          </td>
-          <td>
-            <input
-              type="text"
-              value={genre}
-              onChange={(event) => setGenre(event.target.value)}
-            />
-          </td>
-          <td>
-            <input
-              type="text"
-              value={image}
-              onChange={(event) => setImage(event.target.value)}
-            />
-          </td>
-          <td>
-            <input
-              type="text"
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-            />
-          </td>
-          <td>
-            <button id={artist.id} onClick={submitArtist}>
-              Edit
-            </button>
-          </td>
-        </tr>
-      )} */}
     </tbody>
   );
 };
 
-const VenuesTable = ({ token, venue, idx }) => {
-  const editVenue = async (e) => {
-    console.log("button clicked: ", e.target.id);
-  };
-
+const VenuesTable = ({ token, venue, idx, canEditVenues }) => {
   return (
-    <tbody>
+    <tbody key={idx}>
       <tr key={idx} id={venue.id}>
         <td>{venue.name}</td>
         <td>{venue.city}</td>
         <td>{venue.state}</td>
         <td>{venue.capacity}</td>
         <td>
-          <button id={venue.id} onClick={editVenue}>
+          <button id={venue.id} onClick={canEditVenues}>
             Edit
           </button>
         </td>
@@ -590,4 +493,5 @@ const VenuesTable = ({ token, venue, idx }) => {
     </tbody>
   );
 };
-// export default Admin;
+
+export default Admin;

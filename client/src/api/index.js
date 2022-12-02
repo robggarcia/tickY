@@ -128,6 +128,23 @@ export const fetchVenues = async () => {
   }
 };
 
+export const adminUpdateVenue = async ({ token, venueId, ...fields }) => {
+  try {
+    const response = await fetch(`api/venues/${venueId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(fields),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // TICKETS
 export const fetchTickets = async () => {
   try {
