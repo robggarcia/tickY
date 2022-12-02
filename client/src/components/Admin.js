@@ -1,14 +1,24 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { adminUpdateVenue, grabAllUsers } from "../api";
+import {
+  adminUpdateVenue,
+  fetchArtists,
+  fetchTickets,
+  fetchVenues,
+  grabAllUsers,
+} from "../api";
 import { updateUser, adminUpdateTicket, adminUpdateArtist } from "../api";
 
 import "../styles/Admin.css";
 
-const Admin = ({ user, token, venues, artists, tickets }) => {
+const Admin = ({ user, token }) => {
   const [isShown, setIsShown] = useState(false);
 
   const [users, setUsers] = useState(null);
+  const [venues, setVenues] = useState(null);
+  const [artists, setArtists] = useState(null);
+  const [tickets, setTickets] = useState(null);
+
   const [editUser, setEditUser] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
   const [showTickets, setShowTickets] = useState(false);
@@ -21,14 +31,28 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
     setUsers(allUsers);
   };
 
-  const fetchTicketsAdmin = async (e) => {};
+  const getArtists = async () => {
+    const data = await fetchArtists();
+    // console.log("getArtists: ", data);
+    setArtists(data);
+  };
+  const getVenues = async () => {
+    const data = await fetchVenues();
+    // console.log("getVenues: ", data);
+    setVenues(data);
+  };
 
-  const fetchArtistsAdmin = async (e) => {};
-
-  const fetchVenuesAdmin = async (e) => {};
+  const getTickets = async () => {
+    const data = await fetchTickets();
+    // console.log("getTickets: ", data);
+    setTickets(data);
+  };
 
   useEffect(() => {
     fetchUsersAdmin();
+    getArtists();
+    getVenues();
+    getTickets();
   }, []);
 
   // EDIT USER
