@@ -27,6 +27,7 @@ import {
   Register,
   Venues,
 } from "./components";
+import Admin from "./components/Admin";
 // import Admin from "./components/Admin";
 
 function App() {
@@ -263,7 +264,7 @@ function App() {
           path="/profile"
           element={<Profile user={user} myOrders={myOrders} />}
         />
-        {/* <Route
+        <Route
           path="/admin"
           element={
             <Admin
@@ -274,7 +275,7 @@ function App() {
               token={token}
             />
           }
-        /> */}
+        />
       </Routes>
       <Modal displayMessage={displayMessage} success={success} />
     </div>
