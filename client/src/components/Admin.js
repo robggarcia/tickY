@@ -44,12 +44,13 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
   const [admin, setAdmin] = useState("");
 
   const submitUser = async () => {
-    const updatedUser = await updateUser({
-      token,
-      userId,
-      username,
-      email,
-    });
+    const user = users.find((user) => user.id === userId);
+    const inputFields = { token, userId, username, email, admin };
+    if (username === user.username) delete inputFields.username;
+    if (email === user.email) delete inputFields.email;
+    if (admin === user.admin) delete inputFields.admin;
+    console.log("ITEMS TO CHANGE: ", inputFields);
+    const updatedUser = await updateUser(inputFields);
     console.log("USER UPDATED: ", updatedUser);
     setEditUser(!editUser);
   };
