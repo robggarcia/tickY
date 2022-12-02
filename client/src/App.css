@@ -157,15 +157,19 @@ body {
 }
 
 .carousel{
-  margin-left: 20%;
-  height: 400px;
+  margin-left: 10%;
+  height: 500px;
   width: 500px;
   color: black;
   /* background-color: lightskyblue; */
 }
 
+.test2{
+  height: 300px;
+  width: 500px;
+}
 .carouselImg{
-  height: 200px;
+  height: 300px;
   width: 200px;
 }
 .img{
