@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { grabAllUsers } from "../api";
-import { updateUser, adminUpdateTicket, updateArtist } from "../api";
+import { updateUser, adminUpdateTicket, adminUpdateArtist } from "../api";
 
 import "../styles/Admin.css";
 
@@ -14,9 +14,6 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
   const [showTickets, setShowTickets] = useState(false);
   const [showArtists, setShowArtists] = useState(false);
   const [showVenues, setShowVenues] = useState(false);
-  //   const fetchUsersAdmin = async (e) => {
-  //     setIsShown(true);
-  //   };
 
   const fetchUsersAdmin = async () => {
     const allUsers = await grabAllUsers(token);
@@ -24,10 +21,17 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
     setUsers(allUsers);
   };
 
+  const fetchTicketsAdmin = async (e) => {};
+
+  const fetchArtistsAdmin = async (e) => {};
+
+  const fetchVenuesAdmin = async (e) => {};
+
   useEffect(() => {
     fetchUsersAdmin();
   }, []);
 
+  // EDIT USER
   const canEditUser = async (e) => {
     const user = users.find((user) => user.id === +e.target.id);
     console.log("USER FOUND: ", user);
@@ -42,7 +46,6 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [admin, setAdmin] = useState("");
-
   const submitUser = async () => {
     const user = users.find((user) => user.id === userId);
     const inputFields = { token, userId, username, email, admin };
@@ -55,11 +58,128 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
     setEditUser(!editUser);
   };
 
-  const fetchTicketsAdmin = async (e) => {};
+  /*  // EDIT TICKETS  -- uncomment when ready to test
+  const canEditTicket = async (e) => {
+    const ticket = tickets.find((ticket) => ticket.id === +e.target.id);
+    console.log("TICKET FOUND: ", ticket);
+    setTicketId(ticket.id);
+    setTicketArtistName(ticket.artistName);
+    setTicketVenueName(ticket.venueName);
+    setDate(ticket.date);
+    setPrice(ticket.price);
+    setQuantity(ticket.quantitiy);
+    setEditTicket(!editTicket);
+    console.log("TICKET ID: ", e.target.id);
+  };
+  const [ticketId, setTicketId] = useState("");
+  const [ticketArtistName, setTicketArtistName] = useState("");
+  const [ticketVenueName, setTicketVenueName] = useState("");
+  const [date, setDate] = useState("");
+  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [editTicket, setEditTicket] = useState(false);
+  const submitTicket = async () => {
+    const ticket = tickets.find((ticket) => ticket.id === +e.target.id);
+    const artistId = artists.find(
+      (artist) => (artist.name = ticketArtistName)
+    ).id;
+    const venueId = venues.find((venue) => (venue.name = ticketVenueName)).id;
+    const inputFields = {
+      token,
+      ticketId,
+      artistId,
+      venueId,
+      date,
+      price,
+      quantity,
+    };
+    if (artistId === ticket.artistId) delete inputFields.artistId;
+    if (venueId === ticket.venueId) delete inputFields.venueId;
+    if (date === user.date) delete inputFields.date;
+    if (price === user.price) delete inputFields.price;
+    if (quantity === user.quantity) delete inputFields.quantity;
+    console.log("ITEMS TO CHANGE: ", inputFields);
+    const updatedTicket = await adminUpdateTicket(inputFields);
+    console.log("TICKET UPDATED: ", updatedTicket);
+    setEditTicket(!editTicket);
+  }; */
 
-  const fetchArtistsAdmin = async (e) => {};
+  /*   // EDIT ARTISTS  -- uncomment when ready to test
+  const canEditArtist = async (e) => {
+    const artist = artists.find((artist) => artist.id === +e.target.id);
+    console.log("ARTIST FOUND: ", artist);
+    setArtistId(artist.id);
+    setArtistName(artist.name);
+    setGenre(artist.genre);
+    setImage(artist.image);
+    setDescription(artist.description);
+    setEditArtist(!editArtist);
+    console.log("TICKET ID: ", e.target.id);
+  };
+  const [artistId, setArtistId] = useState("");
+  const [artistName, setArtistName] = useState("");
+  const [genre, setGenre] = useState("");
+  const [image, setImage] = useState("");
+  const [description, setDescription] = useState("");
+  const [editArtist, setEditArtist] = useState("");
+  const submitArtist = async () => {
+    const artist = artists.find((artist) => artist.id === +e.target.id);
+    const inputFields = {
+      token,
+      artistId,
+      name: artistName,
+      genre,
+      image,
+      description,
+    };
+    if (artistName === artist.name) delete inputFields.name;
+    if (genre === artist.genre) delete inputFields.genre;
+    if (image === user.image) delete inputFields.image;
+    if (description === user.description) delete inputFields.description;
+    console.log("ITEMS TO CHANGE: ", inputFields);
+    const updatedArtist = await adminUpdateArtist(inputFields);
+    console.log("ARTIST UPDATED: ", updatedArtist);
+    setEditArtist(!editArtist);
+  }; */
 
-  const fetchVenuesAdmin = async (e) => {};
+  /*  // EDIT VENUES  -- uncomment when ready to test
+  const canEditVenues = async (e) => {
+    const venue = venues.find((venue) => venue.id === +e.target.id);
+    console.log("VENUE FOUND: ", venue);
+    setVenueId(venue.id);
+    setVenueName(venue.name);
+    setCity(venue.city);
+    setState(venue.state);
+    setCapacity(venue.capacity);
+    setEditVenue(!editVenue);
+    console.log("VENUE ID: ", e.target.id);
+  };
+  const [venueId, setVenueId] = useState("");
+  const [venueName, setVenueName] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [editVenue, setEditVenue] = useState("");
+  const submitVenue = async () => {
+    const venue = venues.find((venue) => venue.id === +e.target.id);
+
+    const inputFields = {
+      token,
+      venueId,
+      name: venueName,
+      city,
+      state,
+      capacity,
+    };
+    if (venueName === venue.name) delete inputFields.name;
+    if (city === artist.city) delete inputFields.city;
+    if (state === user.state) delete inputFields.state;
+    if (capacity === user.capacity) delete inputFields.capacity;
+    console.log("ITEMS TO CHANGE: ", inputFields);
+    const updatedVenue = await adminUpdateVenue(inputFields);
+    console.log("VENUE UPDATED: ", updatedVenue);
+    setEditVenue(!editVenuesetEditVenue);
+  }; */
 
   return (
     <div className="admin">

@@ -95,6 +95,23 @@ export const updateArtist = async ({
   }
 };
 
+export const adminUpdateArtist = async ({ token, artistId, ...fields }) => {
+  try {
+    const response = await fetch(`api/artists/${artistId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(fields),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // VENUES
 export const fetchVenues = async () => {
   try {
@@ -151,15 +168,7 @@ export const updateTicket = async ({ token, ticketId, quantity }) => {
   }
 };
 
-export const adminUpdateTicket = async ({
-  token,
-  ticketId,
-  artistId,
-  venueId,
-  date,
-  price,
-  quantity,
-}) => {
+export const adminUpdateTicket = async ({ token, ticketId, ...fields }) => {
   try {
     const response = await fetch(`api/tickets/${ticketId}`, {
       method: "PATCH",
@@ -167,13 +176,7 @@ export const adminUpdateTicket = async ({
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        artistId,
-        venueId,
-        date,
-        price,
-        quantity,
-      }),
+      body: JSON.stringify(fields),
     });
     const data = await response.json();
     return data;
