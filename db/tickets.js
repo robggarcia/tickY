@@ -80,8 +80,9 @@ async function getTicketById(id) {
     `,
       [id]
     );
-    ticket = await attachArtistAndVenueToTicket(ticket);
-    console.log("GET TICKET BY ID: ", ticket);
+    if (ticket) {
+      ticket = await attachArtistAndVenueToTicket(ticket);
+    }
     return ticket;
   } catch (error) {
     console.error("Error in getTicketById");

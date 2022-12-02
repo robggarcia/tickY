@@ -1,0 +1,12 @@
+.admin {
+  grid-row: 2;
+}
+
+.admin-container {
+  display: flex;
+}
+
+.admin-sidebar {
+  display: flex;
+  flex-direction: column;
+}

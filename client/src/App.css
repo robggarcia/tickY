@@ -11,8 +11,8 @@ body {
   width: 90vw;
   display: grid;
   grid-auto-rows: 8vh 92vh;
-  margin: auto;
   min-width: 600px;
+  margin: auto;
 }
 
 .login, .register {
@@ -154,4 +154,27 @@ body {
   top: 50px;
   left: 100px;
   opacity: 95%;
+}
+
+.carousel{
+  height: 600px;
+  width: 700px;
+  color: black;
+  background-color: lightskyblue;
+}
+
+/* .carouselCaption{
+  padding-top: 20px;
+  color: black;
+} */
+.carouselImg{
+  height: 300px;
+  width: 300px;
+}
+
+@media only screen and (min-width : 1200px) {
+  .carouselCaption
+  {
+    top: 46%;
+  }
 }

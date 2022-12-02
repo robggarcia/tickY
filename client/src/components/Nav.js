@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../styles/Nav.css";
 
 const Nav = ({
+  user,
   keyword,
   setKeyword,
   setSuggest,
@@ -15,12 +16,16 @@ const Nav = ({
   token,
   setCart,
   venues,
+  cart,
 }) => {
-  // why would this be clearing out the token and user?
-  /*  useEffect(() => {
-    setToken("");
-    setUser("");
-  }, []); */
+  const [admin, setAdmin] = useState(false);
+
+  useEffect(() => {
+    console.log("NAV EFFECT CALLED: ", user);
+    if (user) {
+      setAdmin(user.admin);
+    }
+  }, [user]);
 
   const handleLogOut = () => {
     // clear the current cart when logging out
@@ -31,7 +36,7 @@ const Nav = ({
   };
 
   const handleInput = (e) => {
-    setKeyword(e.target.value);
+    setKeyword(e.target);
     console.log("KEYWORD: ", keyword);
   };
 
@@ -89,9 +94,14 @@ const Nav = ({
             Login
           </Link>
         )}
-        {token && (
+        {token && !admin && (
           <Link className="link" to="/profile">
             Profile
+          </Link>
+        )}
+        {token && admin && (
+          <Link className="link" to="/admin">
+            Admin
           </Link>
         )}
         {token && (
@@ -100,6 +110,7 @@ const Nav = ({
           </Link>
         )}
       </div>
+
       {suggest.length > 0 && (
         <div className="suggested">
           <h4>Suggested Artists: </h4>
@@ -136,6 +147,11 @@ const Nav = ({
               );
             })}
           </div>
+        </div>
+      )}
+      {cart.length > 0 && (
+        <div className="cart-bubble-container">
+          <p className="cart-bubble">{cart.length}</p>
         </div>
       )}
     </div>

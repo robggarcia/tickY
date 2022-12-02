@@ -1,10 +1,9 @@
 .navbar {
     grid-row: 1;
     display: flex;
-    margin-top: 20px;
+    margin: 20px 0;
     justify-items: center;
     align-items: center;
-    margin-bottom: 20px;
 }
 
 .navbar .links {
@@ -32,7 +31,6 @@
 
 .logo-container {
     display: flex;
-    align-items: center;
 }
 
 .logo {
@@ -40,7 +38,7 @@
     font-size: 50px;
     padding-left: 15px;
     padding-right: 5px;
-    background-color: lightblue;
+    background-color: #add8e6;
     line-height: 50px;
     width: fit-content;
 }
@@ -51,4 +49,22 @@
     border-right: 22px solid transparent;
     border-top: 50px solid lightblue;
 
+}
+
+.cart-bubble-container {
+    position: relative;
+    right: 210px;
+    top: -20px;
+    display: flex;
+    height: 25px;
+    width: 25px;
+    justify-content: center;
+    border: 2px solid black;
+    border-radius: 50%;
+
+}
+
+.cart-bubble {
+
+    font-weight: bold;
 }

@@ -2,7 +2,7 @@ require("dotenv").config();
 const request = require("supertest");
 const { app, appServer } = require("../..");
 const { createTicket } = require("../../db/tickets");
-const { TicketNotFoundError } = require("../../errors");
+const { TicketNotFoundError, ExistingTicketError } = require("../../errors");
 const {
   expectNotToBeError,
   expectToHaveErrorMessage,
@@ -27,7 +27,7 @@ describe("api/tickets", () => {
       const fakeTicket = fakeTickets[0];
       const response = await request(app).get(`/api/tickets`);
       expectNotToBeError(response.body);
-      expect(response.body).toEqual(arrayContaining([fakeTicket]));
+      expect(response.body[0].artistId).toEqual(fakeTicket.artistId);
     });
   });
 
@@ -35,7 +35,7 @@ describe("api/tickets", () => {
   describe("GET api/tickets/:ticketId", () => {
     it("returns an error if the ticket Id does not exist", async () => {
       const response = await request(app).get(`/api/tickets/1000`);
-      expectToHaveErrorMessage(response.body, TicketNotFoundError(10000));
+      expectToHaveErrorMessage(response.body, TicketNotFoundError(1000));
     });
     it("includes the venue data that matches venueId", async () => {
       const { fakeTickets } = await createFakeTicketWithArtistAndVenue();
@@ -56,7 +56,7 @@ describe("api/tickets", () => {
   });
 
   // POST /api/tickets
-  describe("POST api/tickets", () => {
+  describe("POST api/tickets (**)", () => {
     it("admin is able to create a new ticket", async () => {
       const { token } = await createFakeAdmin();
       const fakeArtist = await createFakeArtist();
@@ -64,12 +64,12 @@ describe("api/tickets", () => {
       const newTicketData = {
         artistId: fakeArtist.id,
         venueId: fakeVenue.id,
-        date: "02-22-2024",
-        price: 40.0,
+        date: "2024-02-22T05:00:00.000Z",
+        price: "40.00",
         quantity: 100,
       };
       const response = await request(app)
-        .post(`api/tickets`)
+        .post(`/api/tickets`)
         .set("Authorization", `Bearer ${token}`)
         .send(newTicketData);
       expectNotToBeError(response.body);
@@ -88,7 +88,7 @@ describe("api/tickets", () => {
       };
       await createTicket(newTicketData);
       const response = await request(app)
-        .post(`api/tickets`)
+        .post(`/api/tickets`)
         .set("Authorization", `Bearer ${token}`)
         .send(newTicketData);
       expectToHaveErrorMessage(
@@ -97,6 +97,7 @@ describe("api/tickets", () => {
       );
     });
   });
+
   // PATCH /api/tickets/:ticketId
   describe("PATCH api/tickets/:ticketId", () => {
     it("admin is able to update a ticket", async () => {
@@ -106,10 +107,10 @@ describe("api/tickets", () => {
       const newFakeArtist = await createFakeArtist();
       const fakeTicketData = {
         artistId: newFakeArtist.id,
-        price: 1.0,
+        price: "1.00",
       };
       const response = await request(app)
-        .patch(`api/tickets/${fakeTicket.id}`)
+        .patch(`/api/tickets/${fakeTicket.id}`)
         .set("Authorization", `Bearer ${token}`)
         .send(fakeTicketData);
       expectNotToBeError(response.body);
@@ -123,11 +124,11 @@ describe("api/tickets", () => {
         price: 1.0,
       };
       const response = await request(app)
-        .patch(`/api/orders/10000`)
+        .patch(`/api/tickets/1000`)
         .set("Authorization", `Bearer ${token}`)
         .send(fakeTicketData);
 
-      expectToHaveErrorMessage(response.body, TicketNotFoundError(10000));
+      expectToHaveErrorMessage(response.body, TicketNotFoundError(1000));
     });
     it("returns an error when the updated ticket information already exists", async () => {
       const { token } = await createFakeAdmin();
@@ -140,7 +141,7 @@ describe("api/tickets", () => {
         date: fakeTicket.date,
       };
       const response = await request(app)
-        .patch(`api/tickets/${secondFakeTicket.id}`)
+        .patch(`/api/tickets/${secondFakeTicket.id}`)
         .set("Authorization", `Bearer ${token}`)
         .send(fakeTicketData);
       expectToHaveErrorMessage(
@@ -156,7 +157,7 @@ describe("api/tickets", () => {
       const { fakeTickets } = await createFakeTicketWithArtistAndVenue();
       const fakeTicket = fakeTickets[0];
       const response = await request(app)
-        .delete(`api/tickets/${fakeTicket.id}`)
+        .delete(`/api/tickets/${fakeTicket.id}`)
         .set("Authorization", `Bearer ${token}`);
       expectNotToBeError(response.body);
       expect(response.body).toEqual(arrayContaining([fakeTicket]));
@@ -167,7 +168,7 @@ describe("api/tickets", () => {
       const fakeTicket = fakeTickets[0];
 
       const response = await request(app)
-        .delete(`api/tickets/1000`)
+        .delete(`/api/tickets/1000`)
         .set("Authorization", `Bearer ${token}`);
       expectToHaveErrorMessage(response.body, TicketNotFoundError(1000));
     });

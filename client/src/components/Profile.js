@@ -1,19 +1,38 @@
 import { useState } from "react";
 import "../styles/Profile.css";
 
-const Profile = ({ user, myOrders, token }) => {
+const Profile = ({ user, myOrders, token, setUser }) => {
   const [editProfile, setEditProfile] = useState(false);
-  const [usersUserName, setUsersUserName] = useState("");
+  const [editUsername, setEditUsername] = useState(false);
+  const [editEmail, setEditEmail] = useState(false);
+  const [editPassword, setEditPassword] = useState(false);
+  const [usersUserName, setUsersUserName] = useState(user.username);
   const [usersPassword, setUsersPassword] = useState("");
-  const [usersEmail, setUsersEmail] = useState("");
+  const [usersEmail, setUsersEmail] = useState(user.email);
+
   console.log(user);
 
   const createEditForm = (event) => {
     event.preventDefault();
-    setEditProfile(true);
+    setEditProfile(!editProfile);
   };
 
-  const handleUpdateUserInfo = async (event) => {
+  const createEditUsername = (event) => {
+    event.preventDefault();
+    setEditUsername(!editUsername);
+  };
+
+  const createEditEmail = (event) => {
+    event.preventDefault();
+    setEditEmail(!editEmail);
+  };
+
+  const createEditPassword = (event) => {
+    event.preventDefault();
+    setEditPassword(!editPassword);
+  };
+
+  const handleUpdateUsername = async (event) => {
     event.preventDefault();
     const response = await fetch(`api/users/${user.id}`, {
       method: "PATCH",
@@ -23,13 +42,49 @@ const Profile = ({ user, myOrders, token }) => {
       },
       body: JSON.stringify({
         username: usersUserName,
-        password: usersPassword,
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
+    setUser(data);
+    setEditUsername(!editUsername);
+  };
+
+  const handleUpdateEmail = async (event) => {
+    event.preventDefault();
+    const response = await fetch(`api/users/${user.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
         email: usersEmail,
       }),
     });
-
     const data = await response.json();
     console.log(data);
+    setUser(data);
+    setEditEmail(!editEmail);
+  };
+
+  const handleUpdatePassword = async (event) => {
+    event.preventDefault();
+
+    const response = await fetch(`api/users/${user.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        password: usersPassword,
+      }),
+    });
+    const data = await response.json();
+    console.log("New Updated Password", data);
+    setUser(data);
+    setEditPassword(!editPassword);
   };
 
   if (!user.username) return <></>;
@@ -73,10 +128,13 @@ const Profile = ({ user, myOrders, token }) => {
             );
           })}
         {editProfile && (
-          <div className="edit-profile">
-            <form onSubmit={handleUpdateUserInfo}>
-              <div>
-                <p>Current username: {user.username}</p>
+          <div>
+            <p>Username: {user.username}</p>
+            <form onSubmit={createEditUsername}>
+              <input type="submit" value="Edit Username" />
+            </form>
+            {editUsername && (
+              <form onSubmit={handleUpdateUsername}>
                 <input
                   type="text"
                   placeholder="New Username"
@@ -85,7 +143,15 @@ const Profile = ({ user, myOrders, token }) => {
                     setUsersUserName(event.target.value);
                   }}
                 />
-                <p>Current email: {user.email}</p>
+                <input type="submit" />
+              </form>
+            )}
+            <p>Username: {user.email}</p>
+            <form onSubmit={createEditEmail}>
+              <input type="submit" value="Edit Email" />
+            </form>
+            {editEmail && (
+              <form onSubmit={handleUpdateEmail}>
                 <input
                   type="text"
                   placeholder="New Email"
@@ -94,18 +160,25 @@ const Profile = ({ user, myOrders, token }) => {
                     setUsersEmail(event.target.value);
                   }}
                 />
-                <p>Update Password</p>
+                <input type="submit" />
+              </form>
+            )}
+            <form onSubmit={createEditPassword}>
+              <input type="submit" value="Edit Password" />
+            </form>
+            {editPassword && (
+              <form onSubmit={handleUpdatePassword}>
                 <input
-                  type="password"
+                  type="text"
                   placeholder="New Password"
                   value={usersPassword}
                   onChange={(event) => {
                     setUsersPassword(event.target.value);
                   }}
                 />
-                <button>Submit Changes</button>
-              </div>
-            </form>
+                <input type="submit" />
+              </form>
+            )}
           </div>
         )}
       </div>

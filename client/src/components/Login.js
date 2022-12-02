@@ -60,7 +60,7 @@ const Login = ({ cart, setToken, token }) => {
             />
           </div>
           <div className="input-field button">
-            <input type="submit" value="Login In" />
+            <input type="submit" value="Log In" />
           </div>
           <div className="login-signup">
             <Link to="/register">New to TickY? Create Account</Link>
