@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { grabAllUsers } from "../api";
-import { updateUser, adminUpdateTicket, updateArtist } from "./api";
+import { updateUser, adminUpdateTicket, updateArtist } from "../api";
 
 import "../styles/Admin.css";
 
@@ -121,26 +121,25 @@ export default Admin;
 
 // TABLE COMPONENTS TO EDIT INDIVIDUAL ITEMS
 const UserTable = ({ token, user, idx }) => {
-  const [edit, setEdit] = useState(false);
-  const [username, setUsername] = useState(user.username);
+  // const [edit, setEdit] = useState(false);
+  /* const [username, setUsername] = useState(user.username);
   const [email, setEmail] = useState(user.email);
-  const [admin, setAdmin] = userState(user.admin);
+  const [admin, setAdmin] = useState(user.admin); */
 
-  const editUser = () => {
-    setEdit(!edit);
-  };
+  // const editUser = () => {
+  //   setEdit(!edit);
+  // };
 
-  const submitUser = async () => {
+  /*   const submitUser = async () => {
     const updatedUser = await updateUser({
       token,
       userId: user.id,
       username,
-      quantity,
       email,
     });
     console.log("USER UPDATED: ", updatedUser);
     setEdit(!edit);
-  };
+  }; */
 
   return (
     <tbody key={idx}>
@@ -149,12 +148,10 @@ const UserTable = ({ token, user, idx }) => {
         <td>{user.email}</td>
         <td>{user.admin}</td>
         <td>
-          <button id={user.id} onClick={editUser}>
-            Edit
-          </button>
+          <button id={user.id}>Edit</button>
         </td>
       </tr>
-      {edit && (
+      {/*  {edit && (
         <tr>
           <td>
             <input
@@ -183,24 +180,24 @@ const UserTable = ({ token, user, idx }) => {
             </button>
           </td>
         </tr>
-      )}
+      )} */}
     </tbody>
   );
 };
 
 const TicketTable = ({ token, ticket, idx }) => {
-  const [edit, setEdit] = useState(false);
-  const [artistName, setArtistName] = useState(ticket.artist.name);
+  // const [edit, setEdit] = useState(false);
+  /* const [artistName, setArtistName] = useState(ticket.artist.name);
   const [venueName, setVenueName] = useState(ticket.venue.name);
   const [date, setDate] = useState(ticket.date.slice(0, 10));
-  const [price, setPrice] = userState(ticket.price);
-  const [quantity, setQuantity] = userState(ticket.quantity);
+  const [price, setPrice] = useState(ticket.price);
+  const [quantity, setQuantity] = useState(ticket.quantity); */
 
-  const editTicket = () => {
-    setEdit(!edit);
-  };
+  // const editTicket = () => {
+  //   setEdit(!edit);
+  // };
 
-  const submitTicket = async () => {
+  /*   const submitTicket = async () => {
     const updatedTicket = await adminUpdateTicket({
       token,
       ticketId: ticket.id,
@@ -212,7 +209,7 @@ const TicketTable = ({ token, ticket, idx }) => {
     });
     console.log("TICKET UPDATED: ", updatedTicket);
     setEdit(!edit);
-  };
+  }; */
 
   return (
     <tbody key={idx}>
@@ -223,12 +220,10 @@ const TicketTable = ({ token, ticket, idx }) => {
         <td>{ticket.price}</td>
         <td>{ticket.quantity}</td>
         <td>
-          <button id={ticket.id} onClick={editTicket}>
-            Edit
-          </button>
+          <button id={ticket.id}>Edit</button>
         </td>
       </tr>
-      {edit && (
+      {/* {edit && (
         <tr>
           <td>
             <input
@@ -271,23 +266,23 @@ const TicketTable = ({ token, ticket, idx }) => {
             </button>
           </td>
         </tr>
-      )}
+      )} */}
     </tbody>
   );
 };
 
-const ArtistTable = ({ artist, idx }) => {
-  const [edit, setEdit] = useState(false);
-  const [name, setName] = useState(artist.name);
+const ArtistTable = ({ token, artist, idx }) => {
+  // const [edit, setEdit] = useState(false);
+  /* const [name, setName] = useState(artist.name);
   const [genre, setGenre] = useState(artist.genre);
   const [image, setImage] = useState(artist.image);
-  const [description, setDescription] = userState(artist.description);
+  const [description, setDescription] = useState(artist.description); */
 
-  const editArtist = () => {
-    setEdit(!edit);
-  };
+  // const editArtist = () => {
+  //   setEdit(!edit);
+  // };
 
-  const submitArtist = async () => {
+  /*   const submitArtist = async () => {
     const updatedArtist = await updateArtist({
       token,
       artistId: artist.id,
@@ -298,7 +293,7 @@ const ArtistTable = ({ artist, idx }) => {
     });
     console.log("ARTIST UPDATED: ", updatedArtist);
     setEdit(!edit);
-  };
+  }; */
 
   return (
     <tbody key={idx}>
@@ -308,12 +303,10 @@ const ArtistTable = ({ artist, idx }) => {
         <td className="image-url">{artist.image}</td>
         <td className="description">{artist.description}</td>
         <td>
-          <button id={artist.id} onClick={editArtist}>
-            Edit
-          </button>
+          <button id={artist.id}>Edit</button>
         </td>
       </tr>
-      {edit && (
+      {/* {edit && (
         <tr>
           <td>
             <input
@@ -344,17 +337,17 @@ const ArtistTable = ({ artist, idx }) => {
             />
           </td>
           <td>
-            <button id={ticket.id} onClick={submitArtist}>
+            <button id={artist.id} onClick={submitArtist}>
               Edit
             </button>
           </td>
         </tr>
-      )}
+      )} */}
     </tbody>
   );
 };
 
-const VenuesTable = ({ venue, idx }) => {
+const VenuesTable = ({ token, venue, idx }) => {
   const editVenue = async (e) => {
     console.log("button clicked: ", e.target.id);
   };
