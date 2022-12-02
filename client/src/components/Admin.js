@@ -79,7 +79,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
   const [quantity, setQuantity] = useState("");
   const [editTicket, setEditTicket] = useState(false);
   const submitTicket = async () => {
-    const ticket = tickets.find((ticket) => ticket.id === +e.target.id);
+    const ticket = tickets.find((ticket) => ticket.id === ticketId);
     const artistId = artists.find(
       (artist) => (artist.name = ticketArtistName)
     ).id;
@@ -123,7 +123,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
   const [description, setDescription] = useState("");
   const [editArtist, setEditArtist] = useState(false);
   const submitArtist = async () => {
-    const artist = artists.find((artist) => artist.id === +e.target.id);
+    const artist = artists.find((artist) => artist.id === artistId);
     const inputFields = {
       token,
       artistId,
@@ -296,7 +296,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                     />
                   </td>
                   <td>
-                    <button id={ticket.id} onClick={submitTicket}>
+                    <button id={ticketId} onClick={submitTicket}>
                       Edit
                     </button>
                   </td>
@@ -352,7 +352,7 @@ const Admin = ({ user, token, venues, artists, tickets }) => {
                     />
                   </td>
                   <td>
-                    <button id={artist.id} onClick={submitArtist}>
+                    <button id={artistId} onClick={submitArtist}>
                       Edit
                     </button>
                   </td>
