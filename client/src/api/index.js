@@ -32,6 +32,7 @@ export const grabAllUsers = async (token) => {
 export const updateUser = async ({ token, userId, username, email, admin }) => {
   try {
     const response = await fetch(`api/users/${userId}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -75,6 +76,7 @@ export const updateArtist = async ({
 }) => {
   try {
     const response = await fetch(`api/artists/${artistId}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

@@ -28,7 +28,7 @@ import {
   Venues,
 } from "./components";
 import Admin from "./components/Admin";
-import "./App.css";
+// import Admin from "./components/Admin";
 
 function App() {
   const [artists, setArtists] = useState([]);

@@ -157,24 +157,25 @@ body {
 }
 
 .carousel{
-  height: 600px;
-  width: 700px;
+  margin-left: 10%;
+  height: 500px;
+  width: 500px;
   color: black;
-  background-color: lightskyblue;
+  /* background-color: lightskyblue; */
 }
 
-/* .carouselCaption{
-  padding-top: 20px;
-  color: black;
-} */
+.test2{
+  height: 300px;
+  width: 500px;
+}
 .carouselImg{
   height: 300px;
-  width: 300px;
+  width: 200px;
+}
+.img{
+  padding-left: 10%;
+}
+.home{
+  display: flex;
 }
 
-@media only screen and (min-width : 1200px) {
-  .carouselCaption
-  {
-    top: 46%;
-  }
-}
