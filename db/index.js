@@ -5,7 +5,10 @@ const client = new Pool(
   process.env.DATABASE_URL
     ? {
         connectionString: process.env.DATBASE_URL,
-        ssl: { rejectUnauthorized: false },
+        ssl:
+          process.env.NODE_ENV === "production"
+            ? { rejectUnauthorized: false }
+            : undefined,
       }
     : {
         user: process.env.DB_USERNAME,
