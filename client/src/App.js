@@ -242,23 +242,22 @@ function App() {
           element={<Register cart={cart} setToken={setToken} token={token} />}
         />
         <Route path="/venues" element={<Venues />} />
-        {myOrders && (
-          <Route
-            path="/artists/:artistId"
-            element={
-              <Artists
-                token={token}
-                currentOrderId={currentOrderId}
-                artists={artists}
-                tickets={tickets}
-                cart={cart}
-                setCart={setCart}
-                myOrders={myOrders}
-                setMyOrders={setMyOrders}
-              />
-            }
-          />
-        )}
+
+        <Route
+          path="/artists/:artistId"
+          element={
+            <Artists
+              token={token}
+              currentOrderId={currentOrderId}
+              artists={artists}
+              tickets={tickets}
+              cart={cart}
+              setCart={setCart}
+              myOrders={myOrders}
+              setMyOrders={setMyOrders}
+            />
+          }
+        />
 
         <Route
           path="/profile"

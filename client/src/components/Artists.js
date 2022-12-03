@@ -44,39 +44,43 @@ const Artists = ({
   console.log(tickets);
   console.log(artistTickets);
   return (
-    <div className="artists">
-      <div className="artist-div">
-        <div className="artist-details">
-          <h1>{artistDetail.name}</h1>
-          <p>{artistDetail.description}</p>
-        </div>
-        <img
-          className="artistImage"
-          src={artistDetail.image}
-          alt={artistDetail.name}
-        />
-      </div>
-      <h3>Tickets</h3>
-      {artistTickets && (
-        <div className="cart-items">
-          {artistTickets.map((ticket, idx) => {
-            return (
-              <Ticket
-                key={idx}
-                index={idx}
-                token={token}
-                ticket={ticket}
-                cart={cart}
-                setCart={setCart}
-                currentOrderId={currentOrderId}
-                myOrders={myOrders}
-                setMyOrders={setMyOrders}
-              />
-            );
-          })}
+    <>
+      {artistDetail && (
+        <div className="artists">
+          <div className="artist-div">
+            <div className="artist-details">
+              <h1>{artistDetail.name}</h1>
+              <p>{artistDetail.description}</p>
+            </div>
+            <img
+              className="artistImage"
+              src={artistDetail.image}
+              alt={artistDetail.name}
+            />
+          </div>
+          <h3>Tickets</h3>
+          {artistTickets && (
+            <div className="cart-items">
+              {artistTickets.map((ticket, idx) => {
+                return (
+                  <Ticket
+                    key={idx}
+                    index={idx}
+                    token={token}
+                    ticket={ticket}
+                    cart={cart}
+                    setCart={setCart}
+                    currentOrderId={currentOrderId}
+                    myOrders={myOrders}
+                    setMyOrders={setMyOrders}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
-    </div>
+    </>
   );
 };
 
