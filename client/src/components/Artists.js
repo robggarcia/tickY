@@ -18,8 +18,8 @@ const Artists = ({
   setMyOrders,
 }) => {
   const { artistId } = useParams();
-  const [artistDetail, setArtistDetail] = useState({});
-  const [artistTickets, setArtistTickets] = useState([]);
+  const [artistDetail, setArtistDetail] = useState(null);
+  const [artistTickets, setArtistTickets] = useState(null);
 
   const grabArtistDetails = async () => {
     for (let artist of artists) {
@@ -57,7 +57,7 @@ const Artists = ({
         />
       </div>
       <h3>Tickets</h3>
-      {artistTickets.length > 0 && (
+      {artistTickets > 0 && (
         <div className="cart-items">
           {artistTickets.map((ticket, idx) => {
             return (
