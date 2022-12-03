@@ -8,7 +8,7 @@ const client = new Pool(
         ssl:
           process.env.NODE_ENV === "production"
             ? { rejectUnauthorized: false }
-            : undefined,
+            : true,
       }
     : {
         user: process.env.DB_USERNAME,
