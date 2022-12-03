@@ -7,7 +7,7 @@
     "seed:dev": "nodemon ./db/seed.js",
     "seed": "node ./db/seed.js",
     "start:dev": "nodemon index.js",
-    "start": "node ./db/seed.js && node index.js",
+    "start": "node index.js",
     "test": "jest --runInBand",
     "test:watch": "jest --runInBand --watchAll",
     "build": "cd ./client && npm i && npm run build && npm run start"

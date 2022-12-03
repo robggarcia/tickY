@@ -57,7 +57,7 @@ const Artists = ({
         />
       </div>
       <h3>Tickets</h3>
-      {artistTickets > 0 && (
+      {artistTickets && (
         <div className="cart-items">
           {artistTickets.map((ticket, idx) => {
             return (
