@@ -145,9 +145,9 @@ const Admin = ({ user, token }) => {
     if (editArtist) {
       if (artistId === ticket.artistId) delete inputFields.artistId;
       if (venueId === ticket.venueId) delete inputFields.venueId;
-      if (date === user.date) delete inputFields.date;
-      if (price === user.price) delete inputFields.price;
-      if (quantity === user.quantity) delete inputFields.quantity;
+      if (date === ticket.date) delete inputFields.date;
+      if (price === ticket.price) delete inputFields.price;
+      if (quantity === ticket.quantity) delete inputFields.quantity;
       console.log("ITEMS TO CHANGE: ", inputFields);
       const updatedTicket = await adminUpdateTicket(inputFields);
       console.log("TICKET UPDATED: ", updatedTicket);
@@ -219,8 +219,8 @@ const Admin = ({ user, token }) => {
     if (editArtist) {
       if (artistName === artist.name) delete inputFields.name;
       if (genre === artist.genre) delete inputFields.genre;
-      if (image === user.image) delete inputFields.image;
-      if (description === user.description) delete inputFields.description;
+      if (image === artist.image) delete inputFields.image;
+      if (description === artist.description) delete inputFields.description;
       console.log("ITEMS TO CHANGE: ", inputFields);
       const updatedArtist = await adminUpdateArtist(inputFields);
       console.log("ARTIST UPDATED: ", updatedArtist);
