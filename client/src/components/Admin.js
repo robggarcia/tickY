@@ -2,6 +2,13 @@ import React from "react";
 import { useState, useEffect } from "react";
 import {
   adminUpdateVenue,
+  createArtist,
+  createTicket,
+  createVenue,
+  destroyArtist,
+  destroyTicket,
+  destroyUser,
+  destroyVenue,
   fetchArtists,
   fetchTickets,
   fetchVenues,
@@ -12,8 +19,6 @@ import { updateUser, adminUpdateTicket, adminUpdateArtist } from "../api";
 import "../styles/Admin.css";
 
 const Admin = ({ user, token }) => {
-  const [isShown, setIsShown] = useState(false);
-
   const [users, setUsers] = useState(null);
   const [venues, setVenues] = useState(null);
   const [artists, setArtists] = useState(null);
@@ -25,9 +30,9 @@ const Admin = ({ user, token }) => {
   const [showArtists, setShowArtists] = useState(false);
   const [showVenues, setShowVenues] = useState(false);
 
-  const fetchUsersAdmin = async () => {
+  const getUsers = async () => {
     const allUsers = await grabAllUsers(token);
-    console.log("ALL USERS TO DISPLAY: ", allUsers);
+    // console.log("ALL USERS TO DISPLAY: ", allUsers);
     setUsers(allUsers);
   };
 
@@ -49,7 +54,7 @@ const Admin = ({ user, token }) => {
   };
 
   useEffect(() => {
-    fetchUsersAdmin();
+    getUsers();
     getArtists();
     getVenues();
     getTickets();
@@ -81,9 +86,27 @@ const Admin = ({ user, token }) => {
     console.log("USER UPDATED: ", updatedUser);
     setEditUser(!editUser);
   };
+  const deleteUser = async (e) => {
+    const userIdToDelete = users.find((user) => user.id === +e.target.id).id;
+    const deletedUser = await destroyUser({
+      token,
+      userId: userIdToDelete,
+    });
+    console.log("deletedUser", deletedUser);
+  };
 
   // EDIT TICKETS
   const canEditTicket = async (e) => {
+    if (editTicket) {
+      setTicketId("");
+      setTicketArtistName("");
+      setTicketVenueName("");
+      setDate("");
+      setPrice("");
+      setQuantity("");
+      setEditTicket(!editTicket);
+      return;
+    }
     const ticket = tickets.find((ticket) => ticket.id === +e.target.id);
     console.log("TICKET FOUND: ", ticket);
     setTicketId(ticket.id);
@@ -95,6 +118,7 @@ const Admin = ({ user, token }) => {
     setEditTicket(!editTicket);
     console.log("TICKET ID: ", e.target.id);
   };
+
   const [ticketId, setTicketId] = useState("");
   const [ticketArtistName, setTicketArtistName] = useState("");
   const [ticketVenueName, setTicketVenueName] = useState("");
@@ -102,6 +126,7 @@ const Admin = ({ user, token }) => {
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
   const [editTicket, setEditTicket] = useState(false);
+
   const submitTicket = async () => {
     const ticket = tickets.find((ticket) => ticket.id === ticketId);
     const artistId = artists.find(
@@ -117,19 +142,54 @@ const Admin = ({ user, token }) => {
       price,
       quantity,
     };
-    if (artistId === ticket.artistId) delete inputFields.artistId;
-    if (venueId === ticket.venueId) delete inputFields.venueId;
-    if (date === user.date) delete inputFields.date;
-    if (price === user.price) delete inputFields.price;
-    if (quantity === user.quantity) delete inputFields.quantity;
-    console.log("ITEMS TO CHANGE: ", inputFields);
-    const updatedTicket = await adminUpdateTicket(inputFields);
-    console.log("TICKET UPDATED: ", updatedTicket);
-    setEditTicket(!editTicket);
+    if (editArtist) {
+      if (artistId === ticket.artistId) delete inputFields.artistId;
+      if (venueId === ticket.venueId) delete inputFields.venueId;
+      if (date === user.date) delete inputFields.date;
+      if (price === user.price) delete inputFields.price;
+      if (quantity === user.quantity) delete inputFields.quantity;
+      console.log("ITEMS TO CHANGE: ", inputFields);
+      const updatedTicket = await adminUpdateTicket(inputFields);
+      console.log("TICKET UPDATED: ", updatedTicket);
+    } else {
+      delete inputFields.ticketId;
+      const newTicket = await createTicket(inputFields);
+      console.log("newTicket", newTicket);
+      // update Tickets
+    }
+    setTicketId("");
+    setTicketArtistName("");
+    setTicketVenueName("");
+    setDate("");
+    setPrice("");
+    setQuantity("");
+
+    if (editTicket) setEditTicket(!editTicket);
+  };
+
+  const deleteTicket = async (e) => {
+    const ticketIdToDelete = tickets.find(
+      (ticket) => ticket.id === +e.target.id
+    ).id;
+    const deletedTicket = await destroyTicket({
+      token,
+      ticketId: ticketIdToDelete,
+    });
+    console.log("deletedTicket", deletedTicket);
+    // update Tickets
   };
 
   // EDIT ARTISTS
   const canEditArtist = async (e) => {
+    if (editArtist) {
+      setArtistId("");
+      setArtistName("");
+      setGenre("");
+      setImage("");
+      setDescription("");
+      setEditArtist(!editArtist);
+      return;
+    }
     const artist = artists.find((artist) => artist.id === +e.target.id);
     console.log("ARTIST FOUND: ", artist);
     setArtistId(artist.id);
@@ -156,18 +216,52 @@ const Admin = ({ user, token }) => {
       image,
       description,
     };
-    if (artistName === artist.name) delete inputFields.name;
-    if (genre === artist.genre) delete inputFields.genre;
-    if (image === user.image) delete inputFields.image;
-    if (description === user.description) delete inputFields.description;
-    console.log("ITEMS TO CHANGE: ", inputFields);
-    const updatedArtist = await adminUpdateArtist(inputFields);
-    console.log("ARTIST UPDATED: ", updatedArtist);
-    setEditArtist(!editArtist);
+    if (editArtist) {
+      if (artistName === artist.name) delete inputFields.name;
+      if (genre === artist.genre) delete inputFields.genre;
+      if (image === user.image) delete inputFields.image;
+      if (description === user.description) delete inputFields.description;
+      console.log("ITEMS TO CHANGE: ", inputFields);
+      const updatedArtist = await adminUpdateArtist(inputFields);
+      console.log("ARTIST UPDATED: ", updatedArtist);
+    } else {
+      delete inputFields.artistId;
+      const newArtist = await createArtist(inputFields);
+      console.log("newArtist", newArtist);
+      // update artists
+    }
+    setArtistId("");
+    setArtistName("");
+    setGenre("");
+    setImage("");
+    setDescription("");
+
+    if (editArtist) setEditArtist(!editArtist);
+  };
+
+  const deleteArtist = async (e) => {
+    const artistIdToDelete = artists.find(
+      (artist) => artist.id === +e.target.id
+    ).id;
+    const deletedArtist = await destroyArtist({
+      token,
+      artistId: artistIdToDelete,
+    });
+    console.log("deletedArtist", deletedArtist);
+    // update Artists
   };
 
   // EDIT VENUES  -- uncomment when ready to test
   const canEditVenues = async (e) => {
+    if (editVenue) {
+      setVenueId("");
+      setVenueName("");
+      setCity("");
+      setState("");
+      setCapacity("");
+      setEditVenue(!editVenue);
+      return;
+    }
     const venue = venues.find((venue) => venue.id === +e.target.id);
     console.log("VENUE FOUND: ", venue);
     setVenueId(venue.id);
@@ -178,12 +272,14 @@ const Admin = ({ user, token }) => {
     setEditVenue(!editVenue);
     console.log("VENUE ID: ", e.target.id);
   };
+
   const [venueId, setVenueId] = useState("");
   const [venueName, setVenueName] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [capacity, setCapacity] = useState("");
   const [editVenue, setEditVenue] = useState(false);
+
   const submitVenue = async () => {
     const venue = venues.find((venue) => venue.id === venueId);
     const inputFields = {
@@ -194,14 +290,39 @@ const Admin = ({ user, token }) => {
       state,
       capacity,
     };
-    if (venueName === venue.name) delete inputFields.name;
-    if (city === venue.city) delete inputFields.city;
-    if (state === venue.state) delete inputFields.state;
-    if (capacity === venue.capacity) delete inputFields.capacity;
-    console.log("ITEMS TO CHANGE: ", inputFields);
-    const updatedVenue = await adminUpdateVenue(inputFields);
-    console.log("VENUE UPDATED: ", updatedVenue);
-    setEditVenue(!editVenue);
+    if (editVenue) {
+      if (venueName === venue.name) delete inputFields.name;
+      if (city === venue.city) delete inputFields.city;
+      if (state === venue.state) delete inputFields.state;
+      if (capacity === venue.capacity) delete inputFields.capacity;
+      console.log("ITEMS TO CHANGE: ", inputFields);
+      const updatedVenue = await adminUpdateVenue(inputFields);
+      console.log("VENUE UPDATED: ", updatedVenue);
+    } else {
+      delete inputFields.venueId;
+      const newVenue = await createVenue(inputFields);
+      console.log("NEW VENUE: ", newVenue);
+      // update Venues
+    }
+    setVenueId("");
+    setVenueName("");
+    setCity("");
+    setState("");
+    setCapacity("");
+
+    if (editVenue) setEditVenue(!editVenue);
+  };
+
+  const deleteVenue = async (e) => {
+    const venueIdToDelete = venues.find(
+      (venue) => venue.id === +e.target.id
+    ).id;
+    const deletedVenue = await destroyVenue({
+      token,
+      venueId: venueIdToDelete,
+    });
+    console.log("deletedVenue", deletedVenue);
+    // update Venues
   };
 
   return (
@@ -224,42 +345,47 @@ const Admin = ({ user, token }) => {
                   <th>Email</th>
                   <th>Admin</th>
                   <th>Edit</th>
+                  <th>Delete</th>
                 </tr>
               </thead>
               {users.map((user, idx) =>
-                UserTable({ token, user, idx, canEditUser })
+                UserTable({ token, user, idx, canEditUser, deleteUser })
               )}
               {editUser && (
-                <tr>
-                  <td>
-                    <input
-                      type="text"
-                      value={username}
-                      onChange={(event) => setUsername(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={email}
-                      onChange={(event) => setEmail(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      value={admin}
-                      onChange={() => setAdmin(!admin)}
-                    />
-                  </td>
-                  <td>
-                    <button onClick={submitUser}>Submit</button>
-                  </td>
-                </tr>
+                <>
+                  <tr>Edit User</tr>
+                  <tr>
+                    <td>
+                      <input
+                        type="text"
+                        value={username}
+                        onChange={(event) => setUsername(event.target.value)}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        value={admin}
+                        onChange={() => setAdmin(!admin)}
+                      />
+                    </td>
+                    <td>
+                      <button onClick={submitUser}>Submit</button>
+                    </td>
+                  </tr>
+                </>
               )}
             </table>
           </div>
         )}
+
         {showTickets && (
           <div className="admin-tickets">
             <h2>Tickets</h2>
@@ -272,17 +398,22 @@ const Admin = ({ user, token }) => {
                   <th>Price</th>
                   <th>Quantity</th>
                   <th>Edit</th>
+                  <th>Delete</th>
                 </tr>
               </thead>
               {tickets.map((ticket, idx) =>
-                TicketTable({ token, ticket, idx, canEditTicket })
+                TicketTable({ token, ticket, idx, canEditTicket, deleteTicket })
               )}
-              {editTicket && (
+              <tbody>
+                <tr>
+                  <td>{editTicket ? "Edit Ticket" : "Create New Ticket"}</td>
+                </tr>
                 <tr>
                   <td>
                     <input
                       type="text"
                       value={ticketArtistName}
+                      placeholder="Artist Name"
                       onChange={(event) =>
                         setTicketArtistName(event.target.value)
                       }
@@ -292,6 +423,7 @@ const Admin = ({ user, token }) => {
                     <input
                       type="text"
                       value={ticketVenueName}
+                      placeholder="Venue Name"
                       onChange={(event) =>
                         setTicketVenueName(event.target.value)
                       }
@@ -301,6 +433,7 @@ const Admin = ({ user, token }) => {
                     <input
                       type="text"
                       value={date}
+                      placeholder="Date"
                       onChange={(event) => setDate(event.target.value)}
                     />
                   </td>
@@ -308,6 +441,7 @@ const Admin = ({ user, token }) => {
                     <input
                       type="text"
                       value={price}
+                      placeholder="Price"
                       onChange={(event) => setPrice(event.target.value)}
                     />
                   </td>
@@ -315,16 +449,17 @@ const Admin = ({ user, token }) => {
                     <input
                       type="number"
                       value={quantity}
+                      placeholder="Quantity"
                       onChange={(event) => setQuantity(event.target.value)}
                     />
                   </td>
                   <td>
                     <button id={ticketId} onClick={submitTicket}>
-                      Submit
+                      {editTicket ? "SUBMIT" : "CREATE"}
                     </button>
                   </td>
                 </tr>
-              )}
+              </tbody>
             </table>
           </div>
         )}
@@ -339,17 +474,22 @@ const Admin = ({ user, token }) => {
                   <th>Image</th>
                   <th>Description</th>
                   <th>Edit</th>
+                  <th>Delete</th>
                 </tr>
               </thead>
               {artists.map((artist, idx) =>
-                ArtistTable({ token, artist, idx, canEditArtist })
+                ArtistTable({ token, artist, idx, canEditArtist, deleteArtist })
               )}
-              {editArtist && (
+              <tbody>
+                <tr>
+                  <td>{editArtist ? "Edit Artist" : "Create New Artist"}</td>
+                </tr>
                 <tr>
                   <td>
                     <input
                       type="text"
                       value={artistName}
+                      placeholder="Artist Name"
                       onChange={(event) => setArtistName(event.target.value)}
                     />
                   </td>
@@ -357,6 +497,7 @@ const Admin = ({ user, token }) => {
                     <input
                       type="text"
                       value={genre}
+                      placeholder="Genre"
                       onChange={(event) => setGenre(event.target.value)}
                     />
                   </td>
@@ -364,6 +505,7 @@ const Admin = ({ user, token }) => {
                     <input
                       type="text"
                       value={image}
+                      placeholder="Image URL"
                       onChange={(event) => setImage(event.target.value)}
                     />
                   </td>
@@ -371,16 +513,17 @@ const Admin = ({ user, token }) => {
                     <input
                       type="text"
                       value={description}
+                      placeholder="Description"
                       onChange={(event) => setDescription(event.target.value)}
                     />
                   </td>
                   <td>
                     <button id={artistId} onClick={submitArtist}>
-                      Submit
+                      {editArtist ? "Submit" : "Create"}
                     </button>
                   </td>
                 </tr>
-              )}
+              </tbody>
             </table>
           </div>
         )}
@@ -395,17 +538,22 @@ const Admin = ({ user, token }) => {
                   <th>State</th>
                   <th>Capacity</th>
                   <th>Edit</th>
+                  <th>Delete</th>
                 </tr>
               </thead>
               {venues.map((venue, idx) =>
-                VenuesTable({ token, venue, idx, canEditVenues })
+                VenuesTable({ token, venue, idx, canEditVenues, deleteVenue })
               )}
-              {editVenue && (
+              <tbody>
+                <tr>
+                  <td>{editVenue ? "Edit Venue" : "Create New Venue"}</td>
+                </tr>
                 <tr>
                   <td>
                     <input
                       type="text"
                       value={venueName}
+                      placeholder="Venue Name"
                       onChange={(event) => setVenueName(event.target.value)}
                     />
                   </td>
@@ -413,6 +561,7 @@ const Admin = ({ user, token }) => {
                     <input
                       type="text"
                       value={city}
+                      placeholder="City"
                       onChange={(event) => setCity(event.target.value)}
                     />
                   </td>
@@ -420,23 +569,25 @@ const Admin = ({ user, token }) => {
                     <input
                       type="text"
                       value={state}
+                      placeholder="State"
                       onChange={(event) => setState(event.target.value)}
                     />
                   </td>
                   <td>
                     <input
-                      type="text"
+                      type="number"
                       value={capacity}
+                      placeholder="Capacity"
                       onChange={(event) => setCapacity(event.target.value)}
                     />
                   </td>
                   <td>
                     <button id={venueId} onClick={submitVenue}>
-                      Submit
+                      {editVenue ? "EDIT" : "CREATE"}
                     </button>
                   </td>
                 </tr>
-              )}
+              </tbody>
             </table>
           </div>
         )}
@@ -446,7 +597,7 @@ const Admin = ({ user, token }) => {
 };
 
 // TABLE COMPONENTS TO EDIT INDIVIDUAL ITEMS
-const UserTable = ({ token, user, idx, canEditUser }) => {
+const UserTable = ({ token, user, idx, canEditUser, deleteUser }) => {
   return (
     <tbody key={idx}>
       <tr key={idx}>
@@ -458,12 +609,17 @@ const UserTable = ({ token, user, idx, canEditUser }) => {
             Edit
           </button>
         </td>
+        <td>
+          <button id={user.id} onClick={deleteUser}>
+            Delete
+          </button>
+        </td>
       </tr>
     </tbody>
   );
 };
 
-const TicketTable = ({ token, ticket, idx, canEditTicket }) => {
+const TicketTable = ({ token, ticket, idx, canEditTicket, deleteTicket }) => {
   return (
     <tbody key={idx}>
       <tr id={ticket.id}>
@@ -477,12 +633,17 @@ const TicketTable = ({ token, ticket, idx, canEditTicket }) => {
             Edit
           </button>
         </td>
+        <td>
+          <button id={ticket.id} onClick={deleteTicket}>
+            Delete
+          </button>
+        </td>
       </tr>
     </tbody>
   );
 };
 
-const ArtistTable = ({ token, artist, idx, canEditArtist }) => {
+const ArtistTable = ({ token, artist, idx, canEditArtist, deleteArtist }) => {
   return (
     <tbody key={idx}>
       <tr id={artist.id}>
@@ -495,12 +656,17 @@ const ArtistTable = ({ token, artist, idx, canEditArtist }) => {
             Edit
           </button>
         </td>
+        <td>
+          <button id={artist.id} onClick={deleteArtist}>
+            Delete
+          </button>
+        </td>
       </tr>
     </tbody>
   );
 };
 
-const VenuesTable = ({ token, venue, idx, canEditVenues }) => {
+const VenuesTable = ({ token, venue, idx, canEditVenues, deleteVenue }) => {
   return (
     <tbody key={idx}>
       <tr key={idx} id={venue.id}>
@@ -511,6 +677,11 @@ const VenuesTable = ({ token, venue, idx, canEditVenues }) => {
         <td>
           <button id={venue.id} onClick={canEditVenues}>
             Edit
+          </button>
+        </td>
+        <td>
+          <button id={venue.id} onClick={deleteVenue}>
+            Delete
           </button>
         </td>
       </tr>

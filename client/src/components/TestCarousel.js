@@ -17,7 +17,7 @@ const TestCarousel = () => {
             <h3>No Fees. Just Easy Tickets.</h3>
           </Carousel.Item>
           <Carousel.Item>
-            <div classname="carouselImg">
+            <div className="carouselImg">
               <img
                 className="test2"
                 src="https://www.jonesaroundtheworld.com/wp-content/uploads/2019/05/Electric-Zoo-New-York-Electronic-Music-Festival-2021.jpeg"
