@@ -8,6 +8,7 @@ const { createUser } = require("./users");
 const { createVenue } = require("./venues");
 
 const dropTables = async () => {
+  console.log("DATABASE_URL: ", process.env.DATABASE_URL);
   console.log("Dropping All Tables...");
   // drop all tables, in the correct order
   try {
