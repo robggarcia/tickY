@@ -7,9 +7,10 @@
     "seed:dev": "nodemon ./db/seed.js",
     "seed": "node ./db/seed.js",
     "start:dev": "nodemon index.js",
-    "start": "node index.js",
+    "start": "node ./db/seed.js && node index.js",
     "test": "jest --runInBand",
-    "test:watch": "jest --runInBand --watchAll"
+    "test:watch": "jest --runInBand --watchAll",
+    "build": "node ./client/'react-scripts build' && node .client/'react-scripts start'"
   },
   "keywords": [],
   "author": "",
