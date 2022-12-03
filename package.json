@@ -10,7 +10,7 @@
     "start": "node ./db/seed.js && node index.js",
     "test": "jest --runInBand",
     "test:watch": "jest --runInBand --watchAll",
-    "build": "node ./client/'react-scripts build' && node .client/'react-scripts start'"
+    "build": "cd .client && npm run build && npm run start"
   },
   "keywords": [],
   "author": "",
