@@ -155,6 +155,29 @@ async function destroyUser(id) {
   return user;
 }
 
+async function hashNewPassword(id, { password }) {
+  const saltRounds = 10;
+  // const newPassword = password.toString();
+  console.log(password);
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  try {
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+    UPDATE users
+    SET password=$2
+    WHERE id=$1
+    RETURNING *
+    `,
+      [id, hashedPassword]
+    );
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   getAllUsers,
   createUser,
@@ -164,4 +187,5 @@ module.exports = {
   getUserByEmail,
   updateUser,
   destroyUser,
+  hashNewPassword,
 };

@@ -10,6 +10,7 @@ const {
   getUserByEmail,
   getUserById,
   destroyUser,
+  hashNewPassword,
 } = require("../db/users");
 const { requireUser, requireAdmin } = require("./utils");
 const usersRouter = express.Router();
@@ -190,5 +191,21 @@ usersRouter.delete("/:userId", requireAdmin, async (req, res, next) => {
     next({ name, message });
   }
 });
+
+usersRouter.patch(
+  "/updatepassword/:userId",
+  requireUser,
+  async (req, res, next) => {
+    const userId = req.params.userId;
+    const password = req.body;
+    console.log(userId, password);
+    try {
+      const userUpdate = await hashNewPassword(userId, password);
+      res.send(userUpdate);
+    } catch ({ name, message }) {
+      next({ name, message });
+    }
+  }
+);
 
 module.exports = usersRouter;

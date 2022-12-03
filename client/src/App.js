@@ -271,18 +271,7 @@ function App() {
             />
           }
         />
-        <Route
-          path="/admin"
-          element={
-            <Admin
-              venues={venues}
-              artists={artists}
-              tickets={tickets}
-              user={user}
-              token={token}
-            />
-          }
-        />
+        <Route path="/admin" element={<Admin user={user} token={token} />} />
       </Routes>
       <Modal displayMessage={displayMessage} success={success} />
     </div>

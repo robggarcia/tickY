@@ -70,8 +70,7 @@ const Profile = ({ user, myOrders, token, setUser }) => {
 
   const handleUpdatePassword = async (event) => {
     event.preventDefault();
-
-    const response = await fetch(`api/users/${user.id}`, {
+    const response = await fetch(`api/users/updatepassword/${user.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
