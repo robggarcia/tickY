@@ -18,11 +18,22 @@ import { updateUser, adminUpdateTicket, adminUpdateArtist } from "../api";
 
 import "../styles/Admin.css";
 
-const Admin = ({ user, token }) => {
-  const [users, setUsers] = useState(null);
-  const [venues, setVenues] = useState(null);
-  const [artists, setArtists] = useState(null);
-  const [tickets, setTickets] = useState(null);
+const Admin = ({
+  user,
+  token,
+  users,
+  setUsers,
+  venues,
+  setVenues,
+  artists,
+  setArtists,
+  tickets,
+  setTickets,
+}) => {
+  const [usersAdmin, setUsersAdmin] = useState(null);
+  const [venuesAdmin, setVenuesAdmin] = useState(null);
+  const [artistsAdmin, setArtistsAdmin] = useState(null);
+  const [ticketsAdmin, setTicketsAdmin] = useState(null);
 
   const [editUser, setEditUser] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
@@ -32,37 +43,34 @@ const Admin = ({ user, token }) => {
 
   const getUsers = async () => {
     const allUsers = await grabAllUsers(token);
-    // console.log("ALL USERS TO DISPLAY: ", allUsers);
-    setUsers(allUsers);
+    setUsersAdmin(allUsers);
   };
 
   const getArtists = async () => {
     const data = await fetchArtists();
-    // console.log("getArtists: ", data);
-    setArtists(data);
+    setArtistsAdmin(data);
   };
   const getVenues = async () => {
     const data = await fetchVenues();
-    // console.log("getVenues: ", data);
-    setVenues(data);
+    setVenuesAdmin(data);
   };
 
   const getTickets = async () => {
     const data = await fetchTickets();
-    // console.log("getTickets: ", data);
-    setTickets(data);
+    setTicketsAdmin(data);
   };
 
   useEffect(() => {
+    console.log("USE EFFECT CALLED");
     getUsers();
     getArtists();
     getVenues();
     getTickets();
-  }, []);
+  }, [users, venues, tickets, artists]);
 
   // EDIT USER
   const canEditUser = async (e) => {
-    const user = users.find((user) => user.id === +e.target.id);
+    const user = usersAdmin.find((user) => user.id === +e.target.id);
     console.log("USER FOUND: ", user);
     setUserId(user.id);
     setUsername(user.username);
@@ -76,7 +84,7 @@ const Admin = ({ user, token }) => {
   const [email, setEmail] = useState("");
   const [admin, setAdmin] = useState("");
   const submitUser = async () => {
-    const user = users.find((user) => user.id === userId);
+    const user = usersAdmin.find((user) => user.id === userId);
     const inputFields = { token, userId, username, email, admin };
     if (username === user.username) delete inputFields.username;
     if (email === user.email) delete inputFields.email;
@@ -85,14 +93,25 @@ const Admin = ({ user, token }) => {
     const updatedUser = await updateUser(inputFields);
     console.log("USER UPDATED: ", updatedUser);
     setEditUser(!editUser);
+    const editUsers = [...users];
+    for (let user of editUsers) {
+      if (user.id === userId) {
+        user = updatedUser;
+      }
+    }
+    setUsers(editUsers);
   };
   const deleteUser = async (e) => {
-    const userIdToDelete = users.find((user) => user.id === +e.target.id).id;
+    const userIdToDelete = usersAdmin.find(
+      (user) => user.id === +e.target.id
+    ).id;
     const deletedUser = await destroyUser({
       token,
       userId: userIdToDelete,
     });
     console.log("deletedUser", deletedUser);
+    const editUsers = [...users].filter((user) => user.id !== userIdToDelete);
+    setUsers(editUsers);
   };
 
   // EDIT TICKETS
@@ -129,13 +148,15 @@ const Admin = ({ user, token }) => {
 
   const submitTicket = async () => {
     const ticket = tickets.find((ticket) => ticket.id === ticketId);
-    const artistId = artists.find(
+    const artistId = artistsAdmin.find(
       (artist) => (artist.name = ticketArtistName)
     ).id;
-    const venueId = venues.find((venue) => (venue.name = ticketVenueName)).id;
+    const venueId = venuesAdmin.find(
+      (venue) => (venue.name = ticketVenueName)
+    ).id;
     const inputFields = {
       token,
-      ticketId,
+      ticketId: ticket.id,
       artistId,
       venueId,
       date,
@@ -151,11 +172,19 @@ const Admin = ({ user, token }) => {
       console.log("ITEMS TO CHANGE: ", inputFields);
       const updatedTicket = await adminUpdateTicket(inputFields);
       console.log("TICKET UPDATED: ", updatedTicket);
+      const editTickets = [...tickets];
+      for (let ticket of editTickets) {
+        if (ticket.id === ticketId) {
+          ticket = updatedTicket;
+        }
+      }
+      setTickets(editTickets);
     } else {
       delete inputFields.ticketId;
       const newTicket = await createTicket(inputFields);
       console.log("newTicket", newTicket);
       // update Tickets
+      setTickets([...tickets].push(newTicket));
     }
     setTicketId("");
     setTicketArtistName("");
@@ -177,6 +206,10 @@ const Admin = ({ user, token }) => {
     });
     console.log("deletedTicket", deletedTicket);
     // update Tickets
+    const editTickets = [...tickets].filter(
+      (ticket) => ticket.id !== ticketIdToDelete
+    );
+    setTickets(editTickets);
   };
 
   // EDIT ARTISTS
@@ -190,7 +223,7 @@ const Admin = ({ user, token }) => {
       setEditArtist(!editArtist);
       return;
     }
-    const artist = artists.find((artist) => artist.id === +e.target.id);
+    const artist = artistsAdmin.find((artist) => artist.id === +e.target.id);
     console.log("ARTIST FOUND: ", artist);
     setArtistId(artist.id);
     setArtistName(artist.name);
@@ -207,7 +240,7 @@ const Admin = ({ user, token }) => {
   const [description, setDescription] = useState("");
   const [editArtist, setEditArtist] = useState(false);
   const submitArtist = async () => {
-    const artist = artists.find((artist) => artist.id === artistId);
+    const artist = artistsAdmin.find((artist) => artist.id === artistId);
     const inputFields = {
       token,
       artistId,
@@ -220,15 +253,30 @@ const Admin = ({ user, token }) => {
       if (artistName === artist.name) delete inputFields.name;
       if (genre === artist.genre) delete inputFields.genre;
       if (image === artist.image) delete inputFields.image;
+      // set default image if image url not specified
+      if (!image)
+        inputFields.image =
+          "https://media.istockphoto.com/id/1318626501/vector/vector-illustration-concert-ticket-design-template-for-party-or-festival.jpg?s=612x612&w=0&k=20&c=mFdE63pP7j8ZnULrWH0TW5c3o_aE_jDlZW-E_PVvYz8=";
       if (description === artist.description) delete inputFields.description;
       console.log("ITEMS TO CHANGE: ", inputFields);
       const updatedArtist = await adminUpdateArtist(inputFields);
       console.log("ARTIST UPDATED: ", updatedArtist);
+      const editArtists = [...artists];
+      for (let artist of editArtists) {
+        if (artist.id === artistId) {
+          artist = updatedArtist;
+        }
+      }
+      setArtists(editArtists);
     } else {
       delete inputFields.artistId;
+      if (!image)
+        inputFields.image =
+          "https://media.istockphoto.com/id/1318626501/vector/vector-illustration-concert-ticket-design-template-for-party-or-festival.jpg?s=612x612&w=0&k=20&c=mFdE63pP7j8ZnULrWH0TW5c3o_aE_jDlZW-E_PVvYz8=";
       const newArtist = await createArtist(inputFields);
       console.log("newArtist", newArtist);
       // update artists
+      setArtists([...artistsAdmin].push(newArtist));
     }
     setArtistId("");
     setArtistName("");
@@ -240,7 +288,7 @@ const Admin = ({ user, token }) => {
   };
 
   const deleteArtist = async (e) => {
-    const artistIdToDelete = artists.find(
+    const artistIdToDelete = artistsAdmin.find(
       (artist) => artist.id === +e.target.id
     ).id;
     const deletedArtist = await destroyArtist({
@@ -249,6 +297,10 @@ const Admin = ({ user, token }) => {
     });
     console.log("deletedArtist", deletedArtist);
     // update Artists
+    const editArtists = [...artistsAdmin].filter(
+      (artist) => artist.id !== artistIdToDelete
+    );
+    setArtists(editArtists);
   };
 
   // EDIT VENUES  -- uncomment when ready to test
@@ -262,7 +314,7 @@ const Admin = ({ user, token }) => {
       setEditVenue(!editVenue);
       return;
     }
-    const venue = venues.find((venue) => venue.id === +e.target.id);
+    const venue = venuesAdmin.find((venue) => venue.id === +e.target.id);
     console.log("VENUE FOUND: ", venue);
     setVenueId(venue.id);
     setVenueName(venue.name);
@@ -281,7 +333,7 @@ const Admin = ({ user, token }) => {
   const [editVenue, setEditVenue] = useState(false);
 
   const submitVenue = async () => {
-    const venue = venues.find((venue) => venue.id === venueId);
+    const venue = venuesAdmin.find((venue) => venue.id === venueId);
     const inputFields = {
       token,
       venueId,
@@ -298,11 +350,19 @@ const Admin = ({ user, token }) => {
       console.log("ITEMS TO CHANGE: ", inputFields);
       const updatedVenue = await adminUpdateVenue(inputFields);
       console.log("VENUE UPDATED: ", updatedVenue);
+      const editVenues = [...venues];
+      for (let venue of editVenues) {
+        if (venue.id === venueId) {
+          venue = updatedVenue;
+        }
+      }
+      setVenues(editVenues);
     } else {
       delete inputFields.venueId;
       const newVenue = await createVenue(inputFields);
       console.log("NEW VENUE: ", newVenue);
       // update Venues
+      setVenues([...venues].push(newVenue));
     }
     setVenueId("");
     setVenueName("");
@@ -314,7 +374,7 @@ const Admin = ({ user, token }) => {
   };
 
   const deleteVenue = async (e) => {
-    const venueIdToDelete = venues.find(
+    const venueIdToDelete = venuesAdmin.find(
       (venue) => venue.id === +e.target.id
     ).id;
     const deletedVenue = await destroyVenue({
@@ -323,6 +383,10 @@ const Admin = ({ user, token }) => {
     });
     console.log("deletedVenue", deletedVenue);
     // update Venues
+    const editVenues = [...venues].filter(
+      (venue) => venue.id !== venueIdToDelete
+    );
+    setVenues(editVenues);
   };
 
   return (
@@ -348,7 +412,7 @@ const Admin = ({ user, token }) => {
                   <th>Delete</th>
                 </tr>
               </thead>
-              {users.map((user, idx) =>
+              {usersAdmin.map((user, idx) =>
                 UserTable({ token, user, idx, canEditUser, deleteUser })
               )}
               {editUser && (
@@ -401,7 +465,7 @@ const Admin = ({ user, token }) => {
                   <th>Delete</th>
                 </tr>
               </thead>
-              {tickets.map((ticket, idx) =>
+              {ticketsAdmin.map((ticket, idx) =>
                 TicketTable({ token, ticket, idx, canEditTicket, deleteTicket })
               )}
               <tbody>
@@ -477,7 +541,7 @@ const Admin = ({ user, token }) => {
                   <th>Delete</th>
                 </tr>
               </thead>
-              {artists.map((artist, idx) =>
+              {artistsAdmin.map((artist, idx) =>
                 ArtistTable({ token, artist, idx, canEditArtist, deleteArtist })
               )}
               <tbody>
@@ -541,7 +605,7 @@ const Admin = ({ user, token }) => {
                   <th>Delete</th>
                 </tr>
               </thead>
-              {venues.map((venue, idx) =>
+              {venuesAdmin.map((venue, idx) =>
                 VenuesTable({ token, venue, idx, canEditVenues, deleteVenue })
               )}
               <tbody>
@@ -649,8 +713,10 @@ const ArtistTable = ({ token, artist, idx, canEditArtist, deleteArtist }) => {
       <tr id={artist.id}>
         <td>{artist.name}</td>
         <td>{artist.genre}</td>
-        <td className="image-url">{artist.image}</td>
-        <td className="description">{artist.description}</td>
+        <td className="image-cell">
+          <img alt="artist" src={artist.image}></img>
+        </td>
+        <td className="description-cell">{artist.description}</td>
         <td>
           <button id={artist.id} onClick={canEditArtist}>
             Edit

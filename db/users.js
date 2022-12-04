@@ -2,10 +2,14 @@ const client = require(".");
 const bcrypt = require("bcrypt");
 
 const getAllUsers = async () => {
-  const response = await client.query(`
+  try {
+    const response = await client.query(`
         SELECT * FROM users
     `);
-  return response.rows;
+    return response.rows;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 async function createUser({ username, password, email, admin }) {

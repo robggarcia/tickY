@@ -10,6 +10,7 @@ import {
   fetchUser,
   fetchUsersOrders,
   fetchVenues,
+  grabAllUsers,
   monthByNumber,
 } from "./api";
 import "./App.css";
@@ -34,6 +35,7 @@ function App() {
   const [artists, setArtists] = useState([]);
   const [venues, setVenues] = useState([]);
   const [tickets, setTickets] = useState([]);
+  const [users, setUsers] = useState([]);
   const [artistTickets, setArtistTickets] = useState(null);
   const [token, setToken] = useState("");
   const [user, setUser] = useState(null);
@@ -55,6 +57,17 @@ function App() {
     const data = await fetchVenues();
     // console.log("getVenues: ", data);
     setVenues(data);
+  };
+  const getAllUsers = async () => {
+    // check local storage to see if a token is available
+    if (localStorage.getItem("token")) setToken(localStorage.getItem("token"));
+    if (!token) {
+      console.log("THE USER IS NOT DEFINED");
+      return;
+    }
+    const data = await grabAllUsers(token);
+    console.log("GRAB ALL USERS: ", data);
+    if (data) setUsers(data);
   };
 
   const getTickets = async () => {
@@ -81,7 +94,7 @@ function App() {
     setArtistTickets(ticketsArray);
   };
 
-  const getUser = async (token) => {
+  const getUser = async () => {
     console.log("GET USER CALLED");
     // check local storage to see if a token is available
     if (localStorage.getItem("token")) setToken(localStorage.getItem("token"));
@@ -140,7 +153,8 @@ function App() {
     getArtists();
     getVenues();
     getTickets();
-    getUser(token);
+    getUser();
+    getAllUsers();
   }, [token]);
 
   return (
@@ -270,7 +284,23 @@ function App() {
             />
           }
         />
-        <Route path="/admin" element={<Admin user={user} token={token} />} />
+        <Route
+          path="/admin"
+          element={
+            <Admin
+              user={user}
+              token={token}
+              users={users}
+              setUsers={setUsers}
+              tickets={tickets}
+              setTickets={setTickets}
+              venues={venues}
+              setVenues={setVenues}
+              artists={artists}
+              setArtists={setArtists}
+            />
+          }
+        />
       </Routes>
       <Modal displayMessage={displayMessage} success={success} />
     </div>

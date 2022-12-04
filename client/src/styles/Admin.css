@@ -10,3 +10,15 @@
   display: flex;
   flex-direction: column;
 }
+
+table, th, td {
+  border: 1px solid;
+}
+
+.image-cell, .description-cell {
+  max-width: 250px;
+}
+
+img {
+  width: 200px;
+}
