@@ -93,7 +93,7 @@ const Admin = ({
     const updatedUser = await updateUser(inputFields);
     console.log("USER UPDATED: ", updatedUser);
     setEditUser(!editUser);
-    const editUsers = [...users];
+    const editUsers = [...usersAdmin];
     for (let user of editUsers) {
       if (user.id === userId) {
         user = updatedUser;
@@ -110,7 +110,9 @@ const Admin = ({
       userId: userIdToDelete,
     });
     console.log("deletedUser", deletedUser);
-    const editUsers = [...users].filter((user) => user.id !== userIdToDelete);
+    const editUsers = [...usersAdmin].filter(
+      (user) => user.id !== userIdToDelete
+    );
     setUsers(editUsers);
   };
 
@@ -126,7 +128,7 @@ const Admin = ({
       setEditTicket(!editTicket);
       return;
     }
-    const ticket = tickets.find((ticket) => ticket.id === +e.target.id);
+    const ticket = ticketsAdmin.find((ticket) => ticket.id === +e.target.id);
     console.log("TICKET FOUND: ", ticket);
     setTicketId(ticket.id);
     setTicketArtistName(ticket.artist.name);
@@ -147,7 +149,7 @@ const Admin = ({
   const [editTicket, setEditTicket] = useState(false);
 
   const submitTicket = async () => {
-    const ticket = tickets.find((ticket) => ticket.id === ticketId);
+    const ticket = ticketsAdmin.find((ticket) => ticket.id === ticketId);
     const artistId = artistsAdmin.find(
       (artist) => (artist.name = ticketArtistName)
     ).id;
@@ -172,7 +174,7 @@ const Admin = ({
       console.log("ITEMS TO CHANGE: ", inputFields);
       const updatedTicket = await adminUpdateTicket(inputFields);
       console.log("TICKET UPDATED: ", updatedTicket);
-      const editTickets = [...tickets];
+      const editTickets = [...ticketsAdmin];
       for (let ticket of editTickets) {
         if (ticket.id === ticketId) {
           ticket = updatedTicket;
@@ -184,7 +186,7 @@ const Admin = ({
       const newTicket = await createTicket(inputFields);
       console.log("newTicket", newTicket);
       // update Tickets
-      setTickets([...tickets].push(newTicket));
+      setTickets([...ticketsAdmin].push(newTicket));
     }
     setTicketId("");
     setTicketArtistName("");
@@ -197,7 +199,7 @@ const Admin = ({
   };
 
   const deleteTicket = async (e) => {
-    const ticketIdToDelete = tickets.find(
+    const ticketIdToDelete = ticketsAdmin.find(
       (ticket) => ticket.id === +e.target.id
     ).id;
     const deletedTicket = await destroyTicket({
@@ -206,7 +208,7 @@ const Admin = ({
     });
     console.log("deletedTicket", deletedTicket);
     // update Tickets
-    const editTickets = [...tickets].filter(
+    const editTickets = [...ticketsAdmin].filter(
       (ticket) => ticket.id !== ticketIdToDelete
     );
     setTickets(editTickets);
@@ -261,7 +263,7 @@ const Admin = ({
       console.log("ITEMS TO CHANGE: ", inputFields);
       const updatedArtist = await adminUpdateArtist(inputFields);
       console.log("ARTIST UPDATED: ", updatedArtist);
-      const editArtists = [...artists];
+      const editArtists = [...artistsAdmin];
       for (let artist of editArtists) {
         if (artist.id === artistId) {
           artist = updatedArtist;
@@ -350,7 +352,7 @@ const Admin = ({
       console.log("ITEMS TO CHANGE: ", inputFields);
       const updatedVenue = await adminUpdateVenue(inputFields);
       console.log("VENUE UPDATED: ", updatedVenue);
-      const editVenues = [...venues];
+      const editVenues = [...venuesAdmin];
       for (let venue of editVenues) {
         if (venue.id === venueId) {
           venue = updatedVenue;
@@ -362,7 +364,7 @@ const Admin = ({
       const newVenue = await createVenue(inputFields);
       console.log("NEW VENUE: ", newVenue);
       // update Venues
-      setVenues([...venues].push(newVenue));
+      setVenues([...venuesAdmin].push(newVenue));
     }
     setVenueId("");
     setVenueName("");
@@ -394,10 +396,46 @@ const Admin = ({
       <h1>Admin Dashboard</h1>
       <div className="admin-container">
         <div className="admin-sidebar">
-          <button onClick={() => setShowUsers(!showUsers)}>Users</button>
-          <button onClick={() => setShowTickets(!showTickets)}>Tickets</button>
-          <button onClick={() => setShowArtists(!showArtists)}>Artists</button>
-          <button onClick={() => setShowVenues(!showVenues)}>Venues</button>
+          <button
+            onClick={() => {
+              setShowUsers(!showUsers);
+              setShowTickets(false);
+              setShowArtists(false);
+              setShowVenues(false);
+            }}
+          >
+            Users
+          </button>
+          <button
+            onClick={() => {
+              setShowTickets(!showTickets);
+              setShowUsers(false);
+              setShowArtists(false);
+              setShowVenues(false);
+            }}
+          >
+            Tickets
+          </button>
+          <button
+            onClick={() => {
+              setShowArtists(!showArtists);
+              setShowTickets(false);
+              setShowUsers(false);
+              setShowVenues(false);
+            }}
+          >
+            Artists
+          </button>
+          <button
+            onClick={() => {
+              setShowVenues(!showVenues);
+              setShowArtists(false);
+              setShowTickets(false);
+              setShowUsers(false);
+            }}
+          >
+            Venues
+          </button>
         </div>
         {showUsers && (
           <div className="admin-users">
@@ -416,7 +454,7 @@ const Admin = ({
                 UserTable({ token, user, idx, canEditUser, deleteUser })
               )}
               {editUser && (
-                <>
+                <tbody>
                   <tr>Edit User</tr>
                   <tr>
                     <td>
@@ -444,7 +482,7 @@ const Admin = ({
                       <button onClick={submitUser}>Submit</button>
                     </td>
                   </tr>
-                </>
+                </tbody>
               )}
             </table>
           </div>
