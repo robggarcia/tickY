@@ -4,14 +4,12 @@ import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import {
   createOrder,
-  createTicketOrder,
   fetchArtists,
   fetchTickets,
   fetchUser,
   fetchUsersOrders,
   fetchVenues,
   grabAllUsers,
-  monthByNumber,
 } from "./api";
 import "./App.css";
 import {

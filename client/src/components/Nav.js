@@ -20,6 +20,7 @@ const Nav = ({
 }) => {
   const [admin, setAdmin] = useState(false);
 
+  console.log("KEYWORD: ", keyword);
   useEffect(() => {
     console.log("NAV EFFECT CALLED: ", user);
     if (user) {
@@ -36,7 +37,7 @@ const Nav = ({
   };
 
   const handleInput = (e) => {
-    setKeyword(e.target);
+    setKeyword(e.target.value);
     console.log("KEYWORD: ", keyword);
   };
 
