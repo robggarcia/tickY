@@ -16,6 +16,8 @@ const Artists = ({
   setCart,
   myOrders,
   setMyOrders,
+  setSuccess,
+  setDisplayMessage,
 }) => {
   const { artistId } = useParams();
   const [artistDetail, setArtistDetail] = useState(null);
@@ -73,6 +75,8 @@ const Artists = ({
                     currentOrderId={currentOrderId}
                     myOrders={myOrders}
                     setMyOrders={setMyOrders}
+                    setSuccess={setSuccess}
+                    setDisplayMessage={setDisplayMessage}
                   />
                 );
               })}

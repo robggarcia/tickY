@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = ({ cart, setToken, token }) => {
+const Login = ({ cart, setToken, token, setSuccess, setDisplayMessage }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [username, setUsername] = useState("");

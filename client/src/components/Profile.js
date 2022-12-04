@@ -2,7 +2,15 @@ import { useEffect } from "react";
 import { useState } from "react";
 import "../styles/Profile.css";
 
-const Profile = ({ user, myOrders, token, setUser, getUser }) => {
+const Profile = ({
+  user,
+  myOrders,
+  token,
+  setUser,
+  getUser,
+  setSuccess,
+  setDisplayMessage,
+}) => {
   const [editProfile, setEditProfile] = useState(false);
   const [editUsername, setEditUsername] = useState(false);
   const [editEmail, setEditEmail] = useState(false);

@@ -16,6 +16,8 @@ const Ticket = ({
   myOrders,
   user,
   setMyOrders,
+  setSuccess,
+  setDisplayMessage,
 }) => {
   const url = useParams();
 
@@ -45,6 +47,13 @@ const Ticket = ({
         ticketId: ticket.id,
         quantity: numTickets,
       });
+      /* if (ticketOrder) {
+        setSuccess(true);
+        setDisplayMessage("Success: Ticket added to the current order");
+      } else {
+        setSuccess(false);
+        setDisplayMessage("Error: Unable to add ticket to the current order");
+      } */
       newCartItem.ticketOrder = ticketOrder;
       console.log("ticketOrder", ticketOrder);
       setTicketOrderId(ticketOrder.id);
@@ -94,7 +103,14 @@ const Ticket = ({
     setCart(newCart);
     // if user is logged in, delete ticket_order
     if (token) {
-      await deleteTicketOrder({ token, ticketOrderId: item.ticketOrderId });
+      const result = await deleteTicketOrder({
+        token,
+        ticketOrderId: item.ticketOrderId,
+      });
+      /* if (result) {
+        setSuccess(true);
+        setDisplayMessage("Success: Ticket removed from current order");
+      } */
       // update current order
       const myOrdersUpdate = [...myOrders];
       const currentOrder = myOrdersUpdate.find(

@@ -29,6 +29,8 @@ const Admin = ({
   setArtists,
   tickets,
   setTickets,
+  setSuccess,
+  setDisplayMessage,
 }) => {
   const [usersAdmin, setUsersAdmin] = useState(null);
   const [venuesAdmin, setVenuesAdmin] = useState(null);

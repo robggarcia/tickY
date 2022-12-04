@@ -241,6 +241,8 @@ function App() {
               myOrders={myOrders}
               currentOrderId={currentOrderId}
               setMyOrders={setMyOrders}
+              setSuccess={setSuccess}
+              setDisplayMessage={setDisplayMessage}
             />
           }
         />
@@ -272,8 +274,7 @@ function App() {
             />
           }
         />
-        <Route path="/venues" element={<Venues />} />
-
+        {/* <Route path="/venues" element={<Venues />} /> */}
         <Route
           path="/artists/:artistId"
           element={

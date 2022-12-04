@@ -12,6 +12,8 @@ const Cart = ({
   myOrders,
   setMyOrders,
   currentOrderId,
+  setSuccess,
+  setDisplayMessage,
 }) => {
   const [itemsToDisplay, setItemsToDisplay] = useState(cart);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -56,6 +58,8 @@ const Cart = ({
                 setCart={setCart}
                 currentOrderId={currentOrderId}
                 myOrders={myOrders}
+                setSuccess={setSuccess}
+                setDisplayMessage={setDisplayMessage}
               />
             );
           })}

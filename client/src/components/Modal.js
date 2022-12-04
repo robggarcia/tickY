@@ -12,7 +12,7 @@ const Modal = ({ displayMessage, success }) => {
       setVisible(true);
       setTimeout(() => {
         setVisible(false);
-      }, 5000);
+      }, 10000);
     }
   }, [displayMessage]);
 
