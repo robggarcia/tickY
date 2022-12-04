@@ -1,14 +1,21 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import "../styles/Profile.css";
 
-const Profile = ({ user, myOrders, token, setUser }) => {
+const Profile = ({ user, myOrders, token, setUser, getUser }) => {
   const [editProfile, setEditProfile] = useState(false);
   const [editUsername, setEditUsername] = useState(false);
   const [editEmail, setEditEmail] = useState(false);
   const [editPassword, setEditPassword] = useState(false);
-  const [usersUserName, setUsersUserName] = useState(user.username);
+  const [usersUserName, setUsersUserName] = useState("");
   const [usersPassword, setUsersPassword] = useState("");
-  const [usersEmail, setUsersEmail] = useState(user.email);
+  const [usersEmail, setUsersEmail] = useState("");
+
+  useEffect(() => {
+    getUser();
+    // setUsersUserName(user.username);
+    // setUsersEmail(user.email);
+  }, []);
 
   console.log(user);
 
@@ -86,7 +93,7 @@ const Profile = ({ user, myOrders, token, setUser }) => {
     setEditPassword(!editPassword);
   };
 
-  if (!user.username) return <></>;
+  if (!user) return <></>;
   return (
     <div className="profile">
       <h1>Welcome {user.username}!</h1>
@@ -95,7 +102,7 @@ const Profile = ({ user, myOrders, token, setUser }) => {
       </form>
       <div className="order-history">
         <h2>Order History</h2>
-        {myOrders.length > 0 &&
+        {myOrders &&
           myOrders.map((order) => {
             return (
               <div key={order.id} className="order-div">
@@ -127,57 +134,63 @@ const Profile = ({ user, myOrders, token, setUser }) => {
             );
           })}
         {editProfile && (
-          <div>
-            <p>Username: {user.username}</p>
-            <form onSubmit={createEditUsername}>
-              <input type="submit" value="Edit Username" />
-            </form>
-            {editUsername && (
-              <form onSubmit={handleUpdateUsername}>
-                <input
-                  type="text"
-                  placeholder="New Username"
-                  value={usersUserName}
-                  onChange={(event) => {
-                    setUsersUserName(event.target.value);
-                  }}
-                />
-                <input type="submit" />
+          <div className="edit-profile">
+            <div className="edit-username">
+              <h5>Username: {user.username}</h5>
+              <form onSubmit={createEditUsername}>
+                <input type="submit" value="Edit Username" />
               </form>
-            )}
-            <p>Username: {user.email}</p>
-            <form onSubmit={createEditEmail}>
-              <input type="submit" value="Edit Email" />
-            </form>
-            {editEmail && (
-              <form onSubmit={handleUpdateEmail}>
-                <input
-                  type="text"
-                  placeholder="New Email"
-                  value={usersEmail}
-                  onChange={(event) => {
-                    setUsersEmail(event.target.value);
-                  }}
-                />
-                <input type="submit" />
+              {editUsername && (
+                <form onSubmit={handleUpdateUsername}>
+                  <input
+                    type="text"
+                    placeholder="New Username"
+                    value={usersUserName}
+                    onChange={(event) => {
+                      setUsersUserName(event.target.value);
+                    }}
+                  />
+                  <input type="submit" />
+                </form>
+              )}
+            </div>
+            <div className="edit-email">
+              <h5>Email: {user.email}</h5>
+              <form onSubmit={createEditEmail}>
+                <input type="submit" value="Edit Email" />
               </form>
-            )}
-            <form onSubmit={createEditPassword}>
-              <input type="submit" value="Edit Password" />
-            </form>
-            {editPassword && (
-              <form onSubmit={handleUpdatePassword}>
-                <input
-                  type="text"
-                  placeholder="New Password"
-                  value={usersPassword}
-                  onChange={(event) => {
-                    setUsersPassword(event.target.value);
-                  }}
-                />
-                <input type="submit" />
+              {editEmail && (
+                <form onSubmit={handleUpdateEmail}>
+                  <input
+                    type="text"
+                    placeholder="New Email"
+                    value={usersEmail}
+                    onChange={(event) => {
+                      setUsersEmail(event.target.value);
+                    }}
+                  />
+                  <input type="submit" />
+                </form>
+              )}
+            </div>
+            <div className="edit-password">
+              <form onSubmit={createEditPassword}>
+                <input type="submit" value="Edit Password" />
               </form>
-            )}
+              {editPassword && (
+                <form onSubmit={handleUpdatePassword}>
+                  <input
+                    type="text"
+                    placeholder="New Password"
+                    value={usersPassword}
+                    onChange={(event) => {
+                      setUsersPassword(event.target.value);
+                    }}
+                  />
+                  <input type="submit" />
+                </form>
+              )}
+            </div>
           </div>
         )}
       </div>

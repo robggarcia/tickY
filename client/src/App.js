@@ -65,9 +65,12 @@ function App() {
       console.log("THE USER IS NOT DEFINED");
       return;
     }
-    const data = await grabAllUsers(token);
-    console.log("GRAB ALL USERS: ", data);
-    if (data) setUsers(data);
+    const info = await fetchUser(token);
+    if (info.admin) {
+      const data = await grabAllUsers(token);
+      console.log("GRAB ALL USERS: ", data);
+      if (data) setUsers(data);
+    }
   };
 
   const getTickets = async () => {
@@ -281,6 +284,7 @@ function App() {
               myOrders={myOrders}
               token={token}
               setUser={setUser}
+              getUser={getUser}
             />
           }
         />
