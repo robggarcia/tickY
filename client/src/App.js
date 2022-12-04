@@ -250,11 +250,27 @@ function App() {
         />
         <Route
           path="/login"
-          element={<Login cart={cart} setToken={setToken} token={token} />}
+          element={
+            <Login
+              cart={cart}
+              setToken={setToken}
+              token={token}
+              setSuccess={setSuccess}
+              setDisplayMessage={setDisplayMessage}
+            />
+          }
         />
         <Route
           path="/register"
-          element={<Register cart={cart} setToken={setToken} token={token} />}
+          element={
+            <Register
+              cart={cart}
+              setToken={setToken}
+              token={token}
+              setSuccess={setSuccess}
+              setDisplayMessage={setDisplayMessage}
+            />
+          }
         />
         <Route path="/venues" element={<Venues />} />
 
@@ -270,6 +286,8 @@ function App() {
               setCart={setCart}
               myOrders={myOrders}
               setMyOrders={setMyOrders}
+              setSuccess={setSuccess}
+              setDisplayMessage={setDisplayMessage}
             />
           }
         />
@@ -283,6 +301,8 @@ function App() {
               token={token}
               setUser={setUser}
               getUser={getUser}
+              setSuccess={setSuccess}
+              setDisplayMessage={setDisplayMessage}
             />
           }
         />
@@ -300,6 +320,8 @@ function App() {
               setVenues={setVenues}
               artists={artists}
               setArtists={setArtists}
+              setSuccess={setSuccess}
+              setDisplayMessage={setDisplayMessage}
             />
           }
         />

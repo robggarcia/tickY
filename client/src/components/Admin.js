@@ -392,308 +392,342 @@ const Admin = ({
   };
 
   return (
-    <div className="admin">
-      <h1>Admin Dashboard</h1>
-      <div className="admin-container">
-        <div className="admin-sidebar">
-          <button
-            onClick={() => {
-              setShowUsers(!showUsers);
-              setShowTickets(false);
-              setShowArtists(false);
-              setShowVenues(false);
-            }}
-          >
-            Users
-          </button>
-          <button
-            onClick={() => {
-              setShowTickets(!showTickets);
-              setShowUsers(false);
-              setShowArtists(false);
-              setShowVenues(false);
-            }}
-          >
-            Tickets
-          </button>
-          <button
-            onClick={() => {
-              setShowArtists(!showArtists);
-              setShowTickets(false);
-              setShowUsers(false);
-              setShowVenues(false);
-            }}
-          >
-            Artists
-          </button>
-          <button
-            onClick={() => {
-              setShowVenues(!showVenues);
-              setShowArtists(false);
-              setShowTickets(false);
-              setShowUsers(false);
-            }}
-          >
-            Venues
-          </button>
-        </div>
-        {showUsers && (
-          <div className="admin-users">
-            <h2>Users</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Username</th>
-                  <th>Email</th>
-                  <th>Admin</th>
-                  <th>Edit</th>
-                  <th>Delete</th>
-                </tr>
-              </thead>
-              {usersAdmin.map((user, idx) =>
-                UserTable({ token, user, idx, canEditUser, deleteUser })
-              )}
-              {editUser && (
-                <tbody>
-                  <tr>Edit User</tr>
-                  <tr>
-                    <td>
-                      <input
-                        type="text"
-                        value={username}
-                        onChange={(event) => setUsername(event.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        value={admin}
-                        onChange={() => setAdmin(!admin)}
-                      />
-                    </td>
-                    <td>
-                      <button onClick={submitUser}>Submit</button>
-                    </td>
-                  </tr>
-                </tbody>
-              )}
-            </table>
-          </div>
-        )}
+    <div className="admincheck">
+      {user && !user.admin ? (
+        <h1>You do not have access to this page</h1>
+      ) : (
+        <div className="admin">
+          <h1>Admin Dashboard</h1>
+          <div className="admin-container">
+            <div className="admin-sidebar">
+              <button
+                onClick={() => {
+                  setShowUsers(!showUsers);
+                  setShowTickets(false);
+                  setShowArtists(false);
+                  setShowVenues(false);
+                }}
+              >
+                Users
+              </button>
+              <button
+                onClick={() => {
+                  setShowTickets(!showTickets);
+                  setShowUsers(false);
+                  setShowArtists(false);
+                  setShowVenues(false);
+                }}
+              >
+                Tickets
+              </button>
+              <button
+                onClick={() => {
+                  setShowArtists(!showArtists);
+                  setShowTickets(false);
+                  setShowUsers(false);
+                  setShowVenues(false);
+                }}
+              >
+                Artists
+              </button>
+              <button
+                onClick={() => {
+                  setShowVenues(!showVenues);
+                  setShowArtists(false);
+                  setShowTickets(false);
+                  setShowUsers(false);
+                }}
+              >
+                Venues
+              </button>
+            </div>
+            {showUsers && (
+              <div className="admin-users">
+                <h2>Users</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Admin</th>
+                      <th>Edit</th>
+                      <th>Delete</th>
+                    </tr>
+                  </thead>
+                  {usersAdmin.map((user, idx) =>
+                    UserTable({ token, user, idx, canEditUser, deleteUser })
+                  )}
+                  {editUser && (
+                    <tbody>
+                      <tr>Edit User</tr>
+                      <tr>
+                        <td>
+                          <input
+                            type="text"
+                            value={username}
+                            onChange={(event) =>
+                              setUsername(event.target.value)
+                            }
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="checkbox"
+                            value={admin}
+                            onChange={() => setAdmin(!admin)}
+                          />
+                        </td>
+                        <td>
+                          <button onClick={submitUser}>Submit</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  )}
+                </table>
+              </div>
+            )}
 
-        {showTickets && (
-          <div className="admin-tickets">
-            <h2>Tickets</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Artist</th>
-                  <th>Venue</th>
-                  <th>Date</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Edit</th>
-                  <th>Delete</th>
-                </tr>
-              </thead>
-              {ticketsAdmin.map((ticket, idx) =>
-                TicketTable({ token, ticket, idx, canEditTicket, deleteTicket })
-              )}
-              <tbody>
-                <tr>
-                  <td>{editTicket ? "Edit Ticket" : "Create New Ticket"}</td>
-                </tr>
-                <tr>
-                  <td>
-                    <input
-                      type="text"
-                      value={ticketArtistName}
-                      placeholder="Artist Name"
-                      onChange={(event) =>
-                        setTicketArtistName(event.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={ticketVenueName}
-                      placeholder="Venue Name"
-                      onChange={(event) =>
-                        setTicketVenueName(event.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={date}
-                      placeholder="Date"
-                      onChange={(event) => setDate(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={price}
-                      placeholder="Price"
-                      onChange={(event) => setPrice(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={quantity}
-                      placeholder="Quantity"
-                      onChange={(event) => setQuantity(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <button id={ticketId} onClick={submitTicket}>
-                      {editTicket ? "SUBMIT" : "CREATE"}
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            {showTickets && (
+              <div className="admin-tickets">
+                <h2>Tickets</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Artist</th>
+                      <th>Venue</th>
+                      <th>Date</th>
+                      <th>Price</th>
+                      <th>Quantity</th>
+                      <th>Edit</th>
+                      <th>Delete</th>
+                    </tr>
+                  </thead>
+                  {ticketsAdmin.map((ticket, idx) =>
+                    TicketTable({
+                      token,
+                      ticket,
+                      idx,
+                      canEditTicket,
+                      deleteTicket,
+                    })
+                  )}
+                  <tbody>
+                    <tr>
+                      <td>
+                        {editTicket ? "Edit Ticket" : "Create New Ticket"}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <input
+                          type="text"
+                          value={ticketArtistName}
+                          placeholder="Artist Name"
+                          onChange={(event) =>
+                            setTicketArtistName(event.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={ticketVenueName}
+                          placeholder="Venue Name"
+                          onChange={(event) =>
+                            setTicketVenueName(event.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={date}
+                          placeholder="Date"
+                          onChange={(event) => setDate(event.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={price}
+                          placeholder="Price"
+                          onChange={(event) => setPrice(event.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          value={quantity}
+                          placeholder="Quantity"
+                          onChange={(event) => setQuantity(event.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <button id={ticketId} onClick={submitTicket}>
+                          {editTicket ? "SUBMIT" : "CREATE"}
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {showArtists && (
+              <div className="admin-artists">
+                <h2>Artists</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Genre</th>
+                      <th>Image</th>
+                      <th>Description</th>
+                      <th>Edit</th>
+                      <th>Delete</th>
+                    </tr>
+                  </thead>
+                  {artistsAdmin.map((artist, idx) =>
+                    ArtistTable({
+                      token,
+                      artist,
+                      idx,
+                      canEditArtist,
+                      deleteArtist,
+                    })
+                  )}
+                  <tbody>
+                    <tr>
+                      <td>
+                        {editArtist ? "Edit Artist" : "Create New Artist"}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <input
+                          type="text"
+                          value={artistName}
+                          placeholder="Artist Name"
+                          onChange={(event) =>
+                            setArtistName(event.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={genre}
+                          placeholder="Genre"
+                          onChange={(event) => setGenre(event.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={image}
+                          placeholder="Image URL"
+                          onChange={(event) => setImage(event.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={description}
+                          placeholder="Description"
+                          onChange={(event) =>
+                            setDescription(event.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <button id={artistId} onClick={submitArtist}>
+                          {editArtist ? "Submit" : "Create"}
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {showVenues && (
+              <div className="admin-venues">
+                <h2>Venues</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>City</th>
+                      <th>State</th>
+                      <th>Capacity</th>
+                      <th>Edit</th>
+                      <th>Delete</th>
+                    </tr>
+                  </thead>
+                  {venuesAdmin.map((venue, idx) =>
+                    VenuesTable({
+                      token,
+                      venue,
+                      idx,
+                      canEditVenues,
+                      deleteVenue,
+                    })
+                  )}
+                  <tbody>
+                    <tr>
+                      <td>{editVenue ? "Edit Venue" : "Create New Venue"}</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <input
+                          type="text"
+                          value={venueName}
+                          placeholder="Venue Name"
+                          onChange={(event) => setVenueName(event.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={city}
+                          placeholder="City"
+                          onChange={(event) => setCity(event.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={state}
+                          placeholder="State"
+                          onChange={(event) => setState(event.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          value={capacity}
+                          placeholder="Capacity"
+                          onChange={(event) => setCapacity(event.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <button id={venueId} onClick={submitVenue}>
+                          {editVenue ? "EDIT" : "CREATE"}
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
-        )}
-        {showArtists && (
-          <div className="admin-artists">
-            <h2>Artists</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Genre</th>
-                  <th>Image</th>
-                  <th>Description</th>
-                  <th>Edit</th>
-                  <th>Delete</th>
-                </tr>
-              </thead>
-              {artistsAdmin.map((artist, idx) =>
-                ArtistTable({ token, artist, idx, canEditArtist, deleteArtist })
-              )}
-              <tbody>
-                <tr>
-                  <td>{editArtist ? "Edit Artist" : "Create New Artist"}</td>
-                </tr>
-                <tr>
-                  <td>
-                    <input
-                      type="text"
-                      value={artistName}
-                      placeholder="Artist Name"
-                      onChange={(event) => setArtistName(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={genre}
-                      placeholder="Genre"
-                      onChange={(event) => setGenre(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={image}
-                      placeholder="Image URL"
-                      onChange={(event) => setImage(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={description}
-                      placeholder="Description"
-                      onChange={(event) => setDescription(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <button id={artistId} onClick={submitArtist}>
-                      {editArtist ? "Submit" : "Create"}
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
-        {showVenues && (
-          <div className="admin-venues">
-            <h2>Venues</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>City</th>
-                  <th>State</th>
-                  <th>Capacity</th>
-                  <th>Edit</th>
-                  <th>Delete</th>
-                </tr>
-              </thead>
-              {venuesAdmin.map((venue, idx) =>
-                VenuesTable({ token, venue, idx, canEditVenues, deleteVenue })
-              )}
-              <tbody>
-                <tr>
-                  <td>{editVenue ? "Edit Venue" : "Create New Venue"}</td>
-                </tr>
-                <tr>
-                  <td>
-                    <input
-                      type="text"
-                      value={venueName}
-                      placeholder="Venue Name"
-                      onChange={(event) => setVenueName(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={city}
-                      placeholder="City"
-                      onChange={(event) => setCity(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={state}
-                      placeholder="State"
-                      onChange={(event) => setState(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={capacity}
-                      placeholder="Capacity"
-                      onChange={(event) => setCapacity(event.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <button id={venueId} onClick={submitVenue}>
-                      {editVenue ? "EDIT" : "CREATE"}
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
