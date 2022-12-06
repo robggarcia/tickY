@@ -11,7 +11,7 @@ const Home = () => {
     <>
       <div className="home">
         <div className="home2">
-          <h1>The Number One Trust Source for Concert Tickets </h1>
+          <h1>The Number One Trusted Source for Concert Tickets </h1>
           <h3>Created By Concert Lovers for Concert Lovers</h3>
         </div>
         <TestCarousel />
