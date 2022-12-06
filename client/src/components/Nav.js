@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { fetchUsersOrders } from "../api";
 import "../styles/Nav.css";
 
 const Nav = ({
@@ -17,6 +18,7 @@ const Nav = ({
   setCart,
   venues,
   cart,
+  setMyOrders,
 }) => {
   const [admin, setAdmin] = useState(false);
 
