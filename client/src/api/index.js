@@ -320,12 +320,23 @@ export const destroyTicket = async ({ token, ticketId }) => {
 // ORDERS
 export const fetchAllOrders = async (token) => {
   try {
-    const response = fetch(`api/orders`, {
+    const response = await fetch(`api/orders`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
+    const data = await response.json();
+    console.log("data", data);
+    /*  for (let order of data) {
+      for (let ticket of order.tickets) {
+        ticket.month = monthByNumber(ticket.date.slice(5, 7));
+        ticket.day = ticket.date.slice(8, 10);
+        ticket.year = ticket.date.slice(0, 4);
+      }
+    } */
+
+    return data;
   } catch (error) {
     console.error(error);
   }

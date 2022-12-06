@@ -90,6 +90,8 @@ function App() {
       const tickDate = new Date(ticket.date.slice(0, 10));
       if (tickDate > current) {
         return true;
+      } else {
+        return false;
       }
     });
     setArtistTickets(ticketsArray);
@@ -175,6 +177,7 @@ function App() {
         token={token}
         setCart={setCart}
         cart={cart}
+        setMyOrders={setMyOrders}
       />
       <Routes>
         <Route

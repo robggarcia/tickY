@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { fetchUsersOrders } from "../api";
 
 import "../styles/Cart.css";
 import Ticket from "./Ticket";
@@ -20,6 +21,7 @@ const Cart = ({
 
   console.log("cart", cart);
   console.log("itemsToDisplay", itemsToDisplay);
+  console.log("user", user);
 
   const navigate = useNavigate();
 
@@ -37,6 +39,17 @@ const Cart = ({
   useEffect(() => {
     updateItems();
   }, [cart]);
+
+  // check if order is defined! if not create a new order for the user
+  const checkOrder = async () => {
+    if (!myOrders || myOrders.length === 0) {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    checkOrder();
+  }, []);
 
   return (
     <div className="cart">

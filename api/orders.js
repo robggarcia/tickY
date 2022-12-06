@@ -29,7 +29,6 @@ ordersRouter.get("/", requireAdmin, async (req, res, next) => {
   try {
     const orders = await getAllOrders();
     res.send(orders);
-    return;
   } catch (error) {
     next(error);
     return;
