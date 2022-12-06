@@ -9,6 +9,7 @@ import {
   destroyTicket,
   destroyUser,
   destroyVenue,
+  fetchAllOrders,
   fetchArtists,
   fetchTickets,
   fetchVenues,
@@ -36,12 +37,14 @@ const Admin = ({
   const [venuesAdmin, setVenuesAdmin] = useState(null);
   const [artistsAdmin, setArtistsAdmin] = useState(null);
   const [ticketsAdmin, setTicketsAdmin] = useState(null);
+  const [ordersAdmin, setOrdersAdmin] = useState(null);
 
   const [editUser, setEditUser] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
   const [showTickets, setShowTickets] = useState(false);
   const [showArtists, setShowArtists] = useState(false);
   const [showVenues, setShowVenues] = useState(false);
+  const [showOrders, setShowOrders] = useState(false);
 
   const getUsers = async () => {
     const allUsers = await grabAllUsers(token);
@@ -62,12 +65,24 @@ const Admin = ({
     setTicketsAdmin(data);
   };
 
+  const getAllOrders = async () => {
+    const orders = await fetchAllOrders(token);
+    // sort orders by unpurchased/puchased and by date
+    const purchasedOrders = orders.filter((order) => order.purchased);
+    console.log("ALL Purchased ORDERS: ", purchasedOrders);
+    const unpurchasedOrders = orders.filter((order) => !order.purchased);
+    console.log("ALL UN Purchased ORDERS: ", unpurchasedOrders);
+    const sortedOrders = [...unpurchasedOrders, ...purchasedOrders];
+    setOrdersAdmin(sortedOrders);
+  };
+
   useEffect(() => {
     console.log("USE EFFECT CALLED");
     getUsers();
     getArtists();
     getVenues();
     getTickets();
+    getAllOrders();
   }, [users, venues, tickets, artists]);
 
   // EDIT USER
@@ -408,6 +423,7 @@ const Admin = ({
                   setShowTickets(false);
                   setShowArtists(false);
                   setShowVenues(false);
+                  setShowOrders(false);
                 }}
               >
                 Users
@@ -418,6 +434,7 @@ const Admin = ({
                   setShowUsers(false);
                   setShowArtists(false);
                   setShowVenues(false);
+                  setShowOrders(false);
                 }}
               >
                 Tickets
@@ -428,6 +445,7 @@ const Admin = ({
                   setShowTickets(false);
                   setShowUsers(false);
                   setShowVenues(false);
+                  setShowOrders(false);
                 }}
               >
                 Artists
@@ -438,9 +456,21 @@ const Admin = ({
                   setShowArtists(false);
                   setShowTickets(false);
                   setShowUsers(false);
+                  setShowOrders(false);
                 }}
               >
                 Venues
+              </button>
+              <button
+                onClick={() => {
+                  setShowUsers(false);
+                  setShowTickets(false);
+                  setShowArtists(false);
+                  setShowVenues(false);
+                  setShowOrders(!showUsers);
+                }}
+              >
+                Orders
               </button>
             </div>
             {showUsers && (
@@ -727,6 +757,28 @@ const Admin = ({
                 </table>
               </div>
             )}
+            {showOrders && (
+              <div className="admin-orders">
+                <h2>Orders</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>User Id</th>
+                      <th>Purchased ?</th>
+                      <th># of Tickets</th>
+                      <th>Cost</th>
+                    </tr>
+                  </thead>
+                  {ordersAdmin.map((order, idx) =>
+                    OrdersTable({
+                      token,
+                      order,
+                      idx,
+                    })
+                  )}
+                </table>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -824,6 +876,26 @@ const VenuesTable = ({ token, venue, idx, canEditVenues, deleteVenue }) => {
             Delete
           </button>
         </td>
+      </tr>
+    </tbody>
+  );
+};
+
+const OrdersTable = ({ token, order, idx }) => {
+  const calculatePrice = (order) => {
+    let price = 0;
+    for (let item of order.tickets) {
+      price += item.price * item.quantity;
+    }
+    return price;
+  };
+  return (
+    <tbody key={idx}>
+      <tr key={idx}>
+        <td>{order.id}</td>
+        <td>{order.purchased ? "true" : "false"}</td>
+        <td>{order.tickets.length}</td>
+        <td>${calculatePrice(order)}</td>
       </tr>
     </tbody>
   );
