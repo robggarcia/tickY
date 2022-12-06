@@ -17,7 +17,7 @@ const Modal = ({ displayMessage, success }) => {
   }, [displayMessage]);
 
   return (
-    <>
+    <div className="modal-container">
       {visible && (
         <div className={success ? "modal success" : "modal error"}>
           <p>{displayMessage}</p>
@@ -26,7 +26,7 @@ const Modal = ({ displayMessage, success }) => {
           </h3>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

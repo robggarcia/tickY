@@ -67,6 +67,9 @@ const Admin = ({
 
   const getAllOrders = async () => {
     const orders = await fetchAllOrders(token);
+    for (let order of orders) {
+      order.username = users.find((user) => user.id === order.userId).username;
+    }
     // sort orders by unpurchased/puchased and by date
     const purchasedOrders = orders.filter((order) => order.purchased);
     console.log("ALL Purchased ORDERS: ", purchasedOrders);
@@ -763,7 +766,7 @@ const Admin = ({
                 <table>
                   <thead>
                     <tr>
-                      <th>User Id</th>
+                      <th>User</th>
                       <th>Purchased ?</th>
                       <th># of Tickets</th>
                       <th>Cost</th>
@@ -892,7 +895,7 @@ const OrdersTable = ({ token, order, idx }) => {
   return (
     <tbody key={idx}>
       <tr key={idx}>
-        <td>{order.id}</td>
+        <td>{order.username}</td>
         <td>{order.purchased ? "true" : "false"}</td>
         <td>{order.tickets.length}</td>
         <td>${calculatePrice(order)}</td>

@@ -151,7 +151,11 @@ const Nav = ({
         </div>
       )}
       {cart.length > 0 && (
-        <div className="cart-bubble-container">
+        <div
+          className={
+            token ? "cart-bubble-container" : "cart-bubble-container no-user"
+          }
+        >
           <p className="cart-bubble">{cart.length}</p>
         </div>
       )}
