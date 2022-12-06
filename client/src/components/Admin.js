@@ -9,7 +9,6 @@ import {
   destroyTicket,
   destroyUser,
   destroyVenue,
-  fetchAllOrders,
   fetchArtists,
   fetchTickets,
   fetchVenues,
