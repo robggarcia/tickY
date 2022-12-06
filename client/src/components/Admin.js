@@ -14,7 +14,12 @@ import {
   fetchVenues,
   grabAllUsers,
 } from "../api";
-import { updateUser, adminUpdateTicket, adminUpdateArtist } from "../api";
+import {
+  updateUser,
+  adminUpdateTicket,
+  adminUpdateArtist,
+  fetchAllOrders,
+} from "../api";
 
 import "../styles/Admin.css";
 
@@ -36,12 +41,14 @@ const Admin = ({
   const [venuesAdmin, setVenuesAdmin] = useState(null);
   const [artistsAdmin, setArtistsAdmin] = useState(null);
   const [ticketsAdmin, setTicketsAdmin] = useState(null);
+  const [ordersAdmin, setOrdersAdmin] = useState(null);
 
   const [editUser, setEditUser] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
   const [showTickets, setShowTickets] = useState(false);
   const [showArtists, setShowArtists] = useState(false);
   const [showVenues, setShowVenues] = useState(false);
+  const [showOders, setShowOrders] = useState(false);
 
   const getUsers = async () => {
     const allUsers = await grabAllUsers(token);
@@ -62,12 +69,19 @@ const Admin = ({
     setTicketsAdmin(data);
   };
 
+  const getAllOrders = async () => {
+    const data = await fetchAllOrders();
+    // order the orders by purchased/unpurchased and by date
+    setOrdersAdmin(data);
+  };
+
   useEffect(() => {
     console.log("USE EFFECT CALLED");
     getUsers();
     getArtists();
     getVenues();
     getTickets();
+    getAllOrders();
   }, [users, venues, tickets, artists]);
 
   // EDIT USER
@@ -408,6 +422,7 @@ const Admin = ({
                   setShowTickets(false);
                   setShowArtists(false);
                   setShowVenues(false);
+                  setShowOrders(false);
                 }}
               >
                 Users
@@ -418,6 +433,7 @@ const Admin = ({
                   setShowUsers(false);
                   setShowArtists(false);
                   setShowVenues(false);
+                  setShowOrders(false);
                 }}
               >
                 Tickets
@@ -428,6 +444,7 @@ const Admin = ({
                   setShowTickets(false);
                   setShowUsers(false);
                   setShowVenues(false);
+                  setShowOrders(false);
                 }}
               >
                 Artists
@@ -438,9 +455,21 @@ const Admin = ({
                   setShowArtists(false);
                   setShowTickets(false);
                   setShowUsers(false);
+                  setShowOrders(false);
                 }}
               >
                 Venues
+              </button>
+              <button
+                onClick={() => {
+                  setShowVenues(false);
+                  setShowArtists(false);
+                  setShowTickets(false);
+                  setShowUsers(false);
+                  setShowOrders(!showOrders);
+                }}
+              >
+                Orders
               </button>
             </div>
             {showUsers && (

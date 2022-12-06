@@ -318,6 +318,19 @@ export const destroyTicket = async ({ token, ticketId }) => {
 };
 
 // ORDERS
+export const fetchAllOrders = async (token) => {
+  try {
+    const response = fetch(`api/orders`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const fetchUsersOrders = async (token, userId) => {
   try {
     const response = await fetch(`api/users/${userId}/orders`, {
