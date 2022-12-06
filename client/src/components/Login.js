@@ -27,11 +27,12 @@ const Login = ({ cart, setToken, token, setSuccess, setDisplayMessage }) => {
     } else {
       setToken(data.token);
       localStorage.setItem("token", data.token);
-      if (cart.length > 0) {
+      /*  if (cart.length > 0) {
         navigate("/cart");
       } else {
         navigate("/");
-      }
+      } */
+      navigate("/");
     }
   };
 
