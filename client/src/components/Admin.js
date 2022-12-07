@@ -13,6 +13,7 @@ import {
   fetchTickets,
   fetchVenues,
   grabAllUsers,
+  updateArtist,
 } from "../api";
 import {
   updateUser,
@@ -794,11 +795,11 @@ const Admin = ({
 };
 
 // TABLE COMPONENTS TO EDIT INDIVIDUAL ITEMS
-const UserTable = ({ token, user, idx }) => {
+const UserTable = ({ token, user, idx, canEditUser, deleteUser }) => {
   const [edit, setEdit] = useState(false);
   const [username, setUsername] = useState(user.username);
   const [email, setEmail] = useState(user.email);
-  const [admin, setAdmin] = userState(user.admin);
+  const [admin, setAdmin] = useState(user.admin);
 
   const editUser = () => {
     setEdit(!edit);
@@ -809,7 +810,6 @@ const UserTable = ({ token, user, idx }) => {
       token,
       userId: user.id,
       username,
-      quantity,
       email,
     });
     console.log("USER UPDATED: ", updatedUser);
@@ -837,13 +837,13 @@ const UserTable = ({ token, user, idx }) => {
   );
 };
 
-const TicketTable = ({ token, ticket, idx }) => {
+const TicketTable = ({ token, ticket, idx, canEditTicket, deleteTicket }) => {
   const [edit, setEdit] = useState(false);
   const [artistName, setArtistName] = useState(ticket.artist.name);
   const [venueName, setVenueName] = useState(ticket.venue.name);
   const [date, setDate] = useState(ticket.date.slice(0, 10));
-  const [price, setPrice] = userState(ticket.price);
-  const [quantity, setQuantity] = userState(ticket.quantity);
+  const [price, setPrice] = useState(ticket.price);
+  const [quantity, setQuantity] = useState(ticket.quantity);
 
   const editTicket = () => {
     setEdit(!edit);
@@ -886,12 +886,12 @@ const TicketTable = ({ token, ticket, idx }) => {
   );
 };
 
-const ArtistTable = ({ artist, idx }) => {
+const ArtistTable = ({ token, artist, idx, canEditArtist }) => {
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState(artist.name);
   const [genre, setGenre] = useState(artist.genre);
   const [image, setImage] = useState(artist.image);
-  const [description, setDescription] = userState(artist.description);
+  const [description, setDescription] = useState(artist.description);
 
   const editArtist = () => {
     setEdit(!edit);
@@ -956,7 +956,7 @@ const ArtistTable = ({ artist, idx }) => {
             />
           </td>
           <td>
-            <button id={ticket.id} onClick={submitArtist}>
+            <button id={artist.id} onClick={submitArtist}>
               Edit
             </button>
           </td>
