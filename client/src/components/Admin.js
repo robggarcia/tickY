@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { grabAllUsers } from "../api";
-import { updateUser, adminUpdateTicket, updateArtist } from "./api";
+import { updateUser, adminUpdateTicket, updateArtist } from "../api";
 
 import "../styles/Admin.css";
 
@@ -124,7 +124,7 @@ const UserTable = ({ token, user, idx }) => {
   const [edit, setEdit] = useState(false);
   const [username, setUsername] = useState(user.username);
   const [email, setEmail] = useState(user.email);
-  const [admin, setAdmin] = userState(user.admin);
+  const [admin, setAdmin] = useState(user.admin);
 
   const editUser = () => {
     setEdit(!edit);
@@ -135,7 +135,7 @@ const UserTable = ({ token, user, idx }) => {
       token,
       userId: user.id,
       username,
-      quantity,
+      //quantity,
       email,
     });
     console.log("USER UPDATED: ", updatedUser);
@@ -193,8 +193,8 @@ const TicketTable = ({ token, ticket, idx }) => {
   const [artistName, setArtistName] = useState(ticket.artist.name);
   const [venueName, setVenueName] = useState(ticket.venue.name);
   const [date, setDate] = useState(ticket.date.slice(0, 10));
-  const [price, setPrice] = userState(ticket.price);
-  const [quantity, setQuantity] = userState(ticket.quantity);
+  const [price, setPrice] = useState(ticket.price);
+  const [quantity, setQuantity] = useState(ticket.quantity);
 
   const editTicket = () => {
     setEdit(!edit);
@@ -281,7 +281,7 @@ const ArtistTable = ({ artist, idx }) => {
   const [name, setName] = useState(artist.name);
   const [genre, setGenre] = useState(artist.genre);
   const [image, setImage] = useState(artist.image);
-  const [description, setDescription] = userState(artist.description);
+  const [description, setDescription] = useState(artist.description);
 
   const editArtist = () => {
     setEdit(!edit);
@@ -289,7 +289,7 @@ const ArtistTable = ({ artist, idx }) => {
 
   const submitArtist = async () => {
     const updatedArtist = await updateArtist({
-      token,
+      //token,
       artistId: artist.id,
       name,
       genre,
@@ -344,9 +344,7 @@ const ArtistTable = ({ artist, idx }) => {
             />
           </td>
           <td>
-            <button id={ticket.id} onClick={submitArtist}>
-              Edit
-            </button>
+            <button onClick={submitArtist}>Edit</button>
           </td>
         </tr>
       )}
