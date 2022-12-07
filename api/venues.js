@@ -62,7 +62,7 @@ venuesRouter.post("/", requireAdmin, async (req, res, next) => {
       next(err);
       return;
     }
-    // create the new ticket
+    // create the new venue
     const venue = await createVenue(inputFields);
     res.send(venue);
   } catch ({ name, message }) {

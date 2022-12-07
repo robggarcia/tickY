@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import {
   createOrder,
-  createTicketOrder,
   fetchArtists,
   fetchTickets,
   fetchUser,
   fetchUsersOrders,
   fetchVenues,
-  monthByNumber,
+  grabAllUsers,
 } from "./api";
 import "./App.css";
 import {
@@ -28,12 +27,13 @@ import {
   Venues,
 } from "./components";
 import Admin from "./components/Admin";
-import "./App.css";
+// import Admin from "./components/Admin";
 
 function App() {
   const [artists, setArtists] = useState([]);
   const [venues, setVenues] = useState([]);
   const [tickets, setTickets] = useState([]);
+  const [users, setUsers] = useState([]);
   const [artistTickets, setArtistTickets] = useState(null);
   const [token, setToken] = useState("");
   const [user, setUser] = useState(null);
@@ -56,6 +56,20 @@ function App() {
     // console.log("getVenues: ", data);
     setVenues(data);
   };
+  const getAllUsers = async () => {
+    // check local storage to see if a token is available
+    if (localStorage.getItem("token")) setToken(localStorage.getItem("token"));
+    if (!token) {
+      console.log("THE USER IS NOT DEFINED");
+      return;
+    }
+    const info = await fetchUser(token);
+    if (info.admin) {
+      const data = await grabAllUsers(token);
+      console.log("GRAB ALL USERS: ", data);
+      if (data) setUsers(data);
+    }
+  };
 
   const getTickets = async () => {
     const data = await fetchTickets();
@@ -76,12 +90,14 @@ function App() {
       const tickDate = new Date(ticket.date.slice(0, 10));
       if (tickDate > current) {
         return true;
+      } else {
+        return false;
       }
     });
     setArtistTickets(ticketsArray);
   };
 
-  const getUser = async (token) => {
+  const getUser = async () => {
     console.log("GET USER CALLED");
     // check local storage to see if a token is available
     if (localStorage.getItem("token")) setToken(localStorage.getItem("token"));
@@ -140,7 +156,8 @@ function App() {
     getArtists();
     getVenues();
     getTickets();
-    getUser(token);
+    getUser();
+    getAllUsers();
   }, [token]);
 
   return (
@@ -160,6 +177,7 @@ function App() {
         token={token}
         setCart={setCart}
         cart={cart}
+        setMyOrders={setMyOrders}
       />
       <Routes>
         <Route
@@ -226,6 +244,8 @@ function App() {
               myOrders={myOrders}
               currentOrderId={currentOrderId}
               setMyOrders={setMyOrders}
+              setSuccess={setSuccess}
+              setDisplayMessage={setDisplayMessage}
             />
           }
         />
@@ -235,44 +255,77 @@ function App() {
         />
         <Route
           path="/login"
-          element={<Login cart={cart} setToken={setToken} token={token} />}
+          element={
+            <Login
+              cart={cart}
+              setToken={setToken}
+              token={token}
+              setSuccess={setSuccess}
+              setDisplayMessage={setDisplayMessage}
+            />
+          }
         />
         <Route
           path="/register"
-          element={<Register cart={cart} setToken={setToken} token={token} />}
+          element={
+            <Register
+              cart={cart}
+              setToken={setToken}
+              token={token}
+              setSuccess={setSuccess}
+              setDisplayMessage={setDisplayMessage}
+            />
+          }
         />
-        <Route path="/venues" element={<Venues />} />
-        {myOrders && (
-          <Route
-            path="/artists/:artistId"
-            element={
-              <Artists
-                token={token}
-                currentOrderId={currentOrderId}
-                artists={artists}
-                tickets={tickets}
-                cart={cart}
-                setCart={setCart}
-                myOrders={myOrders}
-                setMyOrders={setMyOrders}
-              />
-            }
-          />
-        )}
+        {/* <Route path="/venues" element={<Venues />} /> */}
+        <Route
+          path="/artists/:artistId"
+          element={
+            <Artists
+              token={token}
+              currentOrderId={currentOrderId}
+              artists={artists}
+              tickets={tickets}
+              cart={cart}
+              setCart={setCart}
+              myOrders={myOrders}
+              setMyOrders={setMyOrders}
+              setSuccess={setSuccess}
+              setDisplayMessage={setDisplayMessage}
+            />
+          }
+        />
 
         <Route
           path="/profile"
-          element={<Profile user={user} myOrders={myOrders} />}
+          element={
+            <Profile
+              user={user}
+              myOrders={myOrders}
+              token={token}
+              setUser={setUser}
+              getUser={getUser}
+              setSuccess={setSuccess}
+              setDisplayMessage={setDisplayMessage}
+            />
+          }
         />
         <Route
           path="/admin"
           element={
             <Admin
-              venues={venues}
-              artists={artists}
-              tickets={tickets}
               user={user}
               token={token}
+              users={users}
+              setUsers={setUsers}
+              tickets={tickets}
+              setTickets={setTickets}
+              venues={venues}
+              setVenues={setVenues}
+              artists={artists}
+              setArtists={setArtists}
+              setSuccess={setSuccess}
+              setDisplayMessage={setDisplayMessage}
             />
           }
         />

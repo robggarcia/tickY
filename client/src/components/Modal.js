@@ -12,12 +12,12 @@ const Modal = ({ displayMessage, success }) => {
       setVisible(true);
       setTimeout(() => {
         setVisible(false);
-      }, 5000);
+      }, 10000);
     }
   }, [displayMessage]);
 
   return (
-    <>
+    <div className="modal-container">
       {visible && (
         <div className={success ? "modal success" : "modal error"}>
           <p>{displayMessage}</p>
@@ -26,7 +26,7 @@ const Modal = ({ displayMessage, success }) => {
           </h3>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

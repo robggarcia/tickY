@@ -8,6 +8,7 @@ const { createUser } = require("./users");
 const { createVenue } = require("./venues");
 
 const dropTables = async () => {
+  console.log("DATABASE_URL: ", process.env.DATABASE_URL);
   console.log("Dropping All Tables...");
   // drop all tables, in the correct order
   try {
@@ -104,6 +105,12 @@ async function createInitialUsers() {
         password: "password2",
         email: "max@gmail.com",
         admin: true,
+      },
+      {
+        username: "brandontest",
+        password: "brandontest",
+        email: "brandontest@gmail.com",
+        admin: false,
       },
     ];
     const users = await Promise.all(usersToCreate.map(createUser));

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = ({ cart, setToken, token }) => {
+const Login = ({ cart, setToken, token, setSuccess, setDisplayMessage }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [username, setUsername] = useState("");
@@ -27,11 +27,12 @@ const Login = ({ cart, setToken, token }) => {
     } else {
       setToken(data.token);
       localStorage.setItem("token", data.token);
-      if (cart.length > 0) {
+      /*  if (cart.length > 0) {
         navigate("/cart");
       } else {
         navigate("/");
-      }
+      } */
+      navigate("/");
     }
   };
 

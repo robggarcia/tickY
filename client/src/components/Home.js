@@ -10,10 +10,12 @@ const Home = () => {
   return (
     <>
       <div className="home">
-        {/* <h1>No Fees. Just Easy Tickets.</h1>
-        <p>let us save you money on sold out shows</p> */}
+        <div className="home2">
+          <h1>The Number One Trusted Source for Concert Tickets </h1>
+          <h3>Created By Concert Lovers for Concert Lovers</h3>
+        </div>
+        <TestCarousel />
       </div>
-      <TestCarousel />
     </>
   );
 };

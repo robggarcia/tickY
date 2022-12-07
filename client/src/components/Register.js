@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Register = ({ cart, setToken, token }) => {
+const Register = ({ cart, setToken, token, setSuccess, setDisplayMessage }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,15 +46,16 @@ const Register = ({ cart, setToken, token }) => {
       const data = await register.json();
       console.log(data);
       if (data.error) {
-        setError(data.error);
+        setError(data.message);
       } else {
         setToken(data.token);
         localStorage.setItem("token", data.token);
-        if (cart.length > 0) {
+        navigate("/");
+        /* if (cart.length > 0) {
           navigate("/cart");
         } else {
           navigate("/");
-        }
+        } */
       }
       setError(error);
     }

@@ -23,6 +23,7 @@ const Checkout = ({ token, user, myOrders }) => {
   const getCurrentOrder = async () => {
     const order = myOrders.find((order) => order.id === +orderId);
     setCurrentOrder(order);
+    console.log("CURRENT ORDER: ", order);
     let price = 0;
     for (let ticket of order.tickets) {
       const numTics = order.ticketOrders.find(
@@ -31,7 +32,6 @@ const Checkout = ({ token, user, myOrders }) => {
       price += ticket.price * numTics;
     }
     setTotalPrice(price);
-
     // Create PaymentIntent as soon as the page loads
     try {
       fetch("/api/create-payment-intent", {

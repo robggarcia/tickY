@@ -27,6 +27,29 @@ async function getAllOrders() {
       SELECT * 
       FROM orders;
     `);
+
+    for (let order of orders) {
+      if (!order) return null;
+      // attach ticket to order by first grabbing the ticket_order
+      const { rows: ticket_orders } = await client.query(
+        `
+      SELECT *
+      FROM tickets_orders
+      WHERE "orderId"=$1;
+    `,
+        [order.id]
+      );
+      order.ticketOrders = ticket_orders;
+      const tickets = [];
+      for (let ticket_order of ticket_orders) {
+        console.log("ticket_order.ticketId", ticket_order.ticketId);
+        const ticket = await getTicketById(ticket_order.ticketId);
+        ticket.quantity = ticket_order.quantity;
+        tickets.push(ticket);
+      }
+      order.tickets = tickets;
+    }
+
     return orders;
   } catch (error) {
     console.error("Error in getAllOrders");

@@ -8,6 +8,7 @@ const {
   getTicketsByArtist,
   createTicket,
   updateTicket,
+  deleteTicket,
 } = require("../db/tickets");
 const { requireUser, requireAdmin } = require("./utils");
 const ticketsRouter = express.Router();
@@ -114,7 +115,7 @@ ticketsRouter.delete("/:ticketId", requireAdmin, async (req, res, next) => {
   const ticketId = req.params.ticketId;
   try {
     // check to see if ticket id exists
-    const ticket = await getTicketById(ticketId);
+    const ticket = await getTicketById(+ticketId);
     if (!ticket) {
       const err = new Error(`Ticket ${ticketId} not found`);
       err.status = 400;

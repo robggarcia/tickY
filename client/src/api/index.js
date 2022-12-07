@@ -31,7 +31,8 @@ export const grabAllUsers = async (token) => {
 
 export const updateUser = async ({ token, userId, username, email, admin }) => {
   try {
-    const response = await patch(`api/users/${userId}`, {
+    const response = await fetch(`api/users/${userId}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -44,6 +45,22 @@ export const updateUser = async ({ token, userId, username, email, admin }) => {
     });
     const updatedUser = await response.json();
     return updatedUser;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const destroyUser = async ({ token, userId }) => {
+  try {
+    const response = await fetch(`api/users/${userId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(error);
   }
@@ -74,7 +91,8 @@ export const updateArtist = async ({
   description,
 }) => {
   try {
-    const response = await patch(`api/artists/${artistId}`, {
+    const response = await fetch(`api/artists/${artistId}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -93,6 +111,56 @@ export const updateArtist = async ({
   }
 };
 
+export const adminUpdateArtist = async ({ token, artistId, ...fields }) => {
+  try {
+    const response = await fetch(`api/artists/${artistId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(fields),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const createArtist = async ({ token, ...fields }) => {
+  try {
+    const response = await fetch(`api/artists`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(fields),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const destroyArtist = async ({ token, artistId }) => {
+  try {
+    const response = await fetch(`api/artists/${artistId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // VENUES
 export const fetchVenues = async () => {
   try {
@@ -100,6 +168,56 @@ export const fetchVenues = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const adminUpdateVenue = async ({ token, venueId, ...fields }) => {
+  try {
+    const response = await fetch(`api/venues/${venueId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(fields),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const createVenue = async ({ token, ...fields }) => {
+  try {
+    const response = await fetch(`api/venues`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(fields),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const destroyVenue = async ({ token, venueId }) => {
+  try {
+    const response = await fetch(`api/venues/${venueId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
     const data = await response.json();
@@ -149,15 +267,7 @@ export const updateTicket = async ({ token, ticketId, quantity }) => {
   }
 };
 
-export const adminUpdateTicket = async ({
-  token,
-  ticketId,
-  artistId,
-  venueId,
-  date,
-  price,
-  quantity,
-}) => {
+export const adminUpdateTicket = async ({ token, ticketId, ...fields }) => {
   try {
     const response = await fetch(`api/tickets/${ticketId}`, {
       method: "PATCH",
@@ -165,13 +275,40 @@ export const adminUpdateTicket = async ({
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        artistId,
-        venueId,
-        date,
-        price,
-        quantity,
-      }),
+      body: JSON.stringify(fields),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const createTicket = async ({ token, ...fields }) => {
+  try {
+    const response = await fetch(`api/tickets`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(fields),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const destroyTicket = async ({ token, ticketId }) => {
+  try {
+    const response = await fetch(`api/tickets/${ticketId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
     const data = await response.json();
     return data;
@@ -181,6 +318,30 @@ export const adminUpdateTicket = async ({
 };
 
 // ORDERS
+export const fetchAllOrders = async (token) => {
+  try {
+    const response = await fetch(`api/orders`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    console.log("data", data);
+    /*  for (let order of data) {
+      for (let ticket of order.tickets) {
+        ticket.month = monthByNumber(ticket.date.slice(5, 7));
+        ticket.day = ticket.date.slice(8, 10);
+        ticket.year = ticket.date.slice(0, 4);
+      }
+    } */
+
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const fetchUsersOrders = async (token, userId) => {
   try {
     const response = await fetch(`api/users/${userId}/orders`, {
