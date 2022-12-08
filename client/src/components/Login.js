@@ -9,7 +9,6 @@ const Login = ({ cart, setToken, token, setSuccess, setDisplayMessage }) => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    console.log(username, password);
     const response = await fetch(`api/users/login`, {
       method: "POST",
       headers: {

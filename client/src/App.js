@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import {
   createOrder,
+  createTicketOrder,
   fetchArtists,
   fetchTickets,
   fetchUser,
@@ -124,6 +125,7 @@ function App() {
         const currentOrder = orderData[orderData.length - 1];
         setCurrentOrderId(currentOrder.id);
         let newCart = [...cart];
+
         if (currentOrder.tickets.length > 0) {
           setCart([...cart, currentOrder]);
           for (let ticket of currentOrder.tickets) {
@@ -136,12 +138,26 @@ function App() {
               ticketOrderId: ticketOrder.id,
               ticket,
             };
-            // console.log("ITEM FOR CART: ", item);
             newCart.push(item);
           }
         }
         console.log("NEW CART SET: ", newCart);
         setCart(newCart);
+        // need to add items in cart to currentOrder
+
+        for (let item of cart) {
+          console.log("CREATING TICKET ORDER");
+          const ticketOrder = await createTicketOrder({
+            token,
+            orderId: currentOrderId,
+            ticketId: item.ticket.id,
+            quantity: item.quantity,
+          });
+          currentOrder.ticketOrders.push(ticketOrder);
+          currentOrder.tickets.push(item.ticket);
+        }
+        console.log("currentOrder", currentOrder);
+        setMyOrders(orderData);
       } else {
         // create a new order for the user
         console.log("CREATING A NEW ORDER: ");

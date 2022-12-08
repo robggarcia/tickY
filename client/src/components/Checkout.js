@@ -8,6 +8,7 @@ import "../styles/Checkout.css";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { CheckoutForm } from ".";
+import { fetchUsersOrders } from "../api";
 
 const PUBLIC_KEY =
   "pk_test_51M8NgkLCbsSbGPC1m0fZ2cACVLnbP7Htb8CVBxuvLxeVEI8hgnZC9KZw91I7piXRDUrrwEH92dRNQoVK9ucrKOju00VA8T6GC5";
@@ -21,6 +22,7 @@ const Checkout = ({ token, user, myOrders }) => {
   console.log("totalPrice", totalPrice);
 
   const getCurrentOrder = async () => {
+    // const usersOrders = await fetchUsersOrders(token, user.id);
     const order = myOrders.find((order) => order.id === +orderId);
     setCurrentOrder(order);
     console.log("CURRENT ORDER: ", order);

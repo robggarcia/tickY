@@ -20,7 +20,7 @@ const Profile = ({
   const [usersEmail, setUsersEmail] = useState("");
 
   useEffect(() => {
-    getUser();
+    // getUser();
     // setUsersUserName(user.username);
     // setUsersEmail(user.email);
   }, []);

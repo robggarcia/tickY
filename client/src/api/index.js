@@ -343,8 +343,9 @@ export const fetchAllOrders = async (token) => {
 };
 
 export const fetchUsersOrders = async (token, userId) => {
+  const domain = window.location.origin;
   try {
-    const response = await fetch(`api/users/${userId}/orders`, {
+    const response = await fetch(`${domain}/api/users/${userId}/orders`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
