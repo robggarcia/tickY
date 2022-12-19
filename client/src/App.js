@@ -1,5 +1,3 @@
-// test git eric
-
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import {
@@ -28,7 +26,6 @@ import {
   Venues,
 } from "./components";
 import Admin from "./components/Admin";
-// import Admin from "./components/Admin";
 
 function App() {
   const [artists, setArtists] = useState([]);

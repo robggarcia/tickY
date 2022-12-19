@@ -156,7 +156,7 @@ body {
   opacity: 95%;
 }
 
-.carousel{
+.carousel {
   margin-left: 10%;
   height: 500px;
   width: 500px;
@@ -164,18 +164,20 @@ body {
   /* background-color: lightskyblue; */
 }
 
-.test2{
+.test2 {
   height: 300px;
   width: 500px;
 }
-.carouselImg{
+
+.carouselImg {
   height: 300px;
   width: 200px;
 }
-.img{
+
+.img {
   padding-left: 10%;
 }
-.home{
+
+.home {
   display: flex;
 }
-

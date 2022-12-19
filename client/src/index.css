@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+#teal-job-tracker-root-stable {
+  /* display: none !important; */
+  z-index: -1000000000 !important;
+}
